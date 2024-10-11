@@ -1,0 +1,87 @@
+package org.firstinspires.ftc.teamcode.Hardware;
+
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
+import com.arcrobotics.ftclib.controller.PIDFController;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.HardwareMap;
+
+import org.firstinspires.ftc.teamcode.ActionUtils.EventAction;
+import org.firstinspires.ftc.teamcode.ActionUtils.PeriodicAction;
+
+public class PitchArm implements PeriodicAction {
+
+    public DcMotorEx pitchMotor;
+
+    public static double kp = 0.0102, ki = 0, kd = 0.0004;
+
+    public static double ffCoefficient = 0;
+
+    private PIDFController pitchController;
+
+    public int initialPos;
+    public int target;
+
+    private boolean motorInterrupted;
+
+    public PitchArm(HardwareMap hmap, String name) {
+        pitchMotor = hmap.get(DcMotorEx.class, name);
+        pitchMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        pitchMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        pitchController = new PIDFController(kp, ki, kd, 0);
+
+        initialPos = pitchMotor.getCurrentPosition();
+        target = 0;
+
+        motorInterrupted = false;
+    }
+
+    public void setPIDFCoefficients(double p, double i, double d, double f) {
+        pitchController.setPIDF(p, i, d, f);
+    }
+
+    public EventAction getPitchingAction(int targ) {
+        return new PitchingAction(targ);
+    }
+
+    @Override
+    public void periodic() {
+
+        pitchController.setF(Math.cos((pitchMotor.getCurrentPosition() - initialPos)/145.1 * 28/4 * 2 * Math.PI) * ffCoefficient);
+
+        //always have PIDF running in background, unless motor is interrupted
+        if (!motorInterrupted) {
+            double slidePow = pitchController.calculate(pitchMotor.getCurrentPosition() - initialPos, target);
+            pitchMotor.setPower(slidePow);
+        } else {
+            pitchMotor.setPower(0);
+        }
+
+    }
+
+    public class PitchingAction implements EventAction {
+
+        public PitchingAction(int targ) {
+            target = targ;
+        }
+
+        @Override
+        public boolean run(TelemetryPacket p) {
+            //if it is not at its target position, then the action is still running
+            return Math.abs((pitchMotor.getCurrentPosition() - initialPos) - target) > 10;
+        }
+
+        @Override
+        public void init() {
+            pitchController.reset();
+            motorInterrupted = false;
+        }
+
+        @Override
+        public void stop(boolean interrupted) {
+            motorInterrupted = interrupted;
+        }
+    }
+}

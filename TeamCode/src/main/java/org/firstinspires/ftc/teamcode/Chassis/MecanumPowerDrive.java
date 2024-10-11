@@ -1,0 +1,163 @@
+package org.firstinspires.ftc.teamcode.Chassis;
+
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.roadrunner.Pose2d;
+import com.arcrobotics.ftclib.controller.PIDFController;
+import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
+import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.IMU;
+import com.qualcomm.robotcore.util.ElapsedTime;
+
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.teamcode.ActionUtils.PeriodicAction;
+import org.firstinspires.ftc.teamcode.PurePursuit.NavPoint;
+import org.firstinspires.ftc.teamcode.RRTuning.MecanumDrive;
+
+@Config
+public class MecanumPowerDrive extends MecanumDrive implements PeriodicAction {
+
+    Telemetry telemetry;
+    FtcDashboard dashboard;
+
+    public ElapsedTime updateHeading;
+
+    public IMU imu;
+
+    public Pose2d startPose;
+
+    public static double kpx = 0.1, kdx = 0.013;
+    public static double kpy = 0.12, kdy = 0.023;
+    public static double kpt = 1.1, kdt = 0.05;
+
+    public PIDFController xPID = new PIDFController(kpx, 0, kdx, 0);
+    public PIDFController yPID = new PIDFController(kpy, 0, kdy, 0);
+    public PIDFController angPID = new PIDFController(kpt, 0, kdt, 0);
+
+    public MecanumPowerDrive(HardwareMap hMap, Pose2d startPos, Telemetry tel){
+        super(hMap, startPos);
+        startPose = startPos;
+        telemetry = tel;
+        initializeIMU(hMap);
+        dashboard = FtcDashboard.getInstance();
+        updateHeading = new ElapsedTime();
+    }
+
+    public void initializeIMU(HardwareMap hmap) {
+        imu = hmap.get(IMU.class, "imu");
+        IMU.Parameters imuParams = new IMU.Parameters(new RevHubOrientationOnRobot(
+                RevHubOrientationOnRobot.LogoFacingDirection.LEFT,
+                RevHubOrientationOnRobot.UsbFacingDirection.UP
+        ));
+        imu.initialize(imuParams);
+        imu.resetYaw();
+    }
+
+
+
+    public void setRobotCentricPower(double x, double y, double rx){
+
+        double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
+        double frontLeftPower = (y + x + rx) / denominator;
+        double backLeftPower = (y - x + rx) / denominator;
+        double frontRightPower = (y - x - rx) / denominator;
+        double backRightPower = (y + x - rx) / denominator;
+
+        leftFront.setPower(frontLeftPower);
+        leftBack.setPower(backLeftPower);
+        rightFront.setPower(frontRightPower);
+        rightBack.setPower(backRightPower);
+
+        telemetry.addData("DENOMINATOR", denominator);
+    }
+
+    public void setFieldCentricPower(double x, double y, double rx){
+
+        double heading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
+
+        double rotX = x * Math.cos(-heading) - y * Math.sin(-heading);
+        double rotY = x * Math.sin(-heading) + y * Math.cos(-heading);
+
+        double denominator = Math.max(Math.abs(rotY) + Math.abs(rotX) + Math.abs(rx), 1);
+        double frontLeftPower = (rotY + rotX + rx) / denominator;
+        double backLeftPower = (rotY - rotX + rx) / denominator;
+        double frontRightPower = (rotY - rotX - rx) / denominator;
+        double backRightPower = (rotY + rotX - rx) / denominator;
+
+        leftFront.setPower(frontLeftPower);
+        leftBack.setPower(backLeftPower);
+        rightFront.setPower(frontRightPower);
+        rightBack.setPower(backRightPower);
+    }
+
+    /**
+     * Wraps an angle within the range -180 to +180 degrees
+     * @param angle
+     * @return Wrapped angle
+     */
+    public static double AngleWrap(double angle) {
+        return angle % 180;
+    }
+
+
+    public void goToPose(NavPoint pt, double movementSpeed, double turnSpeed) {
+        goToPose(pt.getX(), pt.getY(), pt.getHeading(), movementSpeed, turnSpeed);
+    }
+
+    /**
+     * Returns the x, y, and turn movement powers necessary to move the robot to a target position (x,y,theta)
+     * @param x The x position of the target point
+     * @param y The y position of the target point
+     * @param preferredAngle The angle towards which the robot should rotate while approaching the target position
+     * @param movementSpeed Range between 0.0 --> 1.0 at which the x and y movement powers are multiplied by
+     * @param turnSpeed Range between 0.0 --> 1.0 at which the turn power is multiplied by
+     * @return A 3 dimensional vector representing the x movement power, y movement power, and turn movement power (following simple mechanum drive kinematics)
+     */
+
+    public void goToPose(double x, double y, double preferredAngle, double movementSpeed, double turnSpeed) {
+
+//        //Displaying info on FTC Dashboard Field
+//        TelemetryPacket p2pPacket = new TelemetryPacket();
+//        Canvas c = p2pPacket.fieldOverlay();
+//        Drawing.drawRobot(c, pose);
+//        c.fillCircle(x, y, 3);
+//        c.strokeLine(x, y, 5 * Math.cos(preferredAngle) + x, 5 * Math.sin(preferredAngle) + y);
+//        dashboard.sendTelemetryPacket(p2pPacket);
+
+        xPID.setPIDF(kpx, 0, kdx, 0);
+        yPID.setPIDF(kpy, 0, kdy, 0);
+        angPID.setPIDF(kpt, 0, kdt, 0);
+
+        double heading = pose.heading.toDouble();
+        telemetry.addData("p2p HEADING", heading);
+
+        if (preferredAngle - heading > Math.PI) preferredAngle -= 2 * Math.PI;
+        if (preferredAngle - heading < -Math.PI) preferredAngle += 2 * Math.PI;
+
+        double xPower = xPID.calculate(pose.position.x, x);
+        double yPower = yPID.calculate(pose.position.y, y);
+        double hPower = -angPID.calculate(heading, preferredAngle);
+
+        telemetry.addData("PID POWERS", xPower + "\n" + yPower + "\n" + hPower);
+
+        double xRot = xPower * Math.cos(Math.toRadians(90) - heading) - yPower * Math.sin(Math.toRadians(90) - heading);
+        double yRot = xPower * Math.sin(Math.toRadians(90) - heading) + yPower * Math.cos(Math.toRadians(90) - heading);
+
+        setRobotCentricPower(xRot * movementSpeed, yRot * movementSpeed, hPower * turnSpeed);
+    }
+
+    @Override
+    public void periodic() {
+        this.updatePoseEstimate();
+
+        if (updateHeading.milliseconds() > 250) {
+            //resets heading using the imu every 1/4 second
+            this.pose = new Pose2d(this.pose.position.x, this.pose.position.y, AngleWrap(imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS) + startPose.heading.toDouble()));
+            updateHeading.reset();
+        }
+
+        telemetry.addData("Drive Position", this.pose.position.x + "  " + this.pose.position.y + "  " + this.pose.heading.toDouble());
+    }
+
+}
