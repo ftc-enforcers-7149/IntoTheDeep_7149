@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.ActionUtils;
+package org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure;
 
 //TODO: Create multiple ActionInfo classes to be used by EventActions
 public class ActionInfo<T> {

@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.ActionUtils;
+package org.firstinspires.ftc.teamcode.Autos;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
@@ -7,37 +7,29 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.ActionManager;
+import org.firstinspires.ftc.teamcode.ActionUtils.ClawRotateAction;
 import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.EventAction;
+import org.firstinspires.ftc.teamcode.ActionUtils.P2PAction;
 import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.ParallelAction;
 import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.SequentialAction;
+import org.firstinspires.ftc.teamcode.ActionUtils.TimedAction;
 import org.firstinspires.ftc.teamcode.Chassis.MecanumPowerDrive;
 import org.firstinspires.ftc.teamcode.Hardware.OuttakeSlides;
 import org.firstinspires.ftc.teamcode.Hardware.PitchArm;
 
-//TODO: Have actions take a telemetry wrapper class as an input instead of a telemetryPacket :
-// Create a combinedTelemetry class that has a telemetry object and telemetryPacket object
-// so actions can easily display important info on telemetry and still have telemetryPacket
-// functionality with dashboard canvas
-
-
-@Autonomous(name = "ActionTester")
-public class ActionTestOpMode extends LinearOpMode {
+@Autonomous(name = "BlueLeftSamples")
+public class BlueLeftSamples extends LinearOpMode {
 
     ActionManager actionManager;
     MecanumPowerDrive drive;
-
-    WaitAction ac1;
-    WaitAction ac2;
 
     P2PAction moveAc1, moveAc2;
 
     OuttakeSlides frontSlides;
     PitchArm frontArm;
 
-    EventAction slidesUp, slidesDown, slidesScore, armUp, armDown;
+    EventAction slidesUp, slidesDown, armUp, armDown;
     ClawRotateAction clawOuttake, clawIntake;
-
-    //CubicBezier path1 = new CubicBezier(0.1, new NavPoint(-48, 0), new NavPoint(-48, 48), new NavPoint(-40, 48), new NavPoint(-48,40));
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -46,27 +38,23 @@ public class ActionTestOpMode extends LinearOpMode {
 
         drive = new MecanumPowerDrive(hardwareMap, new Pose2d(-63.25, 15.375, 0), telemetry);
 
-        ac1 = new WaitAction(3000);
-        ac2 = new WaitAction(6000);
-
-        moveAc1 = new P2PAction(drive, new Pose2d(-32.75,0,0), 2, 2);
-        moveAc2 = new P2PAction(drive, new Pose2d(-40,0, 0), 2, 2);
+        moveAc1 = new P2PAction(drive, new Pose2d(-42, 50, 0), 1, 1);
+        moveAc2 = new P2PAction(drive, new Pose2d(-56, 56, 135), 1, 1);
 
         frontSlides = new OuttakeSlides(hardwareMap, "frontSlide");
         frontArm = new PitchArm(hardwareMap, "frontPitch");
 
-        slidesUp = frontSlides.getExtensionAction(1200);
-        slidesScore = frontSlides.getExtensionAction(800);
+        slidesUp = frontSlides.getExtensionAction(2900);
         slidesDown = frontSlides.getExtensionAction(0);
-        armDown = frontArm.getPitchingAction(0);
-        armUp = frontArm.getPitchingAction(150);
+        armDown = frontArm.getPitchingAction(1050);
+        armUp = frontArm.getPitchingAction(0);
 
         clawOuttake = new ClawRotateAction(hardwareMap, "frontClaw", -0.5);
         clawIntake = new ClawRotateAction(hardwareMap, "frontClaw", 1);
-        //clawOuttake = new ClawRotateAction(hardwareMap, "frontClaw", -0.3);
 
-        //TODO: Make a failsafe action that takes in a normal action and a response action,
-        // response is run when the failsafe is triggered, and interrupts the normal action
+        //TODO: Make a failsafe action that takes in a trigger action and a response action,
+        // response is run when the trigger is triggered, and interrupts any ongoing movement
+        // actions so they can continue once the failsafe is over
 
         actionManager = new ActionManager(telemetry);
         actionManager.attachPeriodicActions(drive, frontSlides, frontArm);
@@ -83,11 +71,12 @@ public class ActionTestOpMode extends LinearOpMode {
 
                 new SequentialAction(
                         moveAc1,
-                        slidesUp,
+                        new ParallelAction(armDown, new TimedAction(clawIntake, 2000)),
                         armUp,
-                        new ParallelAction(slidesScore, new TimedAction(clawIntake, 2000)),
+                        moveAc2,
+                        slidesUp,
                         new TimedAction(clawOuttake, 2000),
-                        new ParallelAction(moveAc2, slidesDown, armDown)
+                        slidesDown
                 )
 
         );
@@ -96,5 +85,4 @@ public class ActionTestOpMode extends LinearOpMode {
         telemetry.update();
 
     }
-
 }

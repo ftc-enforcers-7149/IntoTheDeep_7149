@@ -1,6 +1,4 @@
-package org.firstinspires.ftc.teamcode.ActionUtils;
-
-import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
+package org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,9 +18,9 @@ public class ParallelAction implements EventAction {
     }
 
     @Override
-    public boolean run(TelemetryPacket p) {
+    public boolean run(CombinedTelemetry t) {
         //only remove an action if it is no longer running
-        actions.removeIf(action -> !action.run(p));
+        actions.removeIf(action -> !action.run(t));
         //if there are actions left, this action is still running
         return !actions.isEmpty();
     }

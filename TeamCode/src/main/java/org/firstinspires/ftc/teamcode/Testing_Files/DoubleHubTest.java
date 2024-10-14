@@ -6,6 +6,7 @@ import android.graphics.Canvas;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.hardware.rev.RevTouchSensor;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.AnalogInput;
@@ -28,6 +29,7 @@ import org.opencv.core.Mat;
 
 import java.util.concurrent.atomic.AtomicReference;
 
+@Disabled
 @TeleOp(name="Double Hub Test")
 public class DoubleHubTest  extends LinearOpMode {
 

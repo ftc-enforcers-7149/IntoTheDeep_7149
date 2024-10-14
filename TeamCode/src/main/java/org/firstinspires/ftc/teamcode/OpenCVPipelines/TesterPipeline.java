@@ -29,7 +29,7 @@ public class TesterPipeline extends OpenCvPipeline{
     public static Scalar upperRed = new Scalar(255,200,225);
     public static Scalar lowerBlue = new Scalar(145,50,50);
     public static Scalar upperBlue = new Scalar(175,200,225);
-    public static Scalar lowerYellow = new Scalar(25,95,175); //(10,95,95);
+    public static Scalar lowerYellow = new Scalar(25,110,200); //(10,95,95);
     public static Scalar upperYellow = new Scalar(45,255,255);//(45,255,255);
 
     public Scalar meanContourValue = new Scalar(0,0,0);
@@ -58,7 +58,7 @@ public class TesterPipeline extends OpenCvPipeline{
     Mat blueRange = new Mat();
     Mat yellowRange = new Mat();
 
-    public static int kernalSize = 14;
+    public static int kernalSize = 10;
 
     //Mat morphKernelErode = Imgproc.getStructuringElement(Imgproc.MORPH_ELLIPSE, new Size(15,15));
     Mat brightness = new Mat();
@@ -79,9 +79,10 @@ public class TesterPipeline extends OpenCvPipeline{
 
     RotatedRect bestBox;
 
-    DecimalFormat decForm = new DecimalFormat("#.0");
+    DecimalFormat decForm2 = new DecimalFormat("#.00");
+    DecimalFormat decForm1 = new DecimalFormat("#.0");
 
-    Point clawPosition = new Point(160, 0);
+    Point clawPosition = new Point(180, 240);
     public static double angleScoreCoefficient = 1.7;
     public static double xOffsetCoefficient = 1.5;
 
@@ -110,10 +111,10 @@ public class TesterPipeline extends OpenCvPipeline{
         Imgproc.cvtColor(frame, colorConvert, Imgproc.COLOR_RGB2HLS_FULL);
 
         //calculate the average brightness of the frame
-        averageBrightness = Core.mean(brightness).val[1];
+        //averageBrightness = Core.mean(brightness).val[1];
 
-        Core.inRange(colorConvert, lowerRed, upperRed, redRange);
-        Core.inRange(colorConvert, lowerBlue, upperBlue, blueRange);
+        //Core.inRange(colorConvert, lowerRed, upperRed, redRange);
+        //Core.inRange(colorConvert, lowerBlue, upperBlue, blueRange);
         Core.inRange(colorConvert, lowerYellow, upperYellow, yellowRange);
 
         //Imgproc.morphologyEx(yellowRange, yellowRange, Imgproc.MORPH_OPEN, Imgproc.getStructuringElement(Imgproc.MORPH_ELLIPSE, new Size(10,10)));
@@ -129,8 +130,8 @@ public class TesterPipeline extends OpenCvPipeline{
         Mat morphKernel = Imgproc.getStructuringElement(Imgproc.MORPH_ELLIPSE, new Size(kernalSize,kernalSize));
         Imgproc.erode(yellowRange, yellowRange, morphKernel);
 
-        Imgproc.findContours(redRange, redContours, new Mat(), Imgproc.CHAIN_APPROX_SIMPLE, Imgproc.RETR_TREE);
-        Imgproc.findContours(blueRange, blueContours, new Mat(), Imgproc.CHAIN_APPROX_SIMPLE, Imgproc.RETR_TREE);
+        //Imgproc.findContours(redRange, redContours, new Mat(), Imgproc.CHAIN_APPROX_SIMPLE, Imgproc.RETR_TREE);
+        //Imgproc.findContours(blueRange, blueContours, new Mat(), Imgproc.CHAIN_APPROX_SIMPLE, Imgproc.RETR_TREE);
         Imgproc.findContours(yellowRange, yellowContours, new Mat(), Imgproc.CHAIN_APPROX_SIMPLE, Imgproc.RETR_TREE);
 
         //Imgproc.drawContours(frame, redContours, -1, new Scalar(200,100,50), 3);
@@ -171,6 +172,7 @@ public class TesterPipeline extends OpenCvPipeline{
             //Imgproc.rectangle(frame, box, new Scalar(0,150,200), 2);
         }
 
+
         for (Rect box : yellowBoundingBoxes){
             //Imgproc.rectangle(frame, box, new Scalar(100,200,0), 2);
         }
@@ -185,7 +187,7 @@ public class TesterPipeline extends OpenCvPipeline{
 
             RotatedRect box = yellowRotBoundingBoxes.get(i);
 
-            Imgproc.putText(frame, decForm.format(Math.toDegrees(getAbsoluteRectAngle(box))), box.center, Imgproc.FONT_HERSHEY_PLAIN,0.7, new Scalar(180,30,30));
+            Imgproc.putText(frame, decForm1.format(Math.toDegrees(getAbsoluteRectAngle(box))), box.center, Imgproc.FONT_HERSHEY_PLAIN,0.7, new Scalar(180,30,30));
             Imgproc.circle(frame, box.center, 3, new Scalar(0,255,30));
 
             //TODO: Use homography to find (x,y) coordinate of each sample
@@ -199,8 +201,10 @@ public class TesterPipeline extends OpenCvPipeline{
 
             double score = manhattanDistance + angleScoreCoefficient * angleOffset;
 
-            Imgproc.putText(frame, decForm.format(score), new Point(box.center.x - 35, box.center.y), Imgproc.FONT_HERSHEY_PLAIN,0.7, new Scalar(30,30,150));
-            Imgproc.putText(frame, decForm.format(angleOffset), new Point(box.center.x - 15, box.center.y + 15), Imgproc.FONT_HERSHEY_PLAIN,0.7, new Scalar(30,150,30));
+            double servoAngle = rectAngle / Math.PI;
+
+            Imgproc.putText(frame, decForm1.format(score), new Point(box.center.x - 35, box.center.y), Imgproc.FONT_HERSHEY_PLAIN,0.7, new Scalar(30,30,150));
+            Imgproc.putText(frame, decForm2.format(servoAngle), new Point(box.center.x - 15, box.center.y + 15), Imgproc.FONT_HERSHEY_PLAIN,0.7, new Scalar(30,150,30));
 
             sampleScores.add(score);
 

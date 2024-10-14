@@ -1,8 +1,9 @@
 package org.firstinspires.ftc.teamcode.ActionUtils;
 
 import com.acmerobotics.dashboard.canvas.Canvas;
-import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 
+import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.CombinedTelemetry;
+import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.EventAction;
 import org.firstinspires.ftc.teamcode.Chassis.MecanumPowerDrive;
 import org.firstinspires.ftc.teamcode.PurePursuit.HermiteCurve;
 import org.firstinspires.ftc.teamcode.PurePursuit.NavPoint;
@@ -10,7 +11,7 @@ import org.firstinspires.ftc.teamcode.PurePursuit.PurePursuitController;
 import org.firstinspires.ftc.teamcode.PurePursuit.PurePursuitReturn;
 import org.firstinspires.ftc.teamcode.RRTuning.Drawing;
 
-public class PurePursuitAction implements EventAction{
+public class PurePursuitAction implements EventAction {
 
     private HermiteCurve curve;
     private MecanumPowerDrive drive;
@@ -32,9 +33,9 @@ public class PurePursuitAction implements EventAction{
     }
 
     @Override
-    public boolean run(TelemetryPacket p) {
+    public boolean run(CombinedTelemetry t) {
 
-        Canvas c = p.fieldOverlay();
+        Canvas c = t.fieldOverlay();
 
         PurePursuitReturn ptAndLastFound =
                 PurePursuitController.findGoalPoint(curve.getCurvePoints(), drive.pose, lookAhead, lastFoundIndex, c);
@@ -64,7 +65,7 @@ public class PurePursuitAction implements EventAction{
 
         //Will only return true when the robot comes to a complete stop from a p2p action
         //and it has reached the final point in the path
-        return goToGoal.run(p) && lastFoundIndex >= curve.getSize() - 1;
+        return goToGoal.run(t) && lastFoundIndex >= curve.getSize() - 1;
     }
 
     @Override

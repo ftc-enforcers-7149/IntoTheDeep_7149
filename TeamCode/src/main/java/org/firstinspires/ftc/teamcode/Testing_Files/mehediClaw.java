@@ -1,11 +1,13 @@
 package org.firstinspires.ftc.teamcode.Testing_Files;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.Servo;
-@TeleOp(name = "MehediClaw")
 
+@Disabled
+@TeleOp(name = "MehediClaw")
 public class mehediClaw extends LinearOpMode {
     Servo claw;
 

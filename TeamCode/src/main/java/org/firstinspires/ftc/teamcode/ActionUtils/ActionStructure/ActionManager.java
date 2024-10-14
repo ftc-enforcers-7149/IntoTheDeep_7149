@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.ActionUtils;
+package org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure;
 
 
 import com.acmerobotics.dashboard.FtcDashboard;
@@ -48,10 +48,10 @@ public class ActionManager {
                 telemetry.addData("Periodic", "");
             }
 
-            TelemetryPacket p = new TelemetryPacket();
-            b = a.run(p);
+            CombinedTelemetry t = new CombinedTelemetry(telemetry, new TelemetryPacket());
+            b = a.run(t);
 
-            dash.sendTelemetryPacket(p);
+            dash.sendTelemetryPacket(t.getPacket());
             telemetry.addData("LoopTime(ms)", loopTime.milliseconds());
             loopTime.reset();
             telemetry.update();

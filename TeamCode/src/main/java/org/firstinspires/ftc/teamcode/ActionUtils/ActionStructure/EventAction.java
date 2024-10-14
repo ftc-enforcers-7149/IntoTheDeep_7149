@@ -1,6 +1,4 @@
-package org.firstinspires.ftc.teamcode.ActionUtils;
-
-import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
+package org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure;
 
 //TODO: Create an interface for action information,
 // have objects that derive from this such as button press objects, sensor information objects.
@@ -14,11 +12,10 @@ import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 public interface EventAction {
 
     /**
-     *
-     * @param p TelemetryPacket used for communication
+     * @param t TelemetryPacket used for communication
      * @return true if the action is still running, false if the action has ended
      */
-    public boolean run(TelemetryPacket p);
+    public boolean run(CombinedTelemetry t);
 
     /**
      * Initializes the action for use. Called prior to the action being run

@@ -1,14 +1,14 @@
 package org.firstinspires.ftc.teamcode.Hardware;
 
-import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.arcrobotics.ftclib.controller.PIDFController;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.firstinspires.ftc.teamcode.ActionUtils.EventAction;
-import org.firstinspires.ftc.teamcode.ActionUtils.PeriodicAction;
+import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.CombinedTelemetry;
+import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.EventAction;
+import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.PeriodicAction;
 
 public class PitchArm implements PeriodicAction {
 
@@ -30,6 +30,9 @@ public class PitchArm implements PeriodicAction {
         pitchMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         pitchMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
+        pitchMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        pitchMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
         pitchController = new PIDFController(kp, ki, kd, 0);
 
         initialPos = pitchMotor.getCurrentPosition();
@@ -49,12 +52,12 @@ public class PitchArm implements PeriodicAction {
     @Override
     public void periodic() {
 
-        pitchController.setF(Math.cos((pitchMotor.getCurrentPosition() - initialPos)/145.1 * 28/4 * 2 * Math.PI) * ffCoefficient);
+        //pitchController.setF(Math.cos((pitchMotor.getCurrentPosition() - initialPos)/145.1 * 28/4 * 2 * Math.PI) * ffCoefficient);
 
         //always have PIDF running in background, unless motor is interrupted
         if (!motorInterrupted) {
-            double slidePow = pitchController.calculate(pitchMotor.getCurrentPosition() - initialPos, target);
-            pitchMotor.setPower(slidePow);
+            double pitchPow = pitchController.calculate(pitchMotor.getCurrentPosition(), target);
+            pitchMotor.setPower(pitchPow);
         } else {
             pitchMotor.setPower(0);
         }
@@ -64,13 +67,19 @@ public class PitchArm implements PeriodicAction {
     public class PitchingAction implements EventAction {
 
         public PitchingAction(int targ) {
-            target = targ;
+            actionTarget = targ;
         }
 
+        private int actionTarget;
+
         @Override
-        public boolean run(TelemetryPacket p) {
+        public boolean run(CombinedTelemetry t) {
+
+            t.getTelemetry().addData("Pitching", actionTarget);
+
+            target = actionTarget;
             //if it is not at its target position, then the action is still running
-            return Math.abs((pitchMotor.getCurrentPosition() - initialPos) - target) > 10;
+            return Math.abs(pitchMotor.getCurrentPosition() - target) > 30;
         }
 
         @Override

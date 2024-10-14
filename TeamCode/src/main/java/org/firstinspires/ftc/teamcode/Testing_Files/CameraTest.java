@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import android.util.Size;
 
 import com.acmerobotics.dashboard.FtcDashboard;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -20,6 +21,7 @@ import org.opencv.core.Mat;
 
 import java.util.concurrent.atomic.AtomicReference;
 
+@Disabled
 @TeleOp(name="CameraTest")
 public class CameraTest extends LinearOpMode {
 

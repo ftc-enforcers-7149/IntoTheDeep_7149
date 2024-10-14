@@ -1,6 +1,5 @@
-package org.firstinspires.ftc.teamcode.ActionUtils;
+package org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure;
 
-import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Pose2d;
 
 import org.firstinspires.ftc.teamcode.Chassis.MecanumPowerDrive;
@@ -35,7 +34,7 @@ public class PositionAction implements EventAction{
     }
 
     @Override
-    public boolean run(TelemetryPacket p) {
+    public boolean run(CombinedTelemetry t) {
 
         if (!activated && Math.hypot(position.position.x - drive.pose.position.x,
                 position.position.y - drive.pose.position.y) < tolerance) {
@@ -46,7 +45,7 @@ public class PositionAction implements EventAction{
         //function will only return false once the action was started and has ended
 
         if (activated) {
-            return action.run(p);
+            return action.run(t);
         } else {
             return true;
         }
@@ -61,6 +60,7 @@ public class PositionAction implements EventAction{
 
     @Override
     public void stop(boolean interrupted) {
+        activated = false;
         action.stop(interrupted);
     }
 

@@ -1,9 +1,11 @@
 package org.firstinspires.ftc.teamcode.Testing_Files;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
+@Disabled
 @TeleOp(name = "DcMotorTester", group = "TesterFiles")
 public class DcMotorTest extends LinearOpMode {
 

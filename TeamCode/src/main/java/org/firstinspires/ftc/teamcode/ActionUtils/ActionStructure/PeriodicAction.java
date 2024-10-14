@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.ActionUtils;
+package org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure;
 
 /**
  * Implemented by actions or hardware that is constantly run during action execution.

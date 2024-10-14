@@ -1,12 +1,14 @@
 package org.firstinspires.ftc.teamcode.OpenCVPipelines;
 
 //import com.acmerobotics.dashboard.FtcDashboard;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.vision.VisionPortal;
 
+@Disabled
 @TeleOp(name = "ProcessorTester")
 public class ProcessorTestOpmode extends LinearOpMode {
 

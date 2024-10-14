@@ -1,8 +1,5 @@
 package org.firstinspires.ftc.teamcode.ActionUtils;
 
-
-import static org.firstinspires.ftc.teamcode.Chassis.MecanumPowerDrive.AngleWrap;
-
 import com.acmerobotics.roadrunner.Pose2d;
 import com.arcrobotics.ftclib.controller.PIDFController;
 
@@ -10,8 +7,7 @@ import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.CombinedTeleme
 import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.EventAction;
 import org.firstinspires.ftc.teamcode.Chassis.MecanumPowerDrive;
 
-
-public class P2PAction implements EventAction {
+public class PositionLockAction implements EventAction {
 
     private PIDFController xPID;
     private PIDFController yPID;
@@ -23,7 +19,7 @@ public class P2PAction implements EventAction {
     private MecanumPowerDrive drive;
 
 
-    public P2PAction(MecanumPowerDrive dr, Pose2d targ, double move, double turn) {
+    public PositionLockAction(MecanumPowerDrive dr, Pose2d targ, double move, double turn) {
         drive = dr;
         target = targ;
 
@@ -39,8 +35,6 @@ public class P2PAction implements EventAction {
 
     @Override
     public boolean run(CombinedTelemetry t) {
-
-        t.getTelemetry().addData("P2P Action", target.position.toString() + " " + Math.toDegrees(target.heading.toDouble()));
 
         Pose2d pose = drive.pose;
         Pose2d velocity = drive.currentVelocity;
@@ -60,18 +54,8 @@ public class P2PAction implements EventAction {
 
         drive.setRobotCentricPower(xRot * movementSpeed, yRot * movementSpeed, hPower * turnSpeed);
 
-        //if off target or heading is incorrect, continue the action
-        if ( (Math.hypot(pose.position.x - target.position.x, pose.position.y - target.position.y) > 0.8
-                || AngleWrap(Math.abs(preferredAngle - heading)) > 0.1
-                || Math.hypot(velocity.position.x, velocity.position.y) > 0.2) ) {
-
-            return true;
-
-        } else {
-            drive.setRobotCentricPower(0,0,0);
-            return false;
-        }
-
+        //this action will always continue to lock onto a position, must be stopped by a helper action
+        return true;
     }
 
 
@@ -85,7 +69,7 @@ public class P2PAction implements EventAction {
 
     @Override
     public void stop(boolean interrupted) {
-        drive.setRobotCentricPower(0,0,0);
+        drive.setRobotCentricPower(0, 0, 0);
     }
 
 }

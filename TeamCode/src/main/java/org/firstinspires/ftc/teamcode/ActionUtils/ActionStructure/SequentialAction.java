@@ -1,6 +1,4 @@
-package org.firstinspires.ftc.teamcode.ActionUtils;
-
-import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
+package org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,14 +18,14 @@ public class SequentialAction implements EventAction {
     }
 
     @Override
-    public boolean run(TelemetryPacket p) {
+    public boolean run(CombinedTelemetry t) {
         //when all actions are finished, this action is finished
         if (actions.isEmpty()) {
             return false;
         }
 
         //if the current action is running, this action is running
-        if (actions.get(0).run(p)) {
+        if (actions.get(0).run(t)) {
             return true;
         } else {
             //if the current action ended, remove it and continue this action
@@ -37,7 +35,7 @@ public class SequentialAction implements EventAction {
                 actions.get(0).init();
             }
             //if an action is finished, run the next action in the sequence
-            return run(p);
+            return run(t);
         }
     }
 

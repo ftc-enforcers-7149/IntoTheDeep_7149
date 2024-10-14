@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.teamcode.ActionUtils.PeriodicAction;
+import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.PeriodicAction;
 import org.firstinspires.ftc.teamcode.PurePursuit.NavPoint;
 import org.firstinspires.ftc.teamcode.RRTuning.MecanumDrive;
 
@@ -21,15 +21,27 @@ public class MecanumPowerDrive extends MecanumDrive implements PeriodicAction {
     Telemetry telemetry;
     FtcDashboard dashboard;
 
-    public ElapsedTime updateHeading;
+    public ElapsedTime updateHeading, velocityTime;
 
     public IMU imu;
 
-    public Pose2d startPose;
+    public Pose2d startPose, currentPose, lastPose;
+    public Pose2d currentVelocity;
 
-    public static double kpx = 0.1, kdx = 0.013;
-    public static double kpy = 0.12, kdy = 0.023;
-    public static double kpt = 1.1, kdt = 0.05;
+    //Tester chassis
+//    public static double kpx = 0.1, kdx = 0.013;
+//    public static double kpy = 0.12, kdy = 0.023;
+//    public static double kpt = 1.1, kdt = 0.05;
+
+    //Main chassis at 5x speed
+    public static double kpx = 0.106, kdx = 0.0119, kix = 0;
+    public static double kpy = 0.123, kdy = 0.0219, kiy = 0;
+    public static double kpt = 1.21, kdt = 0.0615, kit = 0;
+
+    //Main chassis at x1 speed
+//    public static double kpx = 0.11, kdx = 0.011, kix = 0;
+//    public static double kpy = 0.13, kdy = 0.02, kiy = 0;
+//    public static double kpt = 1.22, kdt = 0.064, kit = 0;
 
     public PIDFController xPID = new PIDFController(kpx, 0, kdx, 0);
     public PIDFController yPID = new PIDFController(kpy, 0, kdy, 0);
@@ -41,7 +53,12 @@ public class MecanumPowerDrive extends MecanumDrive implements PeriodicAction {
         telemetry = tel;
         initializeIMU(hMap);
         dashboard = FtcDashboard.getInstance();
+
         updateHeading = new ElapsedTime();
+        velocityTime = new ElapsedTime();
+
+        currentPose = startPose;
+        lastPose = startPose;
     }
 
     public void initializeIMU(HardwareMap hmap) {
@@ -151,13 +168,20 @@ public class MecanumPowerDrive extends MecanumDrive implements PeriodicAction {
     public void periodic() {
         this.updatePoseEstimate();
 
+        lastPose = currentPose;
+        currentPose = pose;
+
+        double velocityLoopTime = velocityTime.seconds();
+        currentVelocity = new Pose2d( (lastPose.position.x - currentPose.position.x) / velocityLoopTime, (lastPose.position.y - currentPose.position.y) / velocityLoopTime, (lastPose.heading.toDouble() - currentPose.heading.toDouble()) / velocityLoopTime);
+
         if (updateHeading.milliseconds() > 250) {
             //resets heading using the imu every 1/4 second
             this.pose = new Pose2d(this.pose.position.x, this.pose.position.y, AngleWrap(imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS) + startPose.heading.toDouble()));
             updateHeading.reset();
         }
 
-        telemetry.addData("Drive Position", this.pose.position.x + "  " + this.pose.position.y + "  " + this.pose.heading.toDouble());
+        telemetry.addData("Drive Position", this.pose.position.x + "  " + this.pose.position.y + "  " + Math.toDegrees(this.pose.heading.toDouble()));
+        telemetry.addData("Drive Velocity", currentVelocity.position.x + "  " + currentVelocity.position.y + "  " + Math.toDegrees(currentVelocity.heading.toDouble()));
     }
 
 }

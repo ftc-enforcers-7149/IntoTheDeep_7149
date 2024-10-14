@@ -1,10 +1,11 @@
 package org.firstinspires.ftc.teamcode.Testing_Files;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.AnalogInput;
 
+@Disabled
 @TeleOp(name = "sonarTest")
-
 public class SonarTesting extends LinearOpMode {
     AnalogInput sonarSensor;
 
