@@ -9,11 +9,13 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.ActionManager;
 import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.FailsafeAction;
 import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.FailsafeTrigger;
+import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.PositionFailsafe;
 import org.firstinspires.ftc.teamcode.ActionUtils.ClawRotateAction;
 import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.EventAction;
 import org.firstinspires.ftc.teamcode.ActionUtils.P2PAction;
 import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.ParallelAction;
 import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.SequentialAction;
+import org.firstinspires.ftc.teamcode.ActionUtils.PositionLockAction;
 import org.firstinspires.ftc.teamcode.ActionUtils.TimedAction;
 import org.firstinspires.ftc.teamcode.ActionUtils.WaitAction;
 import org.firstinspires.ftc.teamcode.Chassis.MecanumPowerDrive;
@@ -27,7 +29,7 @@ public class BlueLeftChamber extends LinearOpMode {
     ActionManager actionManager;
     MecanumPowerDrive drive;
 
-    P2PAction moveChamber, moveChamberAway, moveSample, moveBucket, moveAwayBucket;
+    P2PAction moveChamber, moveChamberAway, moveSample1, moveSample2, moveSample3, moveBucket, moveAwayBucket;
 
     OuttakeSlides frontSlides;
     PitchArm frontArm;
@@ -45,7 +47,10 @@ public class BlueLeftChamber extends LinearOpMode {
         moveChamber = new P2PAction(drive, new Pose2d(-34.5,0,0), 5, 5);
         moveChamberAway = new P2PAction(drive, new Pose2d(-38,0, 0), 5, 5);
 
-        moveSample = new P2PAction(drive, new Pose2d(-42, 50, 0), 1, 1);
+        moveSample1 = new P2PAction(drive, new Pose2d(-42, 50, 0), 1, 1);
+        moveSample2 = new P2PAction(drive, new Pose2d(-42, 54, 0), 1, 1);
+        moveSample3 = new P2PAction(drive, new Pose2d(-44, 58, 30), 1, 1);
+
         moveBucket = new P2PAction(drive, new Pose2d(-56, 56, 110), 1, 1);
         moveAwayBucket = new P2PAction(drive, new Pose2d(-53, 53, 110), 1, 1);
 
@@ -58,6 +63,7 @@ public class BlueLeftChamber extends LinearOpMode {
         slidesDownChamber = frontSlides.getExtensionAction(0);
         slidesUpBucket = frontSlides.getExtensionAction(2900);
         slidesDownBucket = frontSlides.getExtensionAction(0);
+
         armDownChamber = frontArm.getPitchingAction(0);
         armUpChamber = frontArm.getPitchingAction(150);
         armDownSample = frontArm.getPitchingAction(1050);
@@ -89,7 +95,26 @@ public class BlueLeftChamber extends LinearOpMode {
                         armUpChamber,
                         new ParallelAction(slidesScoreChamber, new TimedAction(clawOuttake, 600)),
                         new ParallelAction(moveChamberAway, slidesDownChamber, armDownChamber),
-                        moveSample,
+
+                        moveSample1,
+                        new ParallelAction(armDownSample, new TimedAction(clawIntake, 2000)),
+                        armUpSample,
+                        moveBucket,
+                        slidesUpBucket,
+                        new TimedAction(clawOuttake, 1000),
+                        moveAwayBucket,
+                        slidesDownBucket,
+
+                        moveSample2,
+                        new ParallelAction(armDownSample, new TimedAction(clawIntake, 2000)),
+                        armUpSample,
+                        moveBucket,
+                        slidesUpBucket,
+                        new TimedAction(clawOuttake, 1000),
+                        moveAwayBucket,
+                        slidesDownBucket,
+
+                        moveSample3,
                         new ParallelAction(armDownSample, new TimedAction(clawIntake, 2000)),
                         armUpSample,
                         moveBucket,

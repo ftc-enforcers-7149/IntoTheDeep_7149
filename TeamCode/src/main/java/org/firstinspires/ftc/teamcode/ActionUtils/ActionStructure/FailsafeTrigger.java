@@ -10,9 +10,4 @@ public interface FailsafeTrigger{
      */
     public boolean triggered();
 
-    /**
-     * @return This failsafe's response action.
-     */
-    public EventAction getAction();
-
 }

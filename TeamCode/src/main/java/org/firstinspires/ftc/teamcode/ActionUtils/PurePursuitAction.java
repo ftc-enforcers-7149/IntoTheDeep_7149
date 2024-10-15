@@ -35,7 +35,7 @@ public class PurePursuitAction implements EventAction {
     @Override
     public boolean run(CombinedTelemetry t) {
 
-        Canvas c = t.fieldOverlay();
+        Canvas c = t.getPacket().fieldOverlay();
 
         PurePursuitReturn ptAndLastFound =
                 PurePursuitController.findGoalPoint(curve.getCurvePoints(), drive.pose, lookAhead, lastFoundIndex, c);

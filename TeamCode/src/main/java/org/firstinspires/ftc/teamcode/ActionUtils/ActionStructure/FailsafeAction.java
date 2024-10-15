@@ -7,10 +7,10 @@ public class FailsafeAction implements EventAction{
 
     private boolean triggered, lastTriggered;
 
-    public FailsafeAction(EventAction act, FailsafeTrigger failsafe) {
+    public FailsafeAction(EventAction act, FailsafeTrigger failsafe, EventAction response) {
         runAction = act;
         failsafeTrigger = failsafe;
-        responseAction = failsafeTrigger.getAction();
+        responseAction = response;
 
         triggered = false;
         lastTriggered = false;

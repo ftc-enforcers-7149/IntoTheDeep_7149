@@ -35,6 +35,10 @@ public class ActionManager {
 
     public void runActionManager(EventAction a) {
 
+        //TODO: Make an action that takes in two EventActions and ends the second one once
+        // the first one ends. In this case, the second action continuously runs until the
+        // first action ends
+
         FtcDashboard dash = FtcDashboard.getInstance();
 
         boolean b = true;
@@ -45,13 +49,13 @@ public class ActionManager {
 
             for (PeriodicAction perAct : periodicActions) {
                 perAct.periodic();
-                telemetry.addData("Periodic", "");
             }
 
             CombinedTelemetry t = new CombinedTelemetry(telemetry, new TelemetryPacket());
             b = a.run(t);
 
             dash.sendTelemetryPacket(t.getPacket());
+            telemetry.addLine("");
             telemetry.addData("LoopTime(ms)", loopTime.milliseconds());
             loopTime.reset();
             telemetry.update();
@@ -59,6 +63,5 @@ public class ActionManager {
 
         //TODO: Have periodic actions running in the back to update actionInfo objects associated with actions
     }
-
 
 }
