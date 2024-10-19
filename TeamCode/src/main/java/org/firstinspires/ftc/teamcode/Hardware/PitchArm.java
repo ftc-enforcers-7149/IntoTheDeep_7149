@@ -64,7 +64,7 @@ public class PitchArm implements PeriodicAction {
 
     }
 
-    public class PitchingAction implements EventAction {
+    public class PitchingAction extends EventAction {
 
         public PitchingAction(int targ) {
             actionTarget = targ;
@@ -74,6 +74,7 @@ public class PitchArm implements PeriodicAction {
 
         @Override
         public boolean run(CombinedTelemetry t) {
+            isRunning = true;
 
             t.getTelemetry().addData("Pitching", actionTarget);
 
@@ -90,6 +91,7 @@ public class PitchArm implements PeriodicAction {
 
         @Override
         public void stop(boolean interrupted) {
+            isRunning = false;
             motorInterrupted = interrupted;
         }
     }

@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.EventAction;
 import org.firstinspires.ftc.teamcode.Chassis.MecanumPowerDrive;
 
 
-public class P2PAction implements EventAction {
+public class P2PAction extends EventAction {
 
     private PIDFController xPID;
     private PIDFController yPID;
@@ -39,6 +39,7 @@ public class P2PAction implements EventAction {
 
     @Override
     public boolean run(CombinedTelemetry t) {
+        isRunning = true;
 
         t.getTelemetry().addData("P2P Action", target.position.toString() + " " + Math.toDegrees(target.heading.toDouble()));
 
@@ -68,7 +69,7 @@ public class P2PAction implements EventAction {
             return true;
 
         } else {
-            drive.setRobotCentricPower(0,0,0);
+            this.stop(false);
             return false;
         }
 
@@ -85,6 +86,7 @@ public class P2PAction implements EventAction {
 
     @Override
     public void stop(boolean interrupted) {
+        isRunning = false;
         drive.setRobotCentricPower(0,0,0);
     }
 

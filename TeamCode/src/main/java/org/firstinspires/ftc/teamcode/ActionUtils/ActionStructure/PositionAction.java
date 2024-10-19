@@ -7,7 +7,7 @@ import org.firstinspires.ftc.teamcode.Chassis.MecanumPowerDrive;
 /**
  * Used in conjunction with movement actions to apply position activated functions during motion
  */
-public class PositionAction implements EventAction{
+public class PositionAction extends EventAction {
 
     //TODO: Turn this into an EventAction or not?,
     // could be useful if you randomly want to execute something

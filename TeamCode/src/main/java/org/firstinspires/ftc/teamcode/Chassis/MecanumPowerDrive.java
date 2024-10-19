@@ -86,7 +86,7 @@ public class MecanumPowerDrive extends MecanumDrive implements PeriodicAction {
         rightFront.setPower(frontRightPower);
         rightBack.setPower(backRightPower);
 
-        telemetry.addData("DENOMINATOR", denominator);
+        //telemetry.addData("DENOMINATOR", denominator);
     }
 
     public void setFieldCentricPower(double x, double y, double rx){

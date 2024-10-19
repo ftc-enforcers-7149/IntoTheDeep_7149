@@ -6,7 +6,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.CombinedTelemetry;
 import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.EventAction;
 
-public class WaitAction implements EventAction {
+public class WaitAction extends EventAction {
 
     private int timeMs;
 

@@ -4,25 +4,26 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class ParallelAction extends EventAction {
+public class TeleOpLoop extends EventAction {
 
     private ArrayList<EventAction> actions;
 
-    public ParallelAction(List<EventAction> actionList) {
+    public TeleOpLoop(List<EventAction> actionList) {
         //ensure we are given an arrayList, or else we get exceptions when removing actions from list
         actions = new ArrayList<EventAction>((List<EventAction>) actionList);
     }
 
-    public ParallelAction(EventAction...actions) {
+    public TeleOpLoop(EventAction...actions) {
         this(Arrays.asList(actions));
     }
 
     @Override
     public boolean run(CombinedTelemetry t) {
-        //only remove an action if it is no longer running
-        actions.removeIf(action -> !action.run(t));
-        //if there are actions left, this action is still running
-        return !actions.isEmpty();
+        //run all of the actions in the list
+        for (EventAction act : actions) {
+            act.run(t);
+        }
+        return true;
     }
 
     @Override
@@ -38,5 +39,6 @@ public class ParallelAction extends EventAction {
         for (EventAction act : actions){
             act.stop(interrupted);
         }
+
     }
 }

@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.CombinedTelemetry;
 import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.EventAction;
 
-public class ClawRotateAction implements EventAction {
+public class ClawRotateAction extends EventAction {
 
     private CRServo claw;
 
@@ -19,6 +19,8 @@ public class ClawRotateAction implements EventAction {
 
     @Override
     public boolean run(CombinedTelemetry t) {
+        isRunning = true;
+
         claw.setPower(clawPower);
         return true;
     }
@@ -30,6 +32,7 @@ public class ClawRotateAction implements EventAction {
 
     @Override
     public void stop(boolean interrupted) {
+        isRunning = false;
         claw.setPower(0);
     }
 }

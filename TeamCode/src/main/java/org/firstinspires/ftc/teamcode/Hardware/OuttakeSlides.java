@@ -61,7 +61,7 @@ public class OuttakeSlides implements PeriodicAction {
 
     }
 
-    public class ExtensionAction implements EventAction{
+    public class ExtensionAction extends EventAction {
 
         public ExtensionAction(int targ) {
             actionTarget = targ;
@@ -71,6 +71,7 @@ public class OuttakeSlides implements PeriodicAction {
 
         @Override
         public boolean run(CombinedTelemetry t) {
+            isRunning = true;
 
             t.getTelemetry().addData("Extension", actionTarget);
 
@@ -87,6 +88,7 @@ public class OuttakeSlides implements PeriodicAction {
 
         @Override
         public void stop(boolean interrupted) {
+            isRunning = false;
             motorInterrupted = interrupted;
         }
     }

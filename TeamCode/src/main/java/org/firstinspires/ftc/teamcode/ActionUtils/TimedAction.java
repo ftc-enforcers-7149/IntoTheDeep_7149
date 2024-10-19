@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.CombinedTelemetry;
 import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.EventAction;
 
-public class TimedAction implements EventAction {
+public class TimedAction extends EventAction {
 
     private EventAction action;
     private ElapsedTime timer;

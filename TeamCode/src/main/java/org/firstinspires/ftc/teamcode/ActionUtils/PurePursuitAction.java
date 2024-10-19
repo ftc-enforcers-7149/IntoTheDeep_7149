@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.PurePursuit.PurePursuitController;
 import org.firstinspires.ftc.teamcode.PurePursuit.PurePursuitReturn;
 import org.firstinspires.ftc.teamcode.RRTuning.Drawing;
 
-public class PurePursuitAction implements EventAction {
+public class PurePursuitAction extends EventAction {
 
     private HermiteCurve curve;
     private MecanumPowerDrive drive;

@@ -5,7 +5,9 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 
+import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.ActionManager;
 import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.FailsafeAction;
 import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.FailsafeTrigger;
@@ -29,6 +31,7 @@ public class BlueLeftChamber extends LinearOpMode {
     ActionManager actionManager;
     MecanumPowerDrive drive;
 
+
     P2PAction moveChamber, moveChamberAway, moveSample1, moveSample2, moveSample3, moveBucket, moveAwayBucket;
 
     OuttakeSlides frontSlides;
@@ -45,14 +48,14 @@ public class BlueLeftChamber extends LinearOpMode {
         drive = new MecanumPowerDrive(hardwareMap, new Pose2d(-63.25, 15.375, 0), telemetry);
 
         moveChamber = new P2PAction(drive, new Pose2d(-34.5,0,0), 5, 5);
-        moveChamberAway = new P2PAction(drive, new Pose2d(-38,0, 0), 5, 5);
+        moveChamberAway = new P2PAction(drive, new Pose2d(-40,0, 0), 5, 5);
 
         moveSample1 = new P2PAction(drive, new Pose2d(-42, 50, 0), 1, 1);
-        moveSample2 = new P2PAction(drive, new Pose2d(-42, 54, 0), 1, 1);
-        moveSample3 = new P2PAction(drive, new Pose2d(-44, 58, 30), 1, 1);
+        moveSample2 = new P2PAction(drive, new Pose2d(-42, 58, 10), 1, 1);
+        moveSample3 = new P2PAction(drive, new Pose2d(-44, 64, 35), 1, 1);
 
-        moveBucket = new P2PAction(drive, new Pose2d(-56, 56, 110), 1, 1);
-        moveAwayBucket = new P2PAction(drive, new Pose2d(-53, 53, 110), 1, 1);
+        moveBucket = new P2PAction(drive, new Pose2d(-56, 56, 135), 1, 1);
+        moveAwayBucket = new P2PAction(drive, new Pose2d(-53, 53, 135), 1, 1);
 
 
         frontSlides = new OuttakeSlides(hardwareMap, "frontSlide");
@@ -77,7 +80,7 @@ public class BlueLeftChamber extends LinearOpMode {
         // response is run when the trigger is triggered, and interrupts any ongoing movement
         // actions so they can continue once the failsafe is over
 
-        actionManager = new ActionManager(telemetry);
+        actionManager = new ActionManager(telemetry, hardwareMap);
         actionManager.attachPeriodicActions(drive, frontSlides, frontArm);
 
         waitForStart();
@@ -97,7 +100,7 @@ public class BlueLeftChamber extends LinearOpMode {
                         new ParallelAction(moveChamberAway, slidesDownChamber, armDownChamber),
 
                         moveSample1,
-                        new ParallelAction(armDownSample, new TimedAction(clawIntake, 2000)),
+                        new ParallelAction(armDownSample, new TimedAction(clawIntake, 1500)),
                         armUpSample,
                         moveBucket,
                         slidesUpBucket,
@@ -106,7 +109,7 @@ public class BlueLeftChamber extends LinearOpMode {
                         slidesDownBucket,
 
                         moveSample2,
-                        new ParallelAction(armDownSample, new TimedAction(clawIntake, 2000)),
+                        new ParallelAction(armDownSample, new TimedAction(clawIntake, 1500)),
                         armUpSample,
                         moveBucket,
                         slidesUpBucket,
@@ -115,7 +118,7 @@ public class BlueLeftChamber extends LinearOpMode {
                         slidesDownBucket,
 
                         moveSample3,
-                        new ParallelAction(armDownSample, new TimedAction(clawIntake, 2000)),
+                        new ParallelAction(armDownSample, new TimedAction(clawIntake, 1500)),
                         armUpSample,
                         moveBucket,
                         slidesUpBucket,

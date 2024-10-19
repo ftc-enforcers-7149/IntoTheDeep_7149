@@ -23,6 +23,8 @@ public class P2PTuner extends LinearOpMode {
 
     public static double moveSpeed = 5, turnSpeed = 5;
 
+    public static boolean resetPID = false;
+
     MecanumPowerDrive drive;
 
     FtcDashboard dashboard = FtcDashboard.getInstance();
@@ -46,6 +48,15 @@ public class P2PTuner extends LinearOpMode {
 
         while(opModeIsActive() && !isStopRequested()) {
             drive.updatePoseEstimate();
+
+            if (resetPID) {
+                resetPID = false;
+                drive.xPID.reset();
+                drive.yPID.reset();
+                drive.angPID.reset();
+                telemetry.addData("Reset", "PID");
+                telemetry.update();
+            }
 
             TelemetryPacket p2pPacket = new TelemetryPacket();
             Canvas c = p2pPacket.fieldOverlay();

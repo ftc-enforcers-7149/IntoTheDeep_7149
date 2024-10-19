@@ -3,21 +3,21 @@ package org.firstinspires.ftc.teamcode.ActionUtils;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.Pose2d;
+import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.ActionManager;
 import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.EventAction;
+import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.GamepadAction;
 import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.ParallelAction;
 import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.SequentialAction;
+import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.TeleOpLoop;
 import org.firstinspires.ftc.teamcode.Chassis.MecanumPowerDrive;
 import org.firstinspires.ftc.teamcode.Hardware.OuttakeSlides;
 import org.firstinspires.ftc.teamcode.Hardware.PitchArm;
 
-//TODO: Have actions take a telemetry wrapper class as an input instead of a telemetryPacket :
-// Create a combinedTelemetry class that has a telemetry object and telemetryPacket object
-// so actions can easily display important info on telemetry and still have telemetryPacket
-// functionality with dashboard canvas
 
 
 @Autonomous(name = "ActionTester")
@@ -68,7 +68,7 @@ public class ActionTestOpMode extends LinearOpMode {
         //TODO: Make a failsafe action that takes in a normal action and a response action,
         // response is run when the failsafe is triggered, and interrupts the normal action
 
-        actionManager = new ActionManager(telemetry);
+        actionManager = new ActionManager(telemetry, hardwareMap);
         actionManager.attachPeriodicActions(drive, frontSlides, frontArm);
 
         waitForStart();
@@ -80,16 +80,16 @@ public class ActionTestOpMode extends LinearOpMode {
         //the following shows how actions should be structured and indented
 
         actionManager.runActionManager(
+                new TeleOpLoop(
 
-                new SequentialAction(
-                        moveAc1,
-                        slidesUp,
-                        armUp,
-                        new ParallelAction(slidesScore, new TimedAction(clawIntake, 2000)),
-                        new TimedAction(clawOuttake, 2000),
-                        new ParallelAction(moveAc2, slidesDown, armDown)
+                        new GamepadAction(new DriveAction(drive, gamepad1, true, 1.08), gamepad1, (gamepad -> true)),
+                        new GamepadAction(slidesUp, gamepad1, (gamepad -> gamepad.a && !slidesDown.isRunning)),
+                        new GamepadAction(slidesDown, gamepad1, (gamepad -> gamepad.b && !slidesUp.isRunning)),
+
+                        new GamepadAction(ac1, gamepad1, (gamepad -> gamepad.right_trigger > 0.5))
+
+
                 )
-
         );
 
         telemetry.addData("Finished", "Actions");

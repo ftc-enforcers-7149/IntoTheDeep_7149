@@ -82,6 +82,7 @@ public class TesterPipeline extends OpenCvPipeline{
     DecimalFormat decForm2 = new DecimalFormat("#.00");
     DecimalFormat decForm1 = new DecimalFormat("#.0");
 
+
     Point clawPosition = new Point(180, 240);
     public static double angleScoreCoefficient = 1.7;
     public static double xOffsetCoefficient = 1.5;
@@ -91,6 +92,8 @@ public class TesterPipeline extends OpenCvPipeline{
     //can be used during teleop, or one processor for each specific color can be used
     @Override
     public Mat processFrame(Mat frame) {
+
+        Core.flip(frame, frame, -1);
 
         redContours.clear();
         blueContours.clear();

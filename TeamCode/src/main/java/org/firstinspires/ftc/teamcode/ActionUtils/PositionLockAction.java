@@ -7,7 +7,7 @@ import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.CombinedTeleme
 import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.EventAction;
 import org.firstinspires.ftc.teamcode.Chassis.MecanumPowerDrive;
 
-public class PositionLockAction implements EventAction {
+public class PositionLockAction extends EventAction {
 
     private PIDFController xPID;
     private PIDFController yPID;

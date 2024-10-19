@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure;
 
-public class FailsafeAction implements EventAction{
+public class FailsafeAction extends EventAction {
 
     private EventAction runAction, responseAction;
     private FailsafeTrigger failsafeTrigger;
