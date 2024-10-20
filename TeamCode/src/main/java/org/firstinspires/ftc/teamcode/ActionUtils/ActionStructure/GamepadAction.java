@@ -66,6 +66,10 @@ public class GamepadAction extends EventAction {
     public void stop(boolean interrupted) {
         isRunning = false;
 
+        if (triggered) {
+            action.stop(interrupted);
+        }
+
         triggered = false;
         lastTriggered = false;
     }
