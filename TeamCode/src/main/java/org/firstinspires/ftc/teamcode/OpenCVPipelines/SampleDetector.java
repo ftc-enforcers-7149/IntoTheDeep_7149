@@ -2,8 +2,15 @@ package org.firstinspires.ftc.teamcode.OpenCVPipelines;
 
 import android.graphics.Bitmap;
 
+import com.acmerobotics.dashboard.config.Config;
+
+import org.firstinspires.ftc.robotcore.external.function.Consumer;
+import org.firstinspires.ftc.robotcore.external.function.Continuation;
+import org.firstinspires.ftc.robotcore.external.stream.CameraStreamSource;
 import org.firstinspires.ftc.robotcore.internal.camera.calibration.CameraCalibration;
+import org.firstinspires.ftc.vision.VisionProcessor;
 import org.opencv.android.Utils;
+import org.opencv.calib3d.Calib3d;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
@@ -20,19 +27,17 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicReference;
 
-//TODO: Make an abstract processor base class to extend all processors from, should contain hsv values for specific colors and useful methods
+@Config
+public class SampleDetector extends OpenCvPipeline implements VisionProcessor, CameraStreamSource {
 
-//@Config
-public class TesterPipeline extends OpenCvPipeline{
+    //RESOLUTION: 640x480
 
     public static Scalar lowerRed = new Scalar(215,50,50);
     public static Scalar upperRed = new Scalar(255,200,225);
     public static Scalar lowerBlue = new Scalar(145,50,50);
     public static Scalar upperBlue = new Scalar(175,200,225);
-    public static Scalar lowerYellow = new Scalar(25,110,200); //(10,95,95);
+    public static Scalar lowerYellow = new Scalar(25,80,80); //(10,95,95);
     public static Scalar upperYellow = new Scalar(45,255,255);//(45,255,255);
-
-    public Scalar meanContourValue = new Scalar(0,0,0);
 
     /*--------------HSV COLORS---------------------------
 
@@ -43,49 +48,51 @@ public class TesterPipeline extends OpenCvPipeline{
     FTC Yellow: H 10-45  S 50 - 200  V 50-225
 
      --------------------------------------------------*/
-
+    public static boolean displayBinaryMat = false;
 
     public int contourNum = 0;
     public double contourX = 0;
     public double contourY = 0;
-    public double contourHead = 0;
-    public double averageBrightness = 0;
+    public double sampleHead = 0;
     public int minContourArea = 150;
 
     Mat colorConvert = new Mat();
-
-    Mat redRange = new Mat();
-    Mat blueRange = new Mat();
     Mat yellowRange = new Mat();
+
+    Mat homography;
 
     public static int kernalSize = 10;
 
-    //Mat morphKernelErode = Imgproc.getStructuringElement(Imgproc.MORPH_ELLIPSE, new Size(15,15));
-    Mat brightness = new Mat();
+    private Mat brightness = new Mat();
+
 
     private AtomicReference<Bitmap> lastFrame = new AtomicReference<>(Bitmap.createBitmap(1, 1, Bitmap.Config.RGB_565));
 
-    public ArrayList<MatOfPoint> redContours = new ArrayList<MatOfPoint>();
-    public ArrayList<MatOfPoint> blueContours = new ArrayList<MatOfPoint>();
     public ArrayList<MatOfPoint> yellowContours = new ArrayList<MatOfPoint>();
-
-    public ArrayList<Rect> redBoundingBoxes = new ArrayList<Rect>();
-    public ArrayList<Rect> blueBoundingBoxes = new ArrayList<Rect>();
     public ArrayList<Rect> yellowBoundingBoxes = new ArrayList<Rect>();
 
     public ArrayList<Double> sampleScores = new ArrayList<Double>();
-
     public ArrayList<RotatedRect> yellowRotBoundingBoxes = new ArrayList<RotatedRect>();
 
-    RotatedRect bestBox;
+    public RotatedRect bestBox;
 
-    DecimalFormat decForm2 = new DecimalFormat("#.00");
-    DecimalFormat decForm1 = new DecimalFormat("#.0");
+    private DecimalFormat decForm2 = new DecimalFormat("#.00");
+    private DecimalFormat decForm1 = new DecimalFormat("#.0");
 
 
-    Point clawPosition = new Point(180, 240);
+    public static Point clawPosition = new Point(320, 240);
+    private double servoPos = 0.5;
     public static double angleScoreCoefficient = 1.7;
     public static double xOffsetCoefficient = 1.5;
+
+
+    public SampleDetector() {
+        //put camera points and corresponding field points here
+        MatOfPoint2f camPoints = new MatOfPoint2f(new Point(0,480), new Point(360,480), new Point(360,0), new Point(0, 0));
+        MatOfPoint2f realPoints = new MatOfPoint2f(new Point(0,0), new Point(50, 0), new Point(50,50), new Point(0,50));
+
+        homography = Calib3d.findHomography(camPoints, realPoints, Calib3d.RANSAC, 5);
+    }
 
     //TODO: Break this processor into multiple ones (blue, yellow, and red) to reduce the processing time
     //eg. Based on alliance color chosen through auto, a yellow and alliance color specific processor
@@ -93,13 +100,9 @@ public class TesterPipeline extends OpenCvPipeline{
     @Override
     public Mat processFrame(Mat frame) {
 
-        Core.flip(frame, frame, -1);
+//        Core.flip(frame, frame, -1);
 
-        redContours.clear();
-        blueContours.clear();
         yellowContours.clear();
-        redBoundingBoxes.clear();
-        blueBoundingBoxes.clear();
         yellowBoundingBoxes.clear();
         yellowRotBoundingBoxes.clear();
         sampleScores.clear();
@@ -116,12 +119,8 @@ public class TesterPipeline extends OpenCvPipeline{
         //calculate the average brightness of the frame
         //averageBrightness = Core.mean(brightness).val[1];
 
-        //Core.inRange(colorConvert, lowerRed, upperRed, redRange);
-        //Core.inRange(colorConvert, lowerBlue, upperBlue, blueRange);
-        Core.inRange(colorConvert, lowerYellow, upperYellow, yellowRange);
 
-        //Imgproc.morphologyEx(yellowRange, yellowRange, Imgproc.MORPH_OPEN, Imgproc.getStructuringElement(Imgproc.MORPH_ELLIPSE, new Size(10,10)));
-        //Imgproc.morphologyEx(yellowRange, yellowRange, Imgproc.MORPH_CLOSE, morphKernel);
+        Core.inRange(colorConvert, lowerYellow, upperYellow, yellowRange);
 
         //TODO: Make the kernal size adaptive based on :
         // how much yellow (specific color) there is?
@@ -133,27 +132,18 @@ public class TesterPipeline extends OpenCvPipeline{
         Mat morphKernel = Imgproc.getStructuringElement(Imgproc.MORPH_ELLIPSE, new Size(kernalSize,kernalSize));
         Imgproc.erode(yellowRange, yellowRange, morphKernel);
 
-        //Imgproc.findContours(redRange, redContours, new Mat(), Imgproc.CHAIN_APPROX_SIMPLE, Imgproc.RETR_TREE);
-        //Imgproc.findContours(blueRange, blueContours, new Mat(), Imgproc.CHAIN_APPROX_SIMPLE, Imgproc.RETR_TREE);
         Imgproc.findContours(yellowRange, yellowContours, new Mat(), Imgproc.CHAIN_APPROX_SIMPLE, Imgproc.RETR_TREE);
 
-        //Imgproc.drawContours(frame, redContours, -1, new Scalar(200,100,50), 3);
         //Imgproc.drawContours(frame, yellowContours, -1, new Scalar(50,100,200), 2);
-        //Imgproc.drawContours(frame, blueContours, -1, new Scalar(100,200,100), 3);
-
 
         for (MatOfPoint contour : yellowContours){
 
             if (Imgproc.contourArea(contour) > minContourArea) {
-                Rect box = Imgproc.boundingRect(contour);
-                //if (Math.abs(( (double) box.height / box.width) - 1) < 0.5 && box.area() > minContourArea){
-                yellowBoundingBoxes.add(box);
-                //}
 
+                Rect box = Imgproc.boundingRect(contour);
+                yellowBoundingBoxes.add(box);
 
                 RotatedRect rotBox = Imgproc.minAreaRect(new MatOfPoint2f(contour.toArray()));
-
-                //if (rotBox.)
                 yellowRotBoundingBoxes.add(rotBox);
 
                 Point[] vertices = new Point[4];
@@ -165,23 +155,8 @@ public class TesterPipeline extends OpenCvPipeline{
             }
         }
 
-        contourNum = yellowBoundingBoxes.size();
-
-        for (Rect box : redBoundingBoxes){
-            //Imgproc.rectangle(frame, box, new Scalar(200,150,0), 2);
-        }
-
-        for (Rect box : blueBoundingBoxes){
-            //Imgproc.rectangle(frame, box, new Scalar(0,150,200), 2);
-        }
-
-
-        for (Rect box : yellowBoundingBoxes){
-            //Imgproc.rectangle(frame, box, new Scalar(100,200,0), 2);
-        }
-
-        double minHeadingDist = 10000;
-        bestBox = yellowRotBoundingBoxes.get(0);
+        contourNum = yellowRotBoundingBoxes.size();
+        //bestBox = yellowRotBoundingBoxes.get(0);
 
         //TODO: fix the bounding box orientation
         //try drawing different rotated rects on the frame to better understand them
@@ -213,51 +188,57 @@ public class TesterPipeline extends OpenCvPipeline{
 
         }
 
-        if (yellowRotBoundingBoxes.size() == 0){
-            yellowRotBoundingBoxes.add(new RotatedRect());
-            sampleScores.add(0.0);
-        }
+        if (yellowRotBoundingBoxes.size() <= 0){
 
-        double minScore = sampleScores.get(0);
-        int bestSampleIndex = 0;
+            servoPos = 0.5;
+            contourX = 0;
+            contourY = 0;
+            sampleHead = 0;
 
-        for (int i = 0; i < sampleScores.size(); i++) {
-            if (sampleScores.get(i) < minScore) {
-                minScore = sampleScores.get(i);
-                bestSampleIndex = i;
+        } else {
+
+            double minScore = sampleScores.get(0);
+            int bestSampleIndex = 0;
+
+            for (int i = 0; i < sampleScores.size(); i++) {
+                if (sampleScores.get(i) < minScore) {
+                    minScore = sampleScores.get(i);
+                    bestSampleIndex = i;
+                }
             }
+
+            bestBox = yellowRotBoundingBoxes.get(bestSampleIndex);
+
+            Point[] verts = new Point[4];
+            bestBox.points(verts);
+
+            for (int i = 0; i < 4; i++) {
+                Imgproc.line(frame, verts[i], verts[(i + 1) % 4], new Scalar(230, 100, 30), 2);
+            }
+
+            sampleHead = getAbsoluteRectAngle(bestBox);
+
+            servoPos = sampleHead / Math.PI;
+
+            Point realPoint = multiplyPointByHomography(new Point(bestBox.center.x, bestBox.center.y), homography);
+
+            contourX = realPoint.x;
+            contourY = realPoint.y;
+
         }
 
-        bestBox = yellowRotBoundingBoxes.get(bestSampleIndex);
-
-        Point[] verts = new Point[4];
-        bestBox.points(verts);
-
-        for (int i = 0; i < 4; i++) {
-            Imgproc.line(frame, verts[i], verts[(i + 1) % 4], new Scalar(230, 100, 30), 2);
-        }
-
-        contourX = bestBox.center.x;
-        contourY = bestBox.center.y;
-        //contourHead = minHeading;
-
-
-//        if (boundingBoxes.size() > 0) {
-//            meanContourValue = Core.mean(colorConvert.submat(boundingBoxes.get(0)));
-//            Rect detection = boundingBoxes.get(0);
-//            contourX = detection.x + (detection.width / 2.0);
-//            contourY = detection.y + (detection.height / 2.0);
-//            Imgproc.circle(frame, new Point(detection.x, detection.y), 2, new Scalar(255, 0, 0));
-//            Imgproc.circle(frame, new Point(contourX, contourY), 4, new Scalar(255, 130, 0), 4);
-//
-//        }
 
         Bitmap b = Bitmap.createBitmap(frame.width(), frame.height(), Bitmap.Config.RGB_565);
-        Utils.matToBitmap(frame, b);
+
+        if (displayBinaryMat) {
+            Utils.matToBitmap(yellowRange, b);
+        } else {
+            Utils.matToBitmap(frame, b);
+        }
+
         lastFrame.set(b);
 
         //Imgproc.drawMarker(frame, contours.get(0).toList().get(0), new Scalar(255,40,40), Imgproc.MARKER_SQUARE, 10);
-
 
         return frame;
     }
@@ -277,17 +258,16 @@ public class TesterPipeline extends OpenCvPipeline{
         return lastFrame.get();
     }
 
+    public double getServoPos() {
+        return servoPos;
+    }
+
     public int getYellowBoxes(){
         return yellowBoundingBoxes.size();
     }
-    public int getRedBoxes(){
-        return redBoundingBoxes.size();
-    }
-    public int getBlueBoxes(){
-        return blueBoundingBoxes.size();
-    }
 
-    public double getAbsoluteRectAngle(RotatedRect rect) {
+
+    public static double getAbsoluteRectAngle(RotatedRect rect) {
         Point[] vertices = new Point[4];
         rect.points(vertices);
 
@@ -302,8 +282,21 @@ public class TesterPipeline extends OpenCvPipeline{
 
     }
 
-    public double p2pDistance(Point p1, Point p2) {
+    public static double p2pDistance(Point p1, Point p2) {
         return Math.hypot(p2.x - p1.x, p2.y - p1.y);
     }
 
+    private static Point multiplyPointByHomography(Point point, Mat homography) {
+        MatOfPoint2f src = new MatOfPoint2f(point);
+        MatOfPoint2f dst = new MatOfPoint2f();
+
+        Core.perspectiveTransform(src, dst, homography);
+
+        return dst.toList().get(0);
+    }
+
+    public void getFrameBitmap(Continuation<? extends Consumer<Bitmap>> continuation) {
+        continuation.dispatch(bitmapConsumer -> bitmapConsumer.accept(lastFrame.get()));
+    }
 }
+

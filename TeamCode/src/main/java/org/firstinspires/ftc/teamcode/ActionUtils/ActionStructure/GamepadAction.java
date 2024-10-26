@@ -49,6 +49,7 @@ public class GamepadAction extends EventAction {
         //if the action just ended, stop it
         if (lastTriggered && !triggered) {
             action.stop(false);
+            return false;
         }
 
         lastTriggered = triggered;
@@ -72,6 +73,11 @@ public class GamepadAction extends EventAction {
 
         triggered = false;
         lastTriggered = false;
+    }
+
+
+    public boolean isTriggered() {
+        return triggered;
     }
 }
 

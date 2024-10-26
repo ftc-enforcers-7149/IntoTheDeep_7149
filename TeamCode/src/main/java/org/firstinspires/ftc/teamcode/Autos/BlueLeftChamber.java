@@ -94,10 +94,12 @@ public class BlueLeftChamber extends LinearOpMode {
         actionManager.runActionManager(
 
                 new SequentialAction(
+
                         new ParallelAction(moveChamber, slidesUpChamber),
                         armUpChamber,
                         new ParallelAction(slidesScoreChamber, new TimedAction(clawOuttake, 600)),
                         new ParallelAction(moveChamberAway, slidesDownChamber, armDownChamber),
+
 
                         moveSample1,
                         new ParallelAction(armDownSample, new TimedAction(clawIntake, 1500)),

@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.teamcode.EOCV_Pipelines.TesterPipeline;
 import org.firstinspires.ftc.vision.VisionPortal;
 
 @Disabled
@@ -35,8 +36,6 @@ public class ProcessorTestOpmode extends LinearOpMode {
             //FtcDashboard.getInstance().sendImage(proc.getLastFrame());
 
             telemetry.addData("Yellow Samples", proc.getYellowBoxes());
-            telemetry.addData("Red Samples", proc.getRedBoxes());
-            telemetry.addData("Blue Samples", proc.getBlueBoxes());
             telemetry.update();
         }
 

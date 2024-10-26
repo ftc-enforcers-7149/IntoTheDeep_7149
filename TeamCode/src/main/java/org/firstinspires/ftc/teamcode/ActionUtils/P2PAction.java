@@ -41,7 +41,8 @@ public class P2PAction extends EventAction {
     public boolean run(CombinedTelemetry t) {
         isRunning = true;
 
-        t.getTelemetry().addData("P2P Action", target.position.toString() + " " + Math.toDegrees(target.heading.toDouble()));
+        t.registerAction("P2P Action", target.position.toString() + " " + Math.toDegrees(target.heading.toDouble()));
+
 
         Pose2d pose = drive.pose;
         Pose2d velocity = drive.currentVelocity;

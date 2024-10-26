@@ -21,4 +21,11 @@ public class CombinedTelemetry {
     public Telemetry getTelemetry() {
         return telemetry;
     }
+
+
+    public void registerAction(String actionName, String actionInfo){
+        telemetry.addData("-----" ,"-----");
+        telemetry.addData(actionName, " " + actionInfo);
+        telemetry.addData("-----" ,"-----");
+    }
 }

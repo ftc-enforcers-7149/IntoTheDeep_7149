@@ -51,14 +51,8 @@ public class ActionManager {
     public void runActionManager(EventAction a) {
 
 
-        //TODO: Make gamepad triggered actions that take in a gamepad and a gamepad predicate
-        // The predicate specifies the button/trigger that leads to a boolean as to whether
-        // the action is triggered or not
-        // for these actions, make an abstract class that implements EventAction
-        // Abstract class should have a running boolean, a predicate input, and an action input
-
-        //TODO: Should an isRunning method be implemented for EventActions?
-        // Could be useful during TeleOp to not be running interfering actions
+        //TODO: For gamepad actions, use factories with a .whenPressed()
+        // or .whenHeld() methods to specify the trigger types, etc
 
 
         FtcDashboard dash = FtcDashboard.getInstance();

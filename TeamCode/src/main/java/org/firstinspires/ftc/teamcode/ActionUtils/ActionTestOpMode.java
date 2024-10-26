@@ -3,16 +3,15 @@ package org.firstinspires.ftc.teamcode.ActionUtils;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.Pose2d;
-import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.ActionManager;
+import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.FailsafeAction;
+import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.PositionFailsafe;
+import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.TeleActionSequence;
 import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.EventAction;
 import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.GamepadAction;
-import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.ParallelAction;
-import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.SequentialAction;
 import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.TeleOpLoop;
 import org.firstinspires.ftc.teamcode.Chassis.MecanumPowerDrive;
 import org.firstinspires.ftc.teamcode.Hardware.OuttakeSlides;
@@ -82,12 +81,18 @@ public class ActionTestOpMode extends LinearOpMode {
         actionManager.runActionManager(
                 new TeleOpLoop(
 
-                        new GamepadAction(new DriveAction(drive, gamepad1, true, 1.08), gamepad1, (gamepad -> true)),
-                        new GamepadAction(slidesUp, gamepad1, (gamepad -> gamepad.a && !slidesDown.isRunning)),
-                        new GamepadAction(slidesDown, gamepad1, (gamepad -> gamepad.b && !slidesUp.isRunning)),
-
-                        new GamepadAction(ac1, gamepad1, (gamepad -> gamepad.right_trigger > 0.5))
-
+                            new DriveAction(drive, gamepad1, true, 1.08),
+                            new TeleActionSequence(
+                                new GamepadAction(slidesUp, gamepad2, (gamepad -> gamepad.a)),
+                                new TeleEndAction(
+                                        //the ability to run claw ends when slidesDown is first triggered
+                                        //once slidesDown ends, the sequence resets to slidesUp
+                                        new GamepadAction(slidesDown, gamepad2, (gamepad -> gamepad.b)),
+                                        new GamepadAction(new TimedAction(new ClawRotateAction(hardwareMap, "frontClaw", 0.3), 500),
+                                                gamepad1, (gamepad -> gamepad.left_trigger > 0.01))
+                                )
+                            ),
+                            new GamepadAction(ac1, gamepad1, (gamepad -> gamepad.left_trigger > 0.5))
 
                 )
         );
