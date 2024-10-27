@@ -505,7 +505,7 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
                         slideBackTarget = 1300;
                     }
 
-                    if (gamepad2.circle) {
+                    if (gamepad2.cross) {
                         stageBack = Stages.PITCHDOWN;
                         //stageBack = Stages.INTAKING;
                         inStageBack = Intake.ABOVE;
@@ -634,12 +634,12 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
                                 clawBack.setPower(0);
                             }
 
-                            if (gamepad2.circle && !(prevGamepad2.circle)) {
+                            if (gamepad2.cross && !(prevGamepad2.cross)) {
                                 inStageBack = Intake.PICKUP;
                                 pitchBackTarget = (int) (SAMPLE_PICKUP_PITCH_POS * 2.5);
                             }
 
-                            if (gamepad2.square) {
+                            if (gamepad2.circle && !(prevGamepad2.circle)) {
                                 inStageBack = Intake.IDLE;
                                 stageBack = Stages.PITCHUP;
                                 //stageBack = Stages.IDLE;
@@ -661,7 +661,7 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
                                 clawBack.setPower(1);
                             }
 
-                            if (gamepad2.square) {
+                            if (gamepad2.circle) {
                                 inStageBack = Intake.ABOVE;
                                 stageBack = Stages.PITCHUP;
                                 pitchBackTarget = (int) (SAMPLE_ABOVE_PITCH_POS * 2.5);
