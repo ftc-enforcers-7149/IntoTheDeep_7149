@@ -81,8 +81,8 @@ public class TesterPipeline extends OpenCvPipeline {
 
     public TesterPipeline() {
         //put camera points and corresponding field points here
-        MatOfPoint2f camPoints = new MatOfPoint2f(new Point(0,480), new Point(360,480), new Point(360,0), new Point(0, 0));
-        MatOfPoint2f realPoints = new MatOfPoint2f(new Point(0,0), new Point(50, 0), new Point(50,50), new Point(0,50));
+        MatOfPoint2f camPoints = new MatOfPoint2f(new Point(0,480), new Point(360,480), new Point(360,0), new Point(0, 0), new Point(180, 240));
+        MatOfPoint2f realPoints = new MatOfPoint2f(new Point(0,0), new Point(50, 0), new Point(50,80), new Point(0,80), new Point(25, 30));
 
         homography = Calib3d.findHomography(camPoints, realPoints, Calib3d.RANSAC, 5);
     }
