@@ -69,7 +69,7 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
 
 
     //Old sample above: 880, 1150
-    final int SAMPLE_ABOVE_PITCH_POS = 1050, SAMPLE_PICKUP_PITCH_POS = 1300;
+    final int SAMPLE_ABOVE_PITCH_POS = 975, SAMPLE_PICKUP_PITCH_POS = 1050;
     final int SAMPLE_ABOVE_SLIDE_POS = 0, SAMPLE_PICKUP_SLIDE_POS = 0;
     final int SPECIMEN_ABOVE_PITCH_POS = 200, SPECIMEN_PICKUP_PITCH_POS = 400;
 

@@ -41,8 +41,9 @@ public class MarsRoverDrivePivot extends LinearOpMode {
 
         while (opModeIsActive() && !isStopRequested()) {
 
-            //each side is connected to a joystick
-            //both set to right stick y value
+            //the front set and back set of wheels are set to the x variable of left joystick
+            //the front set is going to move with the direction of the joystick
+            //the back set will go the opposite direction
             leftDrive.setPower(-gamepad1.right_stick_y);
 
             rightDrive.setPower(-gamepad1.right_stick_y);
@@ -50,7 +51,7 @@ public class MarsRoverDrivePivot extends LinearOpMode {
             //each side's pivot is connected to the respective joystick
             //servos should be facing directly forwards when at 0.5 position
             frontRightPivot.setPosition( (gamepad1.left_stick_x + 1) / 2 );
-            frontLeftPivot.setPosition( (gamepad1.right_stick_x + 1) / 2 );
+            frontLeftPivot.setPosition( (1 - gamepad1.left_stick_x) / 2 );
 
 
             //Use these to flip the direction of the pivots if necessary
@@ -59,10 +60,8 @@ public class MarsRoverDrivePivot extends LinearOpMode {
 
 
 
-            telemetry.addData("Left Joystick Up/Down", "Left Side Forward/Back");
-            telemetry.addData("Right Joystick Up/Down", "Right Side Forward/Back");
-            telemetry.addData("Left Joystick Left/Right", "Left Side Pivot Left/Right");
-            telemetry.addData("Right Joystick Left/Right", "Right Side Left/Right");
+            telemetry.addData("Right Joystick Up/Down", "Forward/Backward");
+            telemetry.addData("Left Joystick Left/Right", "Robot Steering Left/Right");
 
             telemetry.addData("", "");
 
