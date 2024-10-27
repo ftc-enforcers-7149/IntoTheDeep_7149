@@ -465,12 +465,23 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
                 inStageFront = Intake.IDLE;
             }
 
+            //intake
             if (gamepad1.dpad_left) {
                 clawFront.setPower(-1);
             }
+            //outtake
             if (gamepad1.dpad_right) {
                 clawFront.setPower(1);
             }
+            //intake
+            if (gamepad1.square) {
+                clawBack.setPower(1);
+            }
+            //outtake
+            if (gamepad1.circle) {
+                clawBack.setPower(-1);
+            }
+
 
 
             //TODO:
@@ -766,6 +777,23 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
                 }
 
 
+            }
+
+            //intake
+            if (gamepad2.dpad_up) {
+                clawFront.setPower(-1);
+            }
+            //outtake
+            if (gamepad2.dpad_down) {
+                clawFront.setPower(1);
+            }
+            //outtake
+            if (gamepad2.dpad_left) {
+                clawBack.setPower(-1);
+            }
+            //intake
+            if (gamepad2.dpad_right) {
+                clawBack.setPower(1);
             }
 
             telemetry.addData("Pitch Angle (rad)", Math.cos((pitchMotorFront.getCurrentPosition())/145.1 * 28 * Math.PI));
