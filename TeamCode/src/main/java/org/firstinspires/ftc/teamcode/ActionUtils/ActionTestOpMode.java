@@ -82,6 +82,7 @@ public class ActionTestOpMode extends LinearOpMode {
                 new TeleOpLoop(
 
                             new DriveAction(drive, gamepad1, true, 1.08),
+
                             new TeleActionSequence(
                                 new GamepadAction(slidesUp, gamepad2, (gamepad -> gamepad.a)),
                                 new TeleEndAction(
@@ -92,6 +93,7 @@ public class ActionTestOpMode extends LinearOpMode {
                                                 gamepad1, (gamepad -> gamepad.left_trigger > 0.01))
                                 )
                             ),
+
                             new GamepadAction(ac1, gamepad1, (gamepad -> gamepad.left_trigger > 0.5))
 
                 )

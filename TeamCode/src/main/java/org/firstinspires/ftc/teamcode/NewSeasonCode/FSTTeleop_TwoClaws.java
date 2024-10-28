@@ -72,6 +72,9 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
     final int SAMPLE_ABOVE_PITCH_POS = 975, SAMPLE_PICKUP_PITCH_POS = 1050;
     final int SAMPLE_ABOVE_SLIDE_POS = 0, SAMPLE_PICKUP_SLIDE_POS = 0;
     final int SPECIMEN_ABOVE_PITCH_POS = 200, SPECIMEN_PICKUP_PITCH_POS = 400;
+    
+    final double backMotorOffsetAbove = 2.56;
+    final double backMotorOffsetDown = 2.58;
 
     /*
 
@@ -519,7 +522,7 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
                         stageBack = Stages.PITCHDOWN;
                         //stageBack = Stages.INTAKING;
                         inStageBack = Intake.ABOVE;
-                        pitchBackTarget = (int) (SAMPLE_ABOVE_PITCH_POS * 2.56);
+                        pitchBackTarget = (int) (SAMPLE_ABOVE_PITCH_POS * backMotorOffsetAbove);
                         slideBackTarget = 0;
                     }
 
@@ -635,7 +638,7 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
 
                             slideBackTarget = SAMPLE_ABOVE_SLIDE_POS;
 
-                            pitchBackTarget = (int) (SAMPLE_ABOVE_PITCH_POS * 2.56);
+                            pitchBackTarget = (int) (SAMPLE_ABOVE_PITCH_POS * backMotorOffsetAbove);
 
                             //eject unwanted samples
                             if (gamepad1.right_trigger > 0.05) {
@@ -646,7 +649,7 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
 
                             if (gamepad2.cross && !(prevGamepad2.cross)) {
                                 inStageBack = Intake.PICKUP;
-                                pitchBackTarget = (int) (SAMPLE_PICKUP_PITCH_POS * 2.58);
+                                pitchBackTarget = (int) (SAMPLE_PICKUP_PITCH_POS * backMotorOffsetDown);
                             }
 
                             if (gamepad2.circle && !(prevGamepad2.circle)) {
@@ -661,7 +664,7 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
 
                         case PICKUP: {
 
-                            pitchBackTarget = (int) (SAMPLE_PICKUP_PITCH_POS * 2.58);
+                            pitchBackTarget = (int) (SAMPLE_PICKUP_PITCH_POS * backMotorOffsetDown);
 
                             slideBackTarget = SAMPLE_PICKUP_SLIDE_POS;
 
@@ -674,7 +677,7 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
                             if (gamepad2.circle) {
                                 inStageBack = Intake.ABOVE;
                                 stageBack = Stages.PITCHUP;
-                                pitchBackTarget = (int) (SAMPLE_ABOVE_PITCH_POS * 2.56);
+                                pitchBackTarget = (int) (SAMPLE_ABOVE_PITCH_POS * backMotorOffsetAbove);
                             }
 
                             break;
