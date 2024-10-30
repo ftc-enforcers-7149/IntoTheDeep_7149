@@ -50,11 +50,11 @@ public class BlueLeftChamber extends LinearOpMode {
         moveChamber = new P2PAction(drive, new Pose2d(-34.5,0,0), 5, 5);
         moveChamberAway = new P2PAction(drive, new Pose2d(-40,0, 0), 5, 5);
 
-        moveSample1 = new P2PAction(drive, new Pose2d(-47, 50, 0), 5, 5);
-        moveSample2 = new P2PAction(drive, new Pose2d(-47, 60, 0), 5, 5);
-        moveSample3 = new P2PAction(drive, new Pose2d(-45, 60, Math.toRadians(45)), 5, 5);
+        moveSample1 = new P2PAction(drive, new Pose2d(-46, 50, 0), 5, 5);
+        moveSample2 = new P2PAction(drive, new Pose2d(-46, 60.5, 0), 5, 5);
+        moveSample3 = new P2PAction(drive, new Pose2d(-43, 60.3, Math.toRadians(30)), 5, 5);
 
-        moveBucket = new P2PAction(drive, new Pose2d(-56, 56, Math.toRadians(135)), 5, 5);
+        moveBucket = new P2PAction(drive, new Pose2d(-57.5, 57.5, Math.toRadians(135)), 5, 5);
         moveAwayBucket = new P2PAction(drive, new Pose2d(-53, 53, Math.toRadians(135)), 5, 5);
 
 
