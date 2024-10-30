@@ -51,6 +51,11 @@ public class OuttakeSlides implements PeriodicAction {
     @Override
     public void periodic() {
 
+        if (Math.abs(slideMotor.getVelocity()) < 0.01 && slideMotor.getCurrentPosition() < 100 && slideMotor.getPower() < -0.01) {
+            slideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            slideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        }
+
         //always have PIDF running in background, unless motor is interrupted
         if (!motorInterrupted) {
             double slidePow = slideController.calculate(slideMotor.getCurrentPosition(), target);
@@ -73,9 +78,10 @@ public class OuttakeSlides implements PeriodicAction {
         public boolean run(CombinedTelemetry t) {
             isRunning = true;
 
-            t.getTelemetry().addData("Extension", actionTarget);
+            t.registerAction("Extension", "Target: " + actionTarget + " Pos: " + slideMotor.getCurrentPosition());
 
             target = actionTarget;
+
             //if it is not at its target position, then the action is still running
             return Math.abs(slideMotor.getCurrentPosition() - target) > 30;
         }

@@ -31,7 +31,6 @@ public class BlueLeftChamber extends LinearOpMode {
     ActionManager actionManager;
     MecanumPowerDrive drive;
 
-
     P2PAction moveChamber, moveChamberAway, moveSample1, moveSample2, moveSample3, moveBucket, moveAwayBucket;
 
     OuttakeSlides frontSlides;
@@ -46,25 +45,26 @@ public class BlueLeftChamber extends LinearOpMode {
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
         drive = new MecanumPowerDrive(hardwareMap, new Pose2d(-63.25, 15.375, 0), telemetry);
+        drive.imu.resetYaw();
 
         moveChamber = new P2PAction(drive, new Pose2d(-34.5,0,0), 5, 5);
         moveChamberAway = new P2PAction(drive, new Pose2d(-40,0, 0), 5, 5);
 
-        moveSample1 = new P2PAction(drive, new Pose2d(-42, 50, 0), 1, 1);
-        moveSample2 = new P2PAction(drive, new Pose2d(-42, 58, 10), 1, 1);
-        moveSample3 = new P2PAction(drive, new Pose2d(-44, 64, 35), 1, 1);
+        moveSample1 = new P2PAction(drive, new Pose2d(-47, 50, 0), 5, 5);
+        moveSample2 = new P2PAction(drive, new Pose2d(-47, 60, 0), 5, 5);
+        moveSample3 = new P2PAction(drive, new Pose2d(-45, 60, Math.toRadians(45)), 5, 5);
 
-        moveBucket = new P2PAction(drive, new Pose2d(-56, 56, 135), 1, 1);
-        moveAwayBucket = new P2PAction(drive, new Pose2d(-53, 53, 135), 1, 1);
+        moveBucket = new P2PAction(drive, new Pose2d(-56, 56, Math.toRadians(135)), 5, 5);
+        moveAwayBucket = new P2PAction(drive, new Pose2d(-53, 53, Math.toRadians(135)), 5, 5);
 
 
         frontSlides = new OuttakeSlides(hardwareMap, "frontSlide");
         frontArm = new PitchArm(hardwareMap, "frontPitch");
 
-        slidesUpChamber = frontSlides.getExtensionAction(1200);
-        slidesScoreChamber = frontSlides.getExtensionAction(800);
+        slidesUpChamber = frontSlides.getExtensionAction(1100);
+        slidesScoreChamber = frontSlides.getExtensionAction(400);
         slidesDownChamber = frontSlides.getExtensionAction(0);
-        slidesUpBucket = frontSlides.getExtensionAction(2900);
+        slidesUpBucket = frontSlides.getExtensionAction(2600);
         slidesDownBucket = frontSlides.getExtensionAction(0);
 
         armDownChamber = frontArm.getPitchingAction(0);

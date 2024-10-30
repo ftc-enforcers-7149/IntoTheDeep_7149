@@ -33,8 +33,8 @@ public class MovementTest extends LinearOpMode {
 
         drive = new MecanumPowerDrive(hardwareMap, new Pose2d(-63.25, 15.375, 0), telemetry);
 
-        moveAc1 = new P2PAction(drive, new Pose2d(-42, 50, 0), 1, 1);
-        moveAc2 = new P2PAction(drive, new Pose2d(-56, 56, 135), 1, 1);
+        moveAc1 = new P2PAction(drive, new Pose2d(-42, 50, Math.toRadians(90)), 1, 1);
+        moveAc2 = new P2PAction(drive, new Pose2d(-56, 56, Math.toRadians(135)), 1, 1);
 
 
         //TODO: Make a failsafe action that takes in a trigger action and a response action,

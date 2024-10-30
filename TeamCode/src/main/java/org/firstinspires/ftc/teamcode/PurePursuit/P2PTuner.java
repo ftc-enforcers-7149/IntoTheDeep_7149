@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.Chassis.MecanumPowerDrive;
 import org.firstinspires.ftc.teamcode.RRTuning.Drawing;
 
@@ -23,8 +24,6 @@ public class P2PTuner extends LinearOpMode {
 
     public static double moveSpeed = 5, turnSpeed = 5;
 
-    public static boolean resetPID = false;
-
     MecanumPowerDrive drive;
 
     FtcDashboard dashboard = FtcDashboard.getInstance();
@@ -32,6 +31,8 @@ public class P2PTuner extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
+
+        double initialAng = ANG;
 
         timer = new ElapsedTime();
 
@@ -49,8 +50,7 @@ public class P2PTuner extends LinearOpMode {
         while(opModeIsActive() && !isStopRequested()) {
             drive.updatePoseEstimate();
 
-            if (resetPID) {
-                resetPID = false;
+            if (gamepad1.triangle) {
                 drive.xPID.reset();
                 drive.yPID.reset();
                 drive.angPID.reset();
@@ -61,10 +61,10 @@ public class P2PTuner extends LinearOpMode {
             TelemetryPacket p2pPacket = new TelemetryPacket();
             Canvas c = p2pPacket.fieldOverlay();
 
-//            if (timer.milliseconds() > 500) {
-//                drive.pose = new Pose2d(drive.pose.position.x, drive.pose.position.y, drive.imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS));
-//                timer.reset();
-//            }
+            if (timer.milliseconds() > 250) {
+                drive.pose = new Pose2d(drive.pose.position.x, drive.pose.position.y, drive.imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS) + Math.toRadians(initialAng));
+                timer.reset();
+            }
 
 
             drive.goToPose(X, Y, Math.toRadians(ANG), moveSpeed, turnSpeed);

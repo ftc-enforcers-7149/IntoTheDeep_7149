@@ -179,11 +179,15 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
                     slidesFront.slideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                     slidesFront.slideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
+                    if (slidesFront.slideMotor.getCurrentPosition() < 2) {
+                        slidesFront.slideMotor.setPower(0);
+                    }
+
                     if (gamepad2.left_bumper) {
                         stageFront = Stages.SLIDEUP;
                         //stageFront = Stages.OUTTAKING;
                         outStageFront = Outtake.BUCKET;
-                        slideFrontTarget = 2400;
+                        slideFrontTarget = 2600;
                     }
 
                     if (gamepad2.right_bumper) {
@@ -217,7 +221,7 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
                     pitchFrontTarget = 0;
 
                     if (outStageFront == Outtake.BUCKET) {
-                        slideFrontTarget = 2400;
+                        slideFrontTarget = 2600;
                     } else {
                         slideFrontTarget = 1200;
                     }

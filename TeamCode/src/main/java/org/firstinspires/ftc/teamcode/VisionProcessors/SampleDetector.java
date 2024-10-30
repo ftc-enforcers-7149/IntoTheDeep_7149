@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.OpenCVPipelines;
+package org.firstinspires.ftc.teamcode.VisionProcessors;
 
 import android.graphics.Bitmap;
 
@@ -191,9 +191,11 @@ public class SampleDetector extends OpenCvPipeline implements VisionProcessor, C
         if (yellowRotBoundingBoxes.size() <= 0){
 
             servoPos = 0.5;
-            contourX = 0;
-            contourY = 0;
-            sampleHead = 0;
+            contourX = 320;
+            contourY = 240;
+            sampleHead = Math.PI/2;
+
+            bestBox = new RotatedRect(new Point(320, 240), new Size(1,2), 0);
 
         } else {
 
@@ -260,6 +262,10 @@ public class SampleDetector extends OpenCvPipeline implements VisionProcessor, C
 
     public double getServoPos() {
         return servoPos;
+    }
+
+    public RotatedRect getBestSample() {
+        return bestBox;
     }
 
     public int getYellowBoxes(){

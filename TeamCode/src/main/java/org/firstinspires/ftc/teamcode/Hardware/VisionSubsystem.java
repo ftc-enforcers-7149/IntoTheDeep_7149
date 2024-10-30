@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.PeriodicAction;
-import org.firstinspires.ftc.teamcode.OpenCVPipelines.SampleDetector;
+import org.firstinspires.ftc.teamcode.VisionProcessors.SampleDetector;
 import org.firstinspires.ftc.vision.VisionPortal;
 
 public class VisionSubsystem implements PeriodicAction {

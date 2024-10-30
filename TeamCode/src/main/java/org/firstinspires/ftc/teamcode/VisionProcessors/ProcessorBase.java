@@ -1,7 +1,6 @@
-package org.firstinspires.ftc.teamcode.OpenCVPipelines;
+package org.firstinspires.ftc.teamcode.VisionProcessors;
 
 //import org.firstinspires.ftc.robotcore.external.stream.CameraStreamSource;
-import org.firstinspires.ftc.vision.VisionProcessor;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint2f;

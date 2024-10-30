@@ -74,14 +74,14 @@ public class LimelightDriveTest extends LinearOpMode {
             if (llResult != null) {
                 if (llResult.isValid()) {
 
-//                    List<LLResultTypes.FiducialResult> aprilTags = llResult.getFiducialResults();
+                    List<LLResultTypes.FiducialResult> aprilTags = llResult.getFiducialResults();
 
-//                    for (LLResultTypes.FiducialResult tag : aprilTags) {
-//                        double x = tag.getRobotPoseFieldSpace().getPosition().toUnit(DistanceUnit.INCH).x;
-//                        double y = tag.getRobotPoseFieldSpace().getPosition().toUnit(DistanceUnit.INCH).y;
-//                        telemetry.addData("Tag ID", tag.getFiducialId());
-//                        telemetry.addData("Tag Pose", x + "  " + y);
-//                    }
+                    for (LLResultTypes.FiducialResult tag : aprilTags) {
+                        double x = tag.getRobotPoseFieldSpace().getPosition().toUnit(DistanceUnit.INCH).x;
+                        double y = tag.getRobotPoseFieldSpace().getPosition().toUnit(DistanceUnit.INCH).y;
+                        telemetry.addData("Tag ID", tag.getFiducialId());
+                        telemetry.addData("Tag Pose", x + "  " + y);
+                    }
 //
 //                    telemetry.addData("Tx", llResult.getTx());
 //                    telemetry.addData("Ty", llResult.getTy());

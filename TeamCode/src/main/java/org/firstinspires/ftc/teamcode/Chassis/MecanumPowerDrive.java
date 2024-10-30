@@ -33,10 +33,15 @@ public class MecanumPowerDrive extends MecanumDrive implements PeriodicAction {
 //    public static double kpy = 0.12, kdy = 0.023;
 //    public static double kpt = 1.1, kdt = 0.05;
 
+    //Main chassis at 5x speed (Old)
+    //public static double kpx = 0.106, kdx = 0.0119, kix = 0;
+    //public static double kpy = 0.123, kdy = 0.0219, kiy = 0;
+    //public static double kpt = 1.21, kdt = 0.0615, kit = 0;
+
     //Main chassis at 5x speed
-    public static double kpx = 0.106, kdx = 0.0119, kix = 0;
-    public static double kpy = 0.123, kdy = 0.0219, kiy = 0;
-    public static double kpt = 1.21, kdt = 0.0615, kit = 0;
+    public static double kpx = 0.127, kdx = 0.0215, kix = 0.0055;
+    public static double kpy = 0.123, kdy = 0.0219, kiy = 0.004;
+    public static double kpt = 1.56, kdt = 0.089, kit = 0.015;
 
     //Main chassis at x1 speed
 //    public static double kpx = 0.11, kdx = 0.011, kix = 0;
@@ -68,7 +73,6 @@ public class MecanumPowerDrive extends MecanumDrive implements PeriodicAction {
                 RevHubOrientationOnRobot.UsbFacingDirection.UP
         ));
         imu.initialize(imuParams);
-        imu.resetYaw();
     }
 
 
@@ -142,9 +146,9 @@ public class MecanumPowerDrive extends MecanumDrive implements PeriodicAction {
 //        c.strokeLine(x, y, 5 * Math.cos(preferredAngle) + x, 5 * Math.sin(preferredAngle) + y);
 //        dashboard.sendTelemetryPacket(p2pPacket);
 
-        xPID.setPIDF(kpx, 0, kdx, 0);
-        yPID.setPIDF(kpy, 0, kdy, 0);
-        angPID.setPIDF(kpt, 0, kdt, 0);
+        xPID.setPIDF(kpx, kix, kdx, 0);
+        yPID.setPIDF(kpy, kiy, kdy, 0);
+        angPID.setPIDF(kpt, kit, kdt, 0);
 
         double heading = pose.heading.toDouble();
         telemetry.addData("p2p HEADING", heading);

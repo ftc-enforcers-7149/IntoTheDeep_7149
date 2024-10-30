@@ -10,6 +10,8 @@ import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.CombinedTeleme
 import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.EventAction;
 import org.firstinspires.ftc.teamcode.Chassis.MecanumPowerDrive;
 
+import java.text.DecimalFormat;
+
 
 public class P2PAction extends EventAction {
 
@@ -19,6 +21,8 @@ public class P2PAction extends EventAction {
 
     private Pose2d target;
     private double movementSpeed, turnSpeed;
+
+    private DecimalFormat decimalFormat;
 
     private MecanumPowerDrive drive;
 
@@ -34,6 +38,7 @@ public class P2PAction extends EventAction {
         movementSpeed = move;
         turnSpeed = turn;
 
+        decimalFormat = new DecimalFormat("#.00");
     }
 
 
@@ -41,8 +46,8 @@ public class P2PAction extends EventAction {
     public boolean run(CombinedTelemetry t) {
         isRunning = true;
 
-        t.registerAction("P2P Action", target.position.toString() + " " + Math.toDegrees(target.heading.toDouble()));
-
+        t.registerAction("P2P Action", decimalFormat.format(target.position.x)
+                + " " + decimalFormat.format(target.position.y) + " " + decimalFormat.format(Math.toDegrees(target.heading.toDouble())));
 
         Pose2d pose = drive.pose;
         Pose2d velocity = drive.currentVelocity;
@@ -63,15 +68,17 @@ public class P2PAction extends EventAction {
         drive.setRobotCentricPower(xRot * movementSpeed, yRot * movementSpeed, hPower * turnSpeed);
 
         //if off target or heading is incorrect or velocity is high, continue the action
-        if ( (Math.hypot(pose.position.x - target.position.x, pose.position.y - target.position.y) > 0.8
+        if ( (Math.hypot(pose.position.x - target.position.x, pose.position.y - target.position.y) > 0.5
                 || AngleWrap(Math.abs(preferredAngle - heading)) > 0.1
-                || Math.hypot(velocity.position.x, velocity.position.y) > 0.2) ) {
+                || Math.hypot(velocity.position.x, velocity.position.y) > 0.1) ) {
 
             return true;
 
         } else {
+
             this.stop(false);
             return false;
+
         }
 
     }
