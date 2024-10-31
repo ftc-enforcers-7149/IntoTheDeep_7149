@@ -31,12 +31,12 @@ public class BlueLeftChamber extends LinearOpMode {
     ActionManager actionManager;
     MecanumPowerDrive drive;
 
-    P2PAction moveChamber, moveChamberAway, moveSample1, moveSample2, moveSample3, moveBucket, moveAwayBucket;
+    P2PAction moveChamber, moveChamberAway, moveSample1, moveSample2, moveSample3, moveBucket, moveAwayBucket, moveToPark, moveToPark2;
 
     OuttakeSlides frontSlides;
     PitchArm frontArm;
 
-    EventAction slidesUpChamber, slidesDownChamber, slidesScoreChamber, slidesUpBucket, slidesDownBucket, armUpChamber, armDownChamber, armDownSample, armUpSample;
+    EventAction slidesUpChamber, slidesDownChamber, slidesScoreChamber, slidesUpBucket, slidesDownBucket, armUpChamber, armDownChamber, armDownSample, armUpSample, slidesUpPark;
     ClawRotateAction clawOuttake, clawIntake;
 
     @Override
@@ -50,12 +50,15 @@ public class BlueLeftChamber extends LinearOpMode {
         moveChamber = new P2PAction(drive, new Pose2d(-34.5,0,0), 5, 5);
         moveChamberAway = new P2PAction(drive, new Pose2d(-40,0, 0), 5, 5);
 
-        moveSample1 = new P2PAction(drive, new Pose2d(-46, 50, 0), 5, 5);
-        moveSample2 = new P2PAction(drive, new Pose2d(-46, 60.5, 0), 5, 5);
-        moveSample3 = new P2PAction(drive, new Pose2d(-43, 60.3, Math.toRadians(30)), 5, 5);
+        moveSample1 = new P2PAction(drive, new Pose2d(-45.5, 50, 0), 5, 5);
+        moveSample2 = new P2PAction(drive, new Pose2d(-45.5, 60.5, 0), 5, 5);
+        moveSample3 = new P2PAction(drive, new Pose2d(-43.3, 60.3, Math.toRadians(30)), 5, 5);
 
         moveBucket = new P2PAction(drive, new Pose2d(-57.5, 57.5, Math.toRadians(135)), 5, 5);
         moveAwayBucket = new P2PAction(drive, new Pose2d(-53, 53, Math.toRadians(135)), 5, 5);
+
+        moveToPark = new P2PAction(drive, new Pose2d(-14, 40, Math.toRadians(-90)), 5, 5);
+        moveToPark2 = new P2PAction(drive, new Pose2d(-14, 26, Math.toRadians(-90)), 5, 5);
 
 
         frontSlides = new OuttakeSlides(hardwareMap, "frontSlide");
@@ -66,6 +69,7 @@ public class BlueLeftChamber extends LinearOpMode {
         slidesDownChamber = frontSlides.getExtensionAction(0);
         slidesUpBucket = frontSlides.getExtensionAction(2600);
         slidesDownBucket = frontSlides.getExtensionAction(0);
+        slidesUpPark = frontSlides.getExtensionAction(1000);
 
         armDownChamber = frontArm.getPitchingAction(0);
         armUpChamber = frontArm.getPitchingAction(150);
@@ -127,6 +131,10 @@ public class BlueLeftChamber extends LinearOpMode {
                         new TimedAction(clawOuttake, 1000),
                         moveAwayBucket,
                         slidesDownBucket
+
+//                        moveToPark,
+//                        moveToPark2,
+//                        slidesUpPark
 
                 )
         );

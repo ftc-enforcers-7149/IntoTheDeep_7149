@@ -1,7 +1,9 @@
 package org.firstinspires.ftc.teamcode.Chassis;
 
 import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.canvas.Canvas;
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.arcrobotics.ftclib.controller.PIDFController;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
@@ -13,6 +15,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.PeriodicAction;
 import org.firstinspires.ftc.teamcode.PurePursuit.NavPoint;
+import org.firstinspires.ftc.teamcode.RRTuning.Drawing;
 import org.firstinspires.ftc.teamcode.RRTuning.MecanumDrive;
 
 @Config
@@ -34,14 +37,14 @@ public class MecanumPowerDrive extends MecanumDrive implements PeriodicAction {
 //    public static double kpt = 1.1, kdt = 0.05;
 
     //Main chassis at 5x speed (Old)
-    //public static double kpx = 0.106, kdx = 0.0119, kix = 0;
-    //public static double kpy = 0.123, kdy = 0.0219, kiy = 0;
-    //public static double kpt = 1.21, kdt = 0.0615, kit = 0;
+//    public static double kpx = 0.127, kdx = 0.0215, kix = 0.0055;
+//    public static double kpy = 0.123, kdy = 0.0219, kiy = 0.004;
+//    public static double kpt = 1.56, kdt = 0.089, kit = 0.015;
 
     //Main chassis at 5x speed
-    public static double kpx = 0.127, kdx = 0.0215, kix = 0.0055;
-    public static double kpy = 0.123, kdy = 0.0219, kiy = 0.004;
-    public static double kpt = 1.56, kdt = 0.089, kit = 0.015;
+    public static double kpx = 0.071, kdx = 0.012, kix = 0.018;
+    public static double kpy = 0.056, kdy = 0.012, kiy = 0.008;
+    public static double kpt = 0.54, kdt = 0.05, kit = 0.045;
 
     //Main chassis at x1 speed
 //    public static double kpx = 0.11, kdx = 0.011, kix = 0;
@@ -183,6 +186,11 @@ public class MecanumPowerDrive extends MecanumDrive implements PeriodicAction {
             this.pose = new Pose2d(this.pose.position.x, this.pose.position.y, AngleWrap(imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS) + startPose.heading.toDouble()));
             updateHeading.reset();
         }
+
+        TelemetryPacket t = new TelemetryPacket();
+        Canvas c = t.fieldOverlay();
+        Drawing.drawRobot(c, pose);
+        FtcDashboard.getInstance().sendTelemetryPacket(t);
 
         telemetry.addData("Drive Position", this.pose.position.x + "  " + this.pose.position.y + "  " + Math.toDegrees(this.pose.heading.toDouble()));
         telemetry.addData("Drive Velocity", currentVelocity.position.x + "  " + currentVelocity.position.y + "  " + Math.toDegrees(currentVelocity.heading.toDouble()));

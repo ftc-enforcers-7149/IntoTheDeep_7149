@@ -89,9 +89,11 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
         drive = new MecanumPowerDrive(hardwareMap, new Pose2d(0,0,0), telemetry);
 
         slidesFront = new OuttakeSlides(hardwareMap, "frontSlide");
+
         slidesFront.slideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         clawFront = hardwareMap.get(CRServo.class, "frontClaw");
         pitchMotorFront = hardwareMap.get(DcMotorEx.class, "frontPitch");
+
         pitchMotorFront.setDirection(DcMotorSimple.Direction.REVERSE);
 
         clawFront.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -102,7 +104,7 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
         pitchController = new PIDFController(0.0102, 0, 0.0004,0);
         slideController = new PIDFController(0.008, 0, 0.00026, 0.00012);
         pitchController2 = new PIDFController(0.012, 0, 0.0003,0);
-        slideController2 = new PIDFController(0.008, 0, 0.00026, 0.00012);
+        slideController2 = new PIDFController(0.03, 0, 0.00026, 0.00012);
 
         slidesBack = new OuttakeSlides(hardwareMap, "backSlide");
         //slidesBack.slideMotor.setDirection(DcMotorSimple.Direction.FORWARD);
@@ -519,7 +521,7 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
                         stageBack = Stages.SLIDEUP;
                         //stageBack = Stages.OUTTAKING;
                         outStageBack = Outtake.CHAMBER;
-                        slideBackTarget = 1300;
+                        slideBackTarget = 1080;
                     }
 
                     if (gamepad2.cross) {
@@ -545,7 +547,7 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
 
                     pitchBackTarget = 0;
 
-                    slideBackTarget = 1300;
+                    slideBackTarget = 1080;
 
                     double power2 = pitchController2.calculate(pitchMotorBack.getCurrentPosition(), pitchBackTarget);
                     pitchMotorBack.setPower(power2);
@@ -579,7 +581,7 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
                         slideBackTarget = 0;
                     }
 
-                    if (gamepad2.circle && slideBackTarget == 1300) {
+                    if (gamepad2.circle && slideBackTarget == 1080) {
                         slideBackTarget = 750;
                     }
 
@@ -606,7 +608,7 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
                         stageBack = Stages.IDLE;
                     }
 
-                    if (Math.abs(slidesBack.slideMotor.getCurrentPosition() - slideBackTarget) < 20) {
+                    if (Math.abs(slidesBack.slideMotor.getCurrentPosition() - slideBackTarget) < 30) {
                         stageBack = Stages.IDLE;
                     }
 
