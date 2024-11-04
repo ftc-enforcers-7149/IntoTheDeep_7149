@@ -68,7 +68,7 @@ public class P2PAction extends EventAction {
         drive.setRobotCentricPower(xRot * movementSpeed, yRot * movementSpeed, hPower * turnSpeed);
 
         //if off target or heading is incorrect or velocity is high, continue the action
-        if ( (Math.hypot(pose.position.x - target.position.x, pose.position.y - target.position.y) > 0.5
+        if ( (Math.hypot(pose.position.x - target.position.x, pose.position.y - target.position.y) > 0.4
                 || AngleWrap(Math.abs(preferredAngle - heading)) > 0.1
                 || Math.hypot(velocity.position.x, velocity.position.y) > 0.1) ) {
 

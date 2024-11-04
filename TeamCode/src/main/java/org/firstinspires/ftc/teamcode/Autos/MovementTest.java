@@ -4,6 +4,7 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.ActionManager;
@@ -17,6 +18,7 @@ import org.firstinspires.ftc.teamcode.Chassis.MecanumPowerDrive;
 import org.firstinspires.ftc.teamcode.Hardware.OuttakeSlides;
 import org.firstinspires.ftc.teamcode.Hardware.PitchArm;
 
+@Disabled
 @Autonomous(name = "MovementTest")
 public class MovementTest extends LinearOpMode {
 

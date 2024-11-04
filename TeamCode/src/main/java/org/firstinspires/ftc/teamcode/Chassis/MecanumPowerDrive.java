@@ -37,14 +37,14 @@ public class MecanumPowerDrive extends MecanumDrive implements PeriodicAction {
 //    public static double kpt = 1.1, kdt = 0.05;
 
     //Main chassis at 5x speed (Old)
-//    public static double kpx = 0.127, kdx = 0.0215, kix = 0.0055;
-//    public static double kpy = 0.123, kdy = 0.0219, kiy = 0.004;
-//    public static double kpt = 1.56, kdt = 0.089, kit = 0.015;
+    public static double kpx = 0.127, kdx = 0.0215, kix = 0.0055;
+    public static double kpy = 0.123, kdy = 0.0219, kiy = 0.004;
+    public static double kpt = 1.56, kdt = 0.089, kit = 0.015;
 
     //Main chassis at 5x speed
-    public static double kpx = 0.071, kdx = 0.012, kix = 0.018;
-    public static double kpy = 0.056, kdy = 0.012, kiy = 0.008;
-    public static double kpt = 0.54, kdt = 0.05, kit = 0.045;
+//    public static double kpx = 0.071, kdx = 0.012, kix = 0.018;
+//    public static double kpy = 0.056, kdy = 0.012, kiy = 0.008;
+//    public static double kpt = 0.54, kdt = 0.05, kit = 0.045;
 
     //Main chassis at x1 speed
 //    public static double kpx = 0.11, kdx = 0.011, kix = 0;
