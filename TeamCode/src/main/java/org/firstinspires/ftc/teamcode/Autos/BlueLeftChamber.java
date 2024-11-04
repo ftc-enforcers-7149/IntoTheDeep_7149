@@ -47,15 +47,15 @@ public class BlueLeftChamber extends LinearOpMode {
         drive = new MecanumPowerDrive(hardwareMap, new Pose2d(-63.25, 15.375, 0), telemetry);
         drive.imu.resetYaw();
 
-        moveChamber = new P2PAction(drive, new Pose2d(-34.5,0,0), 5, 5);
+        moveChamber = new P2PAction(drive, new Pose2d(-35,0,0), 5, 5);
         moveChamberAway = new P2PAction(drive, new Pose2d(-40,0, 0), 5, 5);
 
         moveSample1 = new P2PAction(drive, new Pose2d(-45.5, 50, 0), 5, 5);
         moveSample2 = new P2PAction(drive, new Pose2d(-45.5, 60.5, 0), 5, 5);
-        moveSample3 = new P2PAction(drive, new Pose2d(-43.3, 60.3, Math.toRadians(30)), 5, 5);
+        moveSample3 = new P2PAction(drive, new Pose2d(-42.9, 60.3, Math.toRadians(30)), 5, 5);
 
-        moveBucket = new P2PAction(drive, new Pose2d(-57.5, 57.5, Math.toRadians(135)), 5, 5);
-        moveAwayBucket = new P2PAction(drive, new Pose2d(-53, 53, Math.toRadians(135)), 5, 5);
+        moveBucket = new P2PAction(drive, new Pose2d(-57.5, 57.5, Math.toRadians(125)), 5, 5);
+        moveAwayBucket = new P2PAction(drive, new Pose2d(-53, 53, Math.toRadians(125)), 5, 5);
 
         moveToPark = new P2PAction(drive, new Pose2d(-14, 40, Math.toRadians(-90)), 5, 5);
         moveToPark2 = new P2PAction(drive, new Pose2d(-14, 26, Math.toRadians(-90)), 5, 5);
@@ -80,12 +80,10 @@ public class BlueLeftChamber extends LinearOpMode {
         clawIntake = new ClawRotateAction(hardwareMap, "frontClaw", 1);
         //clawOuttake = new ClawRotateAction(hardwareMap, "frontClaw", -0.3);
 
-        //TODO: Make a failsafe action that takes in a trigger action and a response action,
-        // response is run when the trigger is triggered, and interrupts any ongoing movement
-        // actions so they can continue once the failsafe is over
 
         actionManager = new ActionManager(telemetry, hardwareMap);
         actionManager.attachPeriodicActions(drive, frontSlides, frontArm);
+
 
         waitForStart();
 
