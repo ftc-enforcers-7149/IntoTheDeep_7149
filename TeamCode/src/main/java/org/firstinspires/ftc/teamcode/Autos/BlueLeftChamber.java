@@ -104,35 +104,32 @@ public class BlueLeftChamber extends LinearOpMode {
 
 
                         moveSample1,
-                        new ParallelAction(armDownSample, new TimedAction(clawIntake, 1500)),
+                        new ParallelAction(armDownSample, new TimedAction(clawIntake, 1000)),
                         armUpSample,
                         moveBucket,
                         slidesUpBucket,
                         new TimedAction(clawOuttake, 1000),
-                        moveAwayBucket,
                         slidesDownBucket,
 
                         moveSample2,
-                        new ParallelAction(armDownSample, new TimedAction(clawIntake, 1500)),
+                        new ParallelAction(armDownSample, new TimedAction(clawIntake, 1000)),
                         armUpSample,
                         moveBucket,
                         slidesUpBucket,
                         new TimedAction(clawOuttake, 1000),
-                        moveAwayBucket,
                         slidesDownBucket,
 
                         moveSample3,
-                        new ParallelAction(armDownSample, new TimedAction(clawIntake, 1500)),
+                        new ParallelAction(armDownSample, new TimedAction(clawIntake, 1000)),
                         armUpSample,
                         moveBucket,
                         slidesUpBucket,
                         new TimedAction(clawOuttake, 1000),
-                        moveAwayBucket,
-                        slidesDownBucket
+                        slidesDownBucket,
 
-//                        moveToPark,
-//                        moveToPark2,
-//                        slidesUpPark
+                        moveToPark,
+                        moveToPark2,
+                        slidesUpPark
 
                 )
         );

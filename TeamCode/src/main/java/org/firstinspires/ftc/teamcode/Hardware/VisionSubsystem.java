@@ -32,8 +32,16 @@ public class VisionSubsystem implements PeriodicAction {
         return detector;
     }
 
+    public VisionPortal getPortal() {
+        return visionPortal;
+    }
+
     @Override
     public void periodic() {
 
     }
+
+
+
+
 }

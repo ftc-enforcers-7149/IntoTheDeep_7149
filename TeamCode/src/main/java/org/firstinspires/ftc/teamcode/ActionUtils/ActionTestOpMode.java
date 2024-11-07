@@ -6,6 +6,7 @@ import com.acmerobotics.roadrunner.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.ActionManager;
 import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.FailsafeAction;
@@ -13,6 +14,7 @@ import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.PositionFailsa
 import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.TeleActionSequence;
 import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.EventAction;
 import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.GamepadAction;
+import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.TeleInterruptActions;
 import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.TeleOpLoop;
 import org.firstinspires.ftc.teamcode.Chassis.MecanumPowerDrive;
 import org.firstinspires.ftc.teamcode.Hardware.OuttakeSlides;
@@ -65,8 +67,14 @@ public class ActionTestOpMode extends LinearOpMode {
         clawIntake = new ClawRotateAction(hardwareMap, "frontClaw", 1);
         //clawOuttake = new ClawRotateAction(hardwareMap, "frontClaw", -0.3);
 
-        //TODO: Make a failsafe action that takes in a normal action and a response action,
-        // response is run when the failsafe is triggered, and interrupts the normal action
+        //TODO: Make an action that takes in multiple actions and runs the first once
+        // until another one is triggered, interrupting the main action
+        // the entire action also takes in a generic predicate (input obj is generic,
+        // predicate type is generic), for an interrupt trigger to return to main
+        // action execution
+        // This is best applied for auto aligning with drive action running as main action
+        // and using the predicate to check if the joysticks are moved, which interrupts
+        // the auto align action
 
         actionManager = new ActionManager(telemetry, hardwareMap);
         actionManager.attachPeriodicActions(drive, frontSlides, frontArm);
@@ -82,7 +90,16 @@ public class ActionTestOpMode extends LinearOpMode {
         actionManager.runActionManager(
                 new TeleOpLoop(
 
-                            new DriveAction(drive, gamepad1, true, 1.08),
+                        new TeleInterruptActions<Gamepad>(
+                                new DriveAction(drive, gamepad1, true, 1.08),
+                                gamepad1,
+                                (gamepad ->
+                                    Math.abs(gamepad.left_stick_x) > 0.01 ||
+                                    Math.abs(gamepad.left_stick_y) > 0.01 ||
+                                    Math.abs(gamepad.right_stick_x) > 0.01
+                                ),
+                                new GamepadAction(moveAc1, gamepad1, (gamepad -> gamepad.triangle))
+                        ),
 
                             new TeleActionSequence(
                                 new GamepadAction(slidesUp, gamepad2, (gamepad -> gamepad.a)),

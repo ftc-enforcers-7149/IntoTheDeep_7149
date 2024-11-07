@@ -9,19 +9,25 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
+import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.Chassis.MecanumPowerDrive;
 import org.firstinspires.ftc.teamcode.Hardware.OuttakeSlides;
+import org.firstinspires.ftc.teamcode.Hardware.VisionSubsystem;
 
 
 @TeleOp(name = "FST TeleOp Main")
 public class FSTTeleop_TwoClaws extends LinearOpMode {
 
+    VisionSubsystem visionSystem;
+    ElapsedTime wristTimer;
 
     OuttakeSlides slidesFront;
     OuttakeSlides slidesBack;
     CRServo clawFront;
+    Servo wristFront;
 
     PIDFController pitchController;
     PIDFController slideController;
@@ -72,7 +78,8 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
     final int SAMPLE_ABOVE_PITCH_POS = 975, SAMPLE_PICKUP_PITCH_POS = 1050;
     final int SAMPLE_ABOVE_SLIDE_POS = 0, SAMPLE_PICKUP_SLIDE_POS = 0;
     final int SPECIMEN_ABOVE_PITCH_POS = 200, SPECIMEN_PICKUP_PITCH_POS = 400;
-    
+
+    //old values are for 425
     final double backMotorOffsetAbove = 2.56;
     final double backMotorOffsetDown = 2.58;
 
@@ -88,10 +95,15 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
 
         drive = new MecanumPowerDrive(hardwareMap, new Pose2d(0,0,0), telemetry);
 
+        //visionSystem = new VisionSubsystem(this);
+
         slidesFront = new OuttakeSlides(hardwareMap, "frontSlide");
 
         slidesFront.slideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         clawFront = hardwareMap.get(CRServo.class, "frontClaw");
+        wristFront = hardwareMap.get(Servo.class, "frontWrist");
+        wristTimer = new ElapsedTime();
+
         pitchMotorFront = hardwareMap.get(DcMotorEx.class, "frontPitch");
 
         pitchMotorFront.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -173,6 +185,8 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
 
 
                 case IDLE: {
+
+                    wristFront.setPosition(0.5);
 
                     slideFrontTarget = 0;
                     pitchFrontTarget = 0;
@@ -324,6 +338,11 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
                             slideFrontTarget = SAMPLE_ABOVE_SLIDE_POS;
 
                             pitchFrontTarget = SAMPLE_ABOVE_PITCH_POS;
+
+//                            if (wristTimer.milliseconds() > 300) {
+//                                wristFront.setPosition(1 - visionSystem.getDetector().getServoPos());
+//                                wristTimer.reset();
+//                            }
 
                             //eject unwanted samples
                             if (gamepad1.left_trigger > 0.05) {
@@ -672,6 +691,8 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
                             slideBackTarget = SAMPLE_ABOVE_SLIDE_POS;
 
                             pitchBackTarget = (int) (SAMPLE_ABOVE_PITCH_POS * backMotorOffsetAbove);
+
+
 
                             //eject unwanted samples
                             if (gamepad1.right_trigger > 0.05) {
