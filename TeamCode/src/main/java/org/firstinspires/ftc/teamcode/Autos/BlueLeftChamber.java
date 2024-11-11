@@ -67,13 +67,14 @@ public class BlueLeftChamber extends LinearOpMode {
         slidesUpChamber = frontSlides.getExtensionAction(1100);
         slidesScoreChamber = frontSlides.getExtensionAction(400);
         slidesDownChamber = frontSlides.getExtensionAction(0);
-        slidesUpBucket = frontSlides.getExtensionAction(2600);
+        slidesUpBucket = frontSlides.getExtensionAction(2550);
         slidesDownBucket = frontSlides.getExtensionAction(0);
         slidesUpPark = frontSlides.getExtensionAction(1000);
 
+        //fix these
         armDownChamber = frontArm.getPitchingAction(0);
         armUpChamber = frontArm.getPitchingAction(150);
-        armDownSample = frontArm.getPitchingAction(1050);
+        armDownSample = frontArm.getPitchingAction(1010);
         armUpSample = frontArm.getPitchingAction(0);
 
         clawOuttake = new ClawRotateAction(hardwareMap, "frontClaw", -0.5);

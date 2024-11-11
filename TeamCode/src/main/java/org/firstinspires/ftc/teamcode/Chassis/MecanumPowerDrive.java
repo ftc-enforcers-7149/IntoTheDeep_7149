@@ -72,8 +72,8 @@ public class MecanumPowerDrive extends MecanumDrive implements PeriodicAction {
     public void initializeIMU(HardwareMap hmap) {
         imu = hmap.get(IMU.class, "imu");
         IMU.Parameters imuParams = new IMU.Parameters(new RevHubOrientationOnRobot(
-                RevHubOrientationOnRobot.LogoFacingDirection.LEFT,
-                RevHubOrientationOnRobot.UsbFacingDirection.UP
+                RevHubOrientationOnRobot.LogoFacingDirection.RIGHT,
+                RevHubOrientationOnRobot.UsbFacingDirection.BACKWARD
         ));
         imu.initialize(imuParams);
     }
