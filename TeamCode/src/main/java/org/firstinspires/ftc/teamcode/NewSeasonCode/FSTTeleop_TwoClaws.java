@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.NewSeasonCode;
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.arcrobotics.ftclib.controller.PIDFController;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -79,7 +81,7 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
     //old w/o camera
 //    final int SAMPLE_ABOVE_PITCH_POS = 975, SAMPLE_PICKUP_PITCH_POS = 1050;
     //with camera SAMPLE_PICKUP_PITCH_POS= 1010
-    final int SAMPLE_ABOVE_PITCH_POS = 910, SAMPLE_PICKUP_PITCH_POS = 1010;
+    final int SAMPLE_ABOVE_PITCH_POS = 910, SAMPLE_PICKUP_PITCH_POS = 1010, SAMPLE_OUT_PITCH_POS = 1000;
 //new with camera
     final int SAMPLE_ABOVE_SLIDE_POS = 0, SAMPLE_PICKUP_SLIDE_POS = 0;
     final int SPECIMEN_ABOVE_PITCH_POS = 200, SPECIMEN_PICKUP_PITCH_POS = 400, SPECIMEN_OUT_PITCH_POS = 400;
@@ -98,6 +100,8 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
+
+        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
         drive = new MecanumPowerDrive(hardwareMap, new Pose2d(0,0,0), telemetry);
 
@@ -330,6 +334,10 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
                         clawFront.setPower(-1);
                     }
 
+                    if (inStageFront == Intake.SPECIMEN_OUT) {
+                        clawFront.setPower(1);
+                    }
+
                     if ((Math.abs(pitchMotorFront.getCurrentPosition() - pitchFrontTarget) < 10)) {
                         stageFront = Stages.INTAKING;
                     }
@@ -347,10 +355,10 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
                             slideFrontTarget = SAMPLE_ABOVE_SLIDE_POS;
 
                             pitchFrontTarget = SAMPLE_ABOVE_PITCH_POS;
-//                            if (wristTimer.milliseconds() > 300) {
-//                                    wristFront.setPosition(visionSystem.getDetector().getServoPos());
-//                                    wristTimer.reset();
-//                                }
+                            if (wristTimer.milliseconds() > 300) {
+                                    wristFront.setPosition(1 - visionSystem.getDetector().getServoPos());
+                                    wristTimer.reset();
+                            }
 
 
 //                            if (wristTimer.milliseconds() > 300) {
@@ -370,6 +378,7 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
 //                                telemetry.addData("Detector", "Active");
 //                            }
                             telemetry.addData("Timer", wristTimer.milliseconds());
+                            telemetry.addData("wrist pos", wristFront.getPosition());
                             //eject unwanted samples
                             if (gamepad1.left_trigger > 0.05) {
                                 clawFront.setPower(0.6);
@@ -401,6 +410,7 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
 
                             if (gamepad2.dpad_left) {
                                 clawFront.setPower(1);
+                                pitchFrontTarget = SAMPLE_OUT_PITCH_POS;
                             } else {
                                 clawFront.setPower(-1);
                             }
@@ -454,6 +464,7 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
                             slideFrontTarget = 0;
 
                             clawFront.setPower(-1);
+
 
 
                             if (gamepad2.left_trigger > 0.05) {
@@ -658,7 +669,7 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
                     if (gamepad2.triangle) {
                         stageBack = Stages.SLIDEDOWN;
                         //stageBack = Stages.IDLE;
-                        slideBackTarget = 1700;
+                        slideBackTarget = 900;
 
                     }
 
@@ -697,8 +708,11 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
                     telemetry.addData("Sliding Velocity", slidesBack.slideMotor.getVelocity());
                     telemetry.addData("Pos", slidesBack.slideMotor.getCurrentPosition());
 
+                    if (slidesBack.slideMotor.getCurrentPosition() < 900) {
+                        pitchBackTarget = 0;
+                    }
+
                     slideBackTarget = 0;
-                    pitchBackTarget = 0;
 
                     //if the motor cannot move, assume it has reached the bottom position
                     if (slidesBack.slideMotor.getVelocity() < 0.01 && slidesBack.slideMotor.getCurrentPosition() < 100 && slidePower < 0){
@@ -914,7 +928,9 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
                 inStageBack = Intake.IDLE;
             }
 
-            telemetry.addData("Pitch Angle (rad)", Math.cos((pitchMotorFront.getCurrentPosition())/145.1 * 28 * Math.PI));
+            FtcDashboard.getInstance().sendImage(visionSystem.getDetector().getLastFrame());
+
+            //telemetry.addData("Pitch Angle (rad)", Math.cos((pitchMotorFront.getCurrentPosition())/145.1 * 28 * Math.PI));
 
             telemetry.addData("Front Slide Position", slidesFront.slideMotor.getCurrentPosition());
             telemetry.addData("Front Slide Power", slidePower);
