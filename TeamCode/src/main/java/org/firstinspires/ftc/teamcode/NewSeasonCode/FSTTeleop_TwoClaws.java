@@ -105,7 +105,7 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
 
         drive = new MecanumPowerDrive(hardwareMap, new Pose2d(0,0,0), telemetry);
 
-        visionSystem = new VisionSubsystem(this);
+        //visionSystem = new VisionSubsystem(this);
 
         slidesFront = new OuttakeSlides(hardwareMap, "frontSlide");
 
@@ -355,10 +355,10 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
                             slideFrontTarget = SAMPLE_ABOVE_SLIDE_POS;
 
                             pitchFrontTarget = SAMPLE_ABOVE_PITCH_POS;
-                            if (wristTimer.milliseconds() > 300) {
-                                    wristFront.setPosition(1 - visionSystem.getDetector().getServoPos());
-                                    wristTimer.reset();
-                            }
+//                            if (wristTimer.milliseconds() > 300) {
+//                                    wristFront.setPosition(1 - visionSystem.getDetector().getServoPos());
+//                                    wristTimer.reset();
+//                            }
 
 
 //                            if (wristTimer.milliseconds() > 300) {
@@ -928,7 +928,7 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
                 inStageBack = Intake.IDLE;
             }
 
-            FtcDashboard.getInstance().sendImage(visionSystem.getDetector().getLastFrame());
+            //FtcDashboard.getInstance().sendImage(visionSystem.getDetector().getLastFrame());
 
             //telemetry.addData("Pitch Angle (rad)", Math.cos((pitchMotorFront.getCurrentPosition())/145.1 * 28 * Math.PI));
 
