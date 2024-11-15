@@ -30,8 +30,6 @@ import java.util.concurrent.atomic.AtomicReference;
 @Config
 public class SampleDetector extends OpenCvPipeline implements VisionProcessor, CameraStreamSource {
 
-    //RESOLUTION: 640x480
-
     public static Scalar lowerRed = new Scalar(215,50,50);
     public static Scalar upperRed = new Scalar(255,200,225);
     public static Scalar lowerBlue = new Scalar(145,50,50);
@@ -80,9 +78,9 @@ public class SampleDetector extends OpenCvPipeline implements VisionProcessor, C
     private DecimalFormat decForm1 = new DecimalFormat("#.0");
 
 
-    public static Point clawPosition = new Point(320, 240);
+    public static Point clawPosition = new Point(160, 120);
     private double servoPos = 0.5;
-    public static double angleScoreCoefficient = 1.7;
+    public static double angleScoreCoefficient = 0;
     public static double xOffsetCoefficient = 1.5;
 
 

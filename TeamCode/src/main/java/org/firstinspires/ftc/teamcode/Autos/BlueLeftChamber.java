@@ -6,6 +6,7 @@ import com.acmerobotics.roadrunner.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.ActionManager;
@@ -35,6 +36,7 @@ public class BlueLeftChamber extends LinearOpMode {
 
     OuttakeSlides frontSlides;
     PitchArm frontArm;
+    Servo wristFront;
 
     EventAction slidesUpChamber, slidesDownChamber, slidesScoreChamber, slidesUpBucket, slidesDownBucket, armUpChamber, armDownChamber, armDownSample, armUpSample, slidesUpPark;
     ClawRotateAction clawOuttake, clawIntake;
@@ -57,12 +59,13 @@ public class BlueLeftChamber extends LinearOpMode {
         moveBucket = new P2PAction(drive, new Pose2d(-57.5, 57.5, Math.toRadians(125)), 5, 5);
         moveAwayBucket = new P2PAction(drive, new Pose2d(-53, 53, Math.toRadians(125)), 5, 5);
 
-        moveToPark = new P2PAction(drive, new Pose2d(-14, 40, Math.toRadians(-90)), 5, 5);
-        moveToPark2 = new P2PAction(drive, new Pose2d(-14, 26, Math.toRadians(-90)), 5, 5);
+        moveToPark = new P2PAction(drive, new Pose2d(-12.5, 40, Math.toRadians(-90)), 5, 5);
+        moveToPark2 = new P2PAction(drive, new Pose2d(-12.5, 26, Math.toRadians(-90)), 5, 5);
 
 
         frontSlides = new OuttakeSlides(hardwareMap, "frontSlide");
         frontArm = new PitchArm(hardwareMap, "frontPitch");
+        wristFront = hardwareMap.get(Servo.class, "frontWrist");
 
         slidesUpChamber = frontSlides.getExtensionAction(1100);
         slidesScoreChamber = frontSlides.getExtensionAction(400);
@@ -85,6 +88,7 @@ public class BlueLeftChamber extends LinearOpMode {
         actionManager = new ActionManager(telemetry, hardwareMap);
         actionManager.attachPeriodicActions(drive, frontSlides, frontArm);
 
+        wristFront.setPosition(0.5);
 
         waitForStart();
 
@@ -130,7 +134,8 @@ public class BlueLeftChamber extends LinearOpMode {
 
                         moveToPark,
                         moveToPark2,
-                        slidesUpPark
+                        slidesUpPark,
+                        armUpChamber
 
                 )
         );

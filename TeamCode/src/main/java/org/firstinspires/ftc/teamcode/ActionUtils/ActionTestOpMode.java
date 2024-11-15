@@ -101,7 +101,7 @@ public class ActionTestOpMode extends LinearOpMode {
                                 new GamepadAction(moveAc1, gamepad1, (gamepad -> gamepad.triangle))
                         ),
 
-                            new TeleActionSequence(
+                        new TeleActionSequence(
                                 new GamepadAction(slidesUp, gamepad2, (gamepad -> gamepad.a)),
                                 new TeleEndAction(
                                         //the ability to run claw ends when slidesDown is first triggered
@@ -110,9 +110,9 @@ public class ActionTestOpMode extends LinearOpMode {
                                         new GamepadAction(new TimedAction(new ClawRotateAction(hardwareMap, "frontClaw", 0.3), 500),
                                                 gamepad1, (gamepad -> gamepad.left_trigger > 0.01))
                                 )
-                            ),
+                        ),
 
-                            new GamepadAction(ac1, gamepad1, (gamepad -> gamepad.left_trigger > 0.5))
+                        new GamepadAction(ac1, gamepad1, (gamepad -> gamepad.left_trigger > 0.5))
 
                 )
         );

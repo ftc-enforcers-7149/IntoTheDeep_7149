@@ -21,11 +21,13 @@ public class VisionSubsystem implements PeriodicAction {
         detector = new SampleDetector();
         visionPortal = new VisionPortal.Builder()
                 .setCamera(opMode.hardwareMap.get(WebcamName.class, "Webcam 1"))
-                .setCameraResolution(new Size(640, 480))
+                .setCameraResolution(new Size(320, 240))
                 .addProcessor(detector)
+                .setStreamFormat(VisionPortal.StreamFormat.MJPEG)
                 .build();
 
         visionPortal.setProcessorEnabled(detector, true);
+
     }
 
     public SampleDetector getDetector() {
@@ -40,8 +42,5 @@ public class VisionSubsystem implements PeriodicAction {
     public void periodic() {
 
     }
-
-
-
 
 }
