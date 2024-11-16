@@ -29,8 +29,8 @@ public class OuttakeSlides implements PeriodicAction {
         slideMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         slideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        slideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        slideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+//        slideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        slideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         slideController = new PIDFController(kp, ki, kd, ff);
 

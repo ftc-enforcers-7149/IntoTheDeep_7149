@@ -50,13 +50,15 @@ public class PIDF_MotorTester extends LinearOpMode {
 
         while (opModeIsActive() && !isStopRequested()) {
 
+            double angle = (motor.getCurrentPosition() / 990.0) * (Math.PI/2);
+
             if (reversed) {
                 motor.setDirection(DcMotorSimple.Direction.REVERSE);
             } else {
                 motor.setDirection(DcMotorSimple.Direction.FORWARD);
             }
 
-            controller.setPIDF(kp, ki, kd, ff);
+            controller.setPIDF(kp, ki, kd, (Math.sin(angle) * ff));
 
             if (gamepad1.triangle) {
                 manualOverride = true;
@@ -76,6 +78,7 @@ public class PIDF_MotorTester extends LinearOpMode {
             telemetry.addData("Current Position", motor.getCurrentPosition() - initialPos);
             telemetry.addData("Manual Override", manualOverride);
             telemetry.addData("NEW VERSION", "");
+            telemetry.addData("Arm Angle", angle);
             telemetry.update();
 
         }

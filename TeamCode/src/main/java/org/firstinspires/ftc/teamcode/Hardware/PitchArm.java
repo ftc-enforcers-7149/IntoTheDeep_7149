@@ -14,7 +14,7 @@ public class PitchArm implements PeriodicAction {
 
     public DcMotorEx pitchMotor;
 
-    public static double kp = 0.0102, ki = 0, kd = 0.0004;
+    public static double kp = 0.022, ki = 0, kd = 0.0004;
 
     public static double ffCoefficient = 0;
 
@@ -30,8 +30,8 @@ public class PitchArm implements PeriodicAction {
         pitchMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         pitchMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        pitchMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        pitchMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+//        pitchMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        pitchMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         pitchController = new PIDFController(kp, ki, kd, 0);
 
@@ -76,11 +76,11 @@ public class PitchArm implements PeriodicAction {
         public boolean run(CombinedTelemetry t) {
             isRunning = true;
 
-            t.getTelemetry().addData("Pitching", actionTarget);
+            t.getTelemetry().addData("Pitching", actionTarget + " " + pitchMotor.getCurrentPosition());
 
             target = actionTarget;
             //if it is not at its target position, then the action is still running
-            return Math.abs(pitchMotor.getCurrentPosition() - target) > 30;
+            return Math.abs(pitchMotor.getCurrentPosition() - target) > 10;
         }
 
         @Override

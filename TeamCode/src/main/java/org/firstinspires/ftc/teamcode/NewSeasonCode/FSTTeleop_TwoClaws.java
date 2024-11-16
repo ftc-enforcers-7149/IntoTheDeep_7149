@@ -4,6 +4,8 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.arcrobotics.ftclib.controller.PIDFController;
+import com.outoftheboxrobotics.photoncore.Photon;
+import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -20,7 +22,9 @@ import org.firstinspires.ftc.teamcode.Chassis.MecanumPowerDrive;
 import org.firstinspires.ftc.teamcode.Hardware.OuttakeSlides;
 import org.firstinspires.ftc.teamcode.Hardware.VisionSubsystem;
 
+import java.util.ArrayList;
 
+//@Photon
 @TeleOp(name = "FST TeleOp Main")
 public class FSTTeleop_TwoClaws extends LinearOpMode {
 
@@ -50,6 +54,8 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
     double lastSlidePower2 = 0;
     double lastPitchPower = 0;
     double lastPitchPower2 = 0;
+
+    int pitchChange = 0;
 
     double frontWristPos = 0.5;
     double frontWristSpeed = 0.05;
@@ -89,7 +95,7 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
     //old w/o camera
 //    final int SAMPLE_ABOVE_PITCH_POS = 975, SAMPLE_PICKUP_PITCH_POS = 1050;
     //with camera SAMPLE_PICKUP_PITCH_POS= 1010
-    final int SAMPLE_ABOVE_PITCH_POS = 910, SAMPLE_PICKUP_PITCH_POS = 1010, SAMPLE_OUT_PITCH_POS = 1000;
+    final int SAMPLE_ABOVE_PITCH_POS = 910, SAMPLE_PICKUP_PITCH_POS = 995, SAMPLE_OUT_PITCH_POS = 970;
 //new with camera
     final int SAMPLE_ABOVE_SLIDE_POS = 0, SAMPLE_PICKUP_SLIDE_POS = 0;
     final int SPECIMEN_ABOVE_PITCH_POS = 200, SPECIMEN_PICKUP_PITCH_POS = 400, SPECIMEN_OUT_PITCH_POS = 400;
@@ -117,7 +123,7 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
 
         loopTime = new ElapsedTime();
 
-        slidesFront.slideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        //slidesFront.slideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         clawFront = hardwareMap.get(CRServo.class, "frontClaw");
         wristFront = hardwareMap.get(Servo.class, "frontWrist");
         wristTimer = new ElapsedTime();
@@ -128,10 +134,10 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
 
         clawFront.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        pitchMotorFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        //pitchMotorFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         pitchMotorFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        pitchController = new PIDFController(0.012, 0, 0.0004,0);
+        pitchController = new PIDFController(0.022, 0, 0.0004,0);
         //good
         slideController = new PIDFController(0.008, 0, 0.00026, 0.00012);
         //good
@@ -155,6 +161,11 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
 
         visionSystem = new VisionSubsystem(this);
 
+        ArrayList<LynxModule> allHubs = new ArrayList<LynxModule>(hardwareMap.getAll(LynxModule.class));
+        for (LynxModule hub : allHubs) {
+            hub.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
+        }
+
         waitForStart();
 
         if (isStopRequested()){
@@ -167,6 +178,11 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
         slidesBack.slideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         while(opModeIsActive() && !isStopRequested()) {
+
+            //reset stale readings for bulk reads
+            for (LynxModule hub : allHubs) {
+                hub.clearBulkCache();
+            }
 
             //falling action gamepads
             prevGamepad2.copy(currentGamepad2);
@@ -183,9 +199,7 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
             }
 
             double pitchPower = pitchController.calculate(pitchMotorFront.getCurrentPosition(), pitchFrontTarget);
-            if (Math.abs(pitchPower - lastPitchPower) > 0.01) {
-                pitchMotorFront.setPower(pitchPower);
-            }
+            pitchMotorFront.setPower(pitchPower);
 
             //BACK PID POWERING
             double slidePower2 = slideController2.calculate(slidesBack.slideMotor.getCurrentPosition(), slideBackTarget);
@@ -225,6 +239,8 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
 
                     slideFrontTarget = 0;
                     pitchFrontTarget = 0;
+
+                    pitchChange = 0;
 
                     //reset the encoder of the slide when at idle
                     slidesFront.slideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -442,7 +458,9 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
 
                         case PICKUP: {
 
-                            pitchFrontTarget = SAMPLE_PICKUP_PITCH_POS;
+                            pitchChange += (int) gamepad2.left_stick_y;
+
+                            pitchFrontTarget = SAMPLE_PICKUP_PITCH_POS + pitchChange;
 
                             slideFrontTarget = SAMPLE_PICKUP_SLIDE_POS;
 
@@ -565,9 +583,10 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
                     clawFront.setPower(0);
 
                     telemetry.addData("Pitching Up", pitchPower);
+                    telemetry.addData("Pitch velo", pitchMotorFront.getVelocity());
                     telemetry.addData("Pos", pitchMotorFront.getCurrentPosition());
 
-                    if (Math.abs(pitchMotorFront.getCurrentPosition() - pitchFrontTarget) < 30) {
+                    if (Math.abs(pitchMotorFront.getCurrentPosition() - pitchFrontTarget) < 5) {
                         if (inStageFront == Intake.IDLE) {
                             stageFront = Stages.IDLE;
                         } else {
@@ -576,7 +595,7 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
                     }
 
                     //reset pitch encoder, same trick as the slides
-                    if (pitchMotorFront.getVelocity() < 0.01 && pitchMotorFront.getCurrentPosition() < 50 && pitchPower < 0){
+                    if (Math.abs(pitchMotorFront.getVelocity()) <= 0.01  && pitchMotorFront.getCurrentPosition() < 20 && pitchPower < 0){
                         pitchMotorFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                         pitchMotorFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
