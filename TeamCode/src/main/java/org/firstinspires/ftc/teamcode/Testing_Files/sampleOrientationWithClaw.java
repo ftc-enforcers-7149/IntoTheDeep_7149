@@ -5,6 +5,7 @@ import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.arcrobotics.ftclib.controller.PIDFController;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -20,6 +21,7 @@ import org.firstinspires.ftc.teamcode.Hardware.OuttakeSlides;
 import org.firstinspires.ftc.teamcode.Hardware.VisionSubsystem;
 import org.firstinspires.ftc.teamcode.NewSeasonCode.FSTTeleop_TwoClaws;
 
+@Disabled
 @Config
 @TeleOp(name = "Sample Orient With Claw")
 public class sampleOrientationWithClaw extends LinearOpMode {

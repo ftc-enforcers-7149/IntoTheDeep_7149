@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
+@Disabled
 @TeleOp(name = "geckoWrist")
 public class geckoClawWristTest extends LinearOpMode {
 //    CRServo claw;

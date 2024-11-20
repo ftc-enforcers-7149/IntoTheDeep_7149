@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.NewSeasonCode;
 
 import com.acmerobotics.roadrunner.Pose2d;
 import com.arcrobotics.ftclib.controller.PIDFController;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -13,6 +14,7 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import org.firstinspires.ftc.teamcode.Chassis.MecanumPowerDrive;
 import org.firstinspires.ftc.teamcode.Hardware.OuttakeSlides;
 
+@Disabled
 @TeleOp(name = "Hanging")
 public class HangControl extends LinearOpMode {
 

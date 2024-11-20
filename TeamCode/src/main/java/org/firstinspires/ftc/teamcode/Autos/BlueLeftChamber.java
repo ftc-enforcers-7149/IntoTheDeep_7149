@@ -94,7 +94,7 @@ public class BlueLeftChamber extends LinearOpMode {
         sampleRotate = new WristRotateAction(0.7, hardwareMap, "frontWrist");
         wristReset = new WristRotateAction(0.5, hardwareMap, "frontWrist");
 
-        clawOuttake = new ClawRotateAction(hardwareMap, "frontClaw", -0.5);
+        clawOuttake = new ClawRotateAction(hardwareMap, "frontClaw", -0.6);
         clawIntake = new ClawRotateAction(hardwareMap, "frontClaw", 1);
         //clawOuttake = new ClawRotateAction(hardwareMap, "frontClaw", -0.3);
 
@@ -118,6 +118,7 @@ public class BlueLeftChamber extends LinearOpMode {
 
                         new ParallelAction(moveChamber, slidesUpChamber),
                         armUpChamber,
+                        new WaitAction(500),
                         new ParallelAction(slidesScoreChamber, new TimedAction(clawOuttake, 600)),
                         new ParallelAction(moveChamberAway, slidesDownChamber, armDownChamber),
 

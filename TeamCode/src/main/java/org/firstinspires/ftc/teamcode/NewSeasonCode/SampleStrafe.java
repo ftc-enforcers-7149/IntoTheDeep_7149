@@ -5,6 +5,7 @@ import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.arcrobotics.ftclib.controller.PIDFController;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -12,6 +13,7 @@ import org.firstinspires.ftc.teamcode.Chassis.MecanumPowerDrive;
 import org.firstinspires.ftc.teamcode.Hardware.VisionSubsystem;
 import org.opencv.core.RotatedRect;
 
+@Disabled
 @Config
 @TeleOp(name = "SampleStrafe")
 public class SampleStrafe extends LinearOpMode {
@@ -44,7 +46,7 @@ public class SampleStrafe extends LinearOpMode {
 
             RotatedRect bestSample = visionSystem.getDetector().getBestSample();
 
-            double xStrafeOffset = bestSample.center.x - 320;
+            double xStrafeOffset = bestSample.center.x - 160;
             
             double strafePower = strafeController.calculate(xStrafeOffset, 0);
 

@@ -6,6 +6,7 @@ import com.acmerobotics.roadrunner.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.ActionManager;
@@ -22,7 +23,7 @@ import org.firstinspires.ftc.teamcode.Hardware.PitchArm;
 
 
 @Disabled
-@Autonomous(name = "ActionTester")
+@TeleOp(name = "ActionTester")
 public class ActionTestOpMode extends LinearOpMode {
 
     ActionManager actionManager;
