@@ -49,6 +49,7 @@ public class GamepadAction extends EventAction {
         //if the action just ended, stop it
         if (lastTriggered && !triggered) {
             action.stop(false);
+            lastTriggered = triggered;
             return false;
         }
 

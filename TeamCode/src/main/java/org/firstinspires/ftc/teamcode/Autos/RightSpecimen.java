@@ -12,6 +12,7 @@ import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.SequentialActi
 import org.firstinspires.ftc.teamcode.ActionUtils.ClawRotateAction;
 import org.firstinspires.ftc.teamcode.ActionUtils.P2PAction;
 import org.firstinspires.ftc.teamcode.ActionUtils.TimedAction;
+import org.firstinspires.ftc.teamcode.ActionUtils.WaitAction;
 import org.firstinspires.ftc.teamcode.Chassis.MecanumPowerDrive;
 import org.firstinspires.ftc.teamcode.Hardware.OuttakeSlides;
 import org.firstinspires.ftc.teamcode.Hardware.PitchArm;
@@ -106,20 +107,21 @@ public class RightSpecimen extends LinearOpMode {
 
                         new ParallelAction(moveChamber, slidesUpChamber),
                         armUpChamber,
+                        new WaitAction(500),
                         new ParallelAction(slidesScoreChamber, new TimedAction(clawOuttake, 600)),
                         new ParallelAction(moveChamberAway, slidesDownChamber, armDownChamber),
 
                         //get first sample and deposit in obs zone
 
                         moveSample1,
-                        new ParallelAction(armDownSample, new TimedAction(clawIntake, 1000)),
+                        new ParallelAction(armDownSample, new TimedAction(clawIntake, 700)),
                         new ParallelAction(moveObservation, armAboveSample),
                         new TimedAction(clawBackOuttake, 700),
 
                         //get second sample and deposit in obs zone
 
                         moveSample2,
-                        new ParallelAction(armDownSample, new TimedAction(clawIntake, 1000)),
+                        new ParallelAction(armDownSample, new TimedAction(clawIntake, 700)),
                         new ParallelAction(moveObservation, armAboveSample),
                         new TimedAction(clawBackOuttake, 700),
 

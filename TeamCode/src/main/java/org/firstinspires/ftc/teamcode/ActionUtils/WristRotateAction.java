@@ -1,9 +1,12 @@
-package org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure;
+package org.firstinspires.ftc.teamcode.ActionUtils;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
-public class WristRotateAction extends EventAction{
+import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.CombinedTelemetry;
+import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.EventAction;
+
+public class WristRotateAction extends EventAction {
 
     private Servo wrist;
     private HardwareMap hMap;
@@ -14,6 +17,8 @@ public class WristRotateAction extends EventAction{
         wrist = hMap.get(Servo.class, name);
         position = pos;
         wrist.setPosition(0.5);
+
+        isRunning = false;
     }
 
     @Override

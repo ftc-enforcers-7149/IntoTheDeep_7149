@@ -13,7 +13,7 @@ import org.firstinspires.ftc.teamcode.Chassis.MecanumPowerDrive;
 import org.firstinspires.ftc.teamcode.Hardware.VisionSubsystem;
 import org.opencv.core.RotatedRect;
 
-@Disabled
+
 @Config
 @TeleOp(name = "SampleStrafe")
 public class SampleStrafe extends LinearOpMode {
@@ -47,7 +47,6 @@ public class SampleStrafe extends LinearOpMode {
             RotatedRect bestSample = visionSystem.getDetector().getBestSample();
 
             double xStrafeOffset = bestSample.center.x - 160;
-            
             double strafePower = strafeController.calculate(xStrafeOffset, 0);
 
             drive.setRobotCentricPower(strafePower, 0, 0);
@@ -55,7 +54,6 @@ public class SampleStrafe extends LinearOpMode {
             telemetry.addData("xStrafeOffset", xStrafeOffset);
             telemetry.addData("Target", 0);
             telemetry.addData("strafePower", strafePower);
-
             telemetry.update();
 
         }

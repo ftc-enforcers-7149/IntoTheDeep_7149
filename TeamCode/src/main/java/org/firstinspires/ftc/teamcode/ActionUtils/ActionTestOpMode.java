@@ -20,9 +20,9 @@ import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.TeleOpLoop;
 import org.firstinspires.ftc.teamcode.Chassis.MecanumPowerDrive;
 import org.firstinspires.ftc.teamcode.Hardware.OuttakeSlides;
 import org.firstinspires.ftc.teamcode.Hardware.PitchArm;
+import org.firstinspires.ftc.teamcode.pedroPathing.follower.Follower;
 
 
-@Disabled
 @TeleOp(name = "ActionTester")
 public class ActionTestOpMode extends LinearOpMode {
 
@@ -91,16 +91,20 @@ public class ActionTestOpMode extends LinearOpMode {
         actionManager.runActionManager(
                 new TeleOpLoop(
 
-                        new TeleInterruptActions<Gamepad>(
-                                new DriveAction(drive, gamepad1, true, 1.08),
-                                gamepad1,
-                                (gamepad ->
-                                    Math.abs(gamepad.left_stick_x) > 0.01 ||
-                                    Math.abs(gamepad.left_stick_y) > 0.01 ||
-                                    Math.abs(gamepad.right_stick_x) > 0.01
-                                ),
-                                new GamepadAction(moveAc1, gamepad1, (gamepad -> gamepad.triangle))
-                        ),
+                        new DriveAction(drive, gamepad1, true, 1.08),
+
+//                        new TeleInterruptActions<Gamepad>(
+//                                new DriveAction(drive, gamepad1, true, 1.08),
+//                                gamepad1,
+//                                (gamepad ->
+//                                    Math.abs(gamepad.left_stick_x) > 0.01 ||
+//                                    Math.abs(gamepad.left_stick_y) > 0.01 ||
+//                                    Math.abs(gamepad.right_stick_x) > 0.01
+//                                ),
+//                                new GamepadAction(moveAc1, gamepad1, (gamepad -> gamepad.triangle))
+//                        ),
+//                        new GamepadAction(new TimedAction(clawOuttake, 400), gamepad2, (gamepad -> gamepad.a && !clawIntake.isRunning)),
+//                        new GamepadAction(new TimedAction(clawIntake, 1000), gamepad2, (gamepad -> gamepad.b && !clawOuttake.isRunning))
 
                         new TeleActionSequence(
                                 new GamepadAction(slidesUp, gamepad2, (gamepad -> gamepad.a)),
@@ -111,9 +115,9 @@ public class ActionTestOpMode extends LinearOpMode {
                                         new GamepadAction(new TimedAction(new ClawRotateAction(hardwareMap, "frontClaw", 0.3), 500),
                                                 gamepad1, (gamepad -> gamepad.left_trigger > 0.01))
                                 )
-                        ),
-
-                        new GamepadAction(ac1, gamepad1, (gamepad -> gamepad.left_trigger > 0.5))
+                        )
+//
+//                        new GamepadAction(ac1, gamepad1, (gamepad -> gamepad.left_trigger > 0.5))
 
                 )
         );
