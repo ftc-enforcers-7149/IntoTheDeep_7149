@@ -4,7 +4,6 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.arcrobotics.ftclib.controller.PIDFController;
-import com.outoftheboxrobotics.photoncore.Photon;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -18,9 +17,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.teamcode.Chassis.MecanumPowerDrive;
-import org.firstinspires.ftc.teamcode.Hardware.OuttakeSlides;
-import org.firstinspires.ftc.teamcode.Hardware.VisionSubsystem;
+import org.firstinspires.ftc.teamcode.Hardware.Chassis.MecanumPowerDrive;
+import org.firstinspires.ftc.teamcode.Hardware.Subsystems.OuttakeSlides;
+import org.firstinspires.ftc.teamcode.Hardware.Subsystems.VisionSubsystem;
 
 import java.util.ArrayList;
 
@@ -28,9 +27,11 @@ import java.util.ArrayList;
 @TeleOp(name = "FST TeleOp Main")
 public class FSTTeleop_TwoClaws extends LinearOpMode {
 
-    VisionSubsystem visionSystem;
+    //VisionSubsystem visionSystem;
     ElapsedTime wristTimer;
     ElapsedTime loopTime;
+
+    CRServo ext1, ext2;
 
     OuttakeSlides slidesFront;
     OuttakeSlides slidesBack;
@@ -120,6 +121,8 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
         drive = new MecanumPowerDrive(hardwareMap, new Pose2d(0,0,0), telemetry);
 
         slidesFront = new OuttakeSlides(hardwareMap, "frontSlide");
+        ext1 = hardwareMap.get(CRServo.class, "ext1");
+        ext2 = hardwareMap.get(CRServo.class, "ext2");
 
         loopTime = new ElapsedTime();
 
@@ -159,7 +162,7 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
         prevGamepad2 = new Gamepad();
         currentGamepad2 = new Gamepad();
 
-        visionSystem = new VisionSubsystem(this);
+        //visionSystem = new VisionSubsystem(this);
 
         ArrayList<LynxModule> allHubs = new ArrayList<LynxModule>(hardwareMap.getAll(LynxModule.class));
         for (LynxModule hub : allHubs) {
@@ -213,7 +216,7 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
                 pitchMotorBack.setPower(pitchPower2);
             }
 
-            wristFront.setPosition(frontWristPos);
+            wristFront.setPosition(1 - frontWristPos);
 
             //reset heading for headless driving
             if (gamepad1.share) {
@@ -232,7 +235,7 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
 
                 case IDLE: {
 
-                    visionSystem.getPortal().stopStreaming();
+                    //visionSystem.getPortal().stopStreaming();
 
                     frontWristPos = 0.5;
                     changeWrist = false;
@@ -378,9 +381,9 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
 
                     if ((Math.abs(pitchMotorFront.getCurrentPosition() - pitchFrontTarget) < 10)) {
 
-                        if (inStageFront == Intake.ABOVE) {
-                            visionSystem.getPortal().resumeStreaming();
-                        }
+//                        if (inStageFront == Intake.ABOVE) {
+//                            visionSystem.getPortal().resumeStreaming();
+//                        }
 
                         stageFront = Stages.INTAKING;
                     }
@@ -399,7 +402,10 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
 
                             pitchFrontTarget = SAMPLE_ABOVE_PITCH_POS;
 
-                            if (gamepad2.right_stick_x != 0) {
+                            ext1.setPower(gamepad2.right_stick_y);
+                            ext2.setPower(-gamepad2.right_stick_y);
+
+                            if (gamepad2.left_stick_x != 0) {
                                 changeWrist = true;
                             }
 
@@ -407,10 +413,10 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
                                 frontWristPos = Range.clip(frontWristPos + (frontWristSpeed * gamepad2.right_stick_x), 0, 1);
                             }
 
-                            if (!changeWrist && wristTimer.milliseconds() > 300) {
-                                    frontWristPos = 1 - visionSystem.getDetector().getServoPos();
-                                    wristTimer.reset();
-                            }
+//                            if (!changeWrist && wristTimer.milliseconds() > 300) {
+//                                    frontWristPos = 1 - visionSystem.getDetector().getServoPos();
+//                                    wristTimer.reset();
+//                            }
 
 
 //                            if (wristTimer.milliseconds() > 300) {
@@ -442,7 +448,7 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
                                 inStageFront = Intake.PICKUP;
                                 pitchFrontTarget = SAMPLE_PICKUP_PITCH_POS;
                                 changeWrist = false;
-                                visionSystem.getPortal().stopStreaming();
+                                //visionSystem.getPortal().stopStreaming();
                             }
 
                             if (gamepad2.left_trigger > 0.05 && !(prevGamepad2.left_trigger > 0.05) && pitchMotorFront.getVelocity(AngleUnit.RADIANS) < 0.1) {
@@ -450,7 +456,7 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
                                 stageFront = Stages.PITCHUP;
                                 //stageFront = Stages.IDLE;
                                 pitchFrontTarget = 0;
-                                visionSystem.getPortal().stopStreaming();
+                                //visionSystem.getPortal().stopStreaming();
                             }
 
                             break;
@@ -476,7 +482,7 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
                                 inStageFront = Intake.ABOVE;
                                 //stageFront = Stages.PITCHUP;
                                 pitchFrontTarget = SAMPLE_ABOVE_PITCH_POS;
-                                visionSystem.getPortal().resumeStreaming();
+                                //visionSystem.getPortal().resumeStreaming();
                             }
 
                             break;
@@ -999,7 +1005,7 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
                 inStageBack = Intake.IDLE;
             }
 
-            FtcDashboard.getInstance().sendImage(visionSystem.getDetector().getLastFrame());
+            //FtcDashboard.getInstance().sendImage(visionSystem.getDetector().getLastFrame());
             telemetry.addData("Loop Time (ms)", loopTime.milliseconds());
             loopTime.reset();
             telemetry.addData("Wrist Pos", frontWristPos);

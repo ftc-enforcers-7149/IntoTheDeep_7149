@@ -14,12 +14,10 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.Chassis.MecanumPowerDrive;
-import org.firstinspires.ftc.teamcode.Hardware.OuttakeSlides;
-import org.firstinspires.ftc.teamcode.Hardware.VisionSubsystem;
-import org.firstinspires.ftc.teamcode.NewSeasonCode.FSTTeleop_TwoClaws;
+import org.firstinspires.ftc.teamcode.Hardware.Chassis.MecanumPowerDrive;
+import org.firstinspires.ftc.teamcode.Hardware.Subsystems.OuttakeSlides;
+import org.firstinspires.ftc.teamcode.Hardware.Subsystems.VisionSubsystem;
 
 @Disabled
 @Config

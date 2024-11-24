@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.teamcode.Chassis.MecanumPowerDrive;
+import org.firstinspires.ftc.teamcode.Hardware.Chassis.MecanumPowerDrive;
 
 @Disabled
 @Config

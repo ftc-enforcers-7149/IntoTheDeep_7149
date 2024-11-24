@@ -8,8 +8,8 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
-import org.firstinspires.ftc.teamcode.Chassis.MecanumPowerDrive;
-import org.firstinspires.ftc.teamcode.Hardware.OuttakeSlides;
+import org.firstinspires.ftc.teamcode.Hardware.Chassis.MecanumPowerDrive;
+import org.firstinspires.ftc.teamcode.Hardware.Subsystems.OuttakeSlides;
 
 @Disabled
 @TeleOp(name = "FST TeleOp")

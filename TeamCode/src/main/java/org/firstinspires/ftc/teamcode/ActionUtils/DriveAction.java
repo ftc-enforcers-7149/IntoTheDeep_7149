@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.CombinedTelemetry;
 import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.EventAction;
-import org.firstinspires.ftc.teamcode.Chassis.MecanumPowerDrive;
+import org.firstinspires.ftc.teamcode.Hardware.Chassis.MecanumPowerDrive;
 
 public class DriveAction extends EventAction {
 

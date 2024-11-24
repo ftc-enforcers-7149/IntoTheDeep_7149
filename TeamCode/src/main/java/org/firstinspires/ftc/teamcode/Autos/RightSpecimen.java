@@ -13,9 +13,9 @@ import org.firstinspires.ftc.teamcode.ActionUtils.ClawRotateAction;
 import org.firstinspires.ftc.teamcode.ActionUtils.P2PAction;
 import org.firstinspires.ftc.teamcode.ActionUtils.TimedAction;
 import org.firstinspires.ftc.teamcode.ActionUtils.WaitAction;
-import org.firstinspires.ftc.teamcode.Chassis.MecanumPowerDrive;
-import org.firstinspires.ftc.teamcode.Hardware.OuttakeSlides;
-import org.firstinspires.ftc.teamcode.Hardware.PitchArm;
+import org.firstinspires.ftc.teamcode.Hardware.Chassis.MecanumPowerDrive;
+import org.firstinspires.ftc.teamcode.Hardware.Subsystems.OuttakeSlides;
+import org.firstinspires.ftc.teamcode.Hardware.Subsystems.PitchArm;
 
 public class RightSpecimen extends LinearOpMode {
 

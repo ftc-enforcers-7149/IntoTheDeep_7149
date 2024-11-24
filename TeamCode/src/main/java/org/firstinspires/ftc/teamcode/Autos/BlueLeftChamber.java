@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.ActionManager;
+import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.PedroAction;
 import org.firstinspires.ftc.teamcode.ActionUtils.WristRotateAction;
 import org.firstinspires.ftc.teamcode.ActionUtils.ClawRotateAction;
 import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.EventAction;
@@ -17,9 +18,14 @@ import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.ParallelAction
 import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.SequentialAction;
 import org.firstinspires.ftc.teamcode.ActionUtils.TimedAction;
 import org.firstinspires.ftc.teamcode.ActionUtils.WaitAction;
-import org.firstinspires.ftc.teamcode.Chassis.MecanumPowerDrive;
-import org.firstinspires.ftc.teamcode.Hardware.OuttakeSlides;
-import org.firstinspires.ftc.teamcode.Hardware.PitchArm;
+import org.firstinspires.ftc.teamcode.Hardware.Chassis.MecanumPowerDrive;
+import org.firstinspires.ftc.teamcode.Hardware.Subsystems.OuttakeSlides;
+import org.firstinspires.ftc.teamcode.Hardware.Subsystems.PitchArm;
+import org.firstinspires.ftc.teamcode.PathingSystems.pedroPathing.follower.Follower;
+import org.firstinspires.ftc.teamcode.PathingSystems.pedroPathing.pathGeneration.BezierLine;
+import org.firstinspires.ftc.teamcode.PathingSystems.pedroPathing.pathGeneration.Path;
+import org.firstinspires.ftc.teamcode.PathingSystems.pedroPathing.pathGeneration.PathChain;
+import org.firstinspires.ftc.teamcode.PathingSystems.pedroPathing.pathGeneration.Point;
 
 
 @Autonomous(name = "BlueLeftChamber")
@@ -59,7 +65,6 @@ public class BlueLeftChamber extends LinearOpMode {
 
         moveToPark = new P2PAction(drive, new Pose2d(-12.5, 40, Math.toRadians(-90)), 5, 5);
         moveToPark2 = new P2PAction(drive, new Pose2d(-12.5, 26, Math.toRadians(-90)), 5, 5);
-
 
         frontSlides = new OuttakeSlides(hardwareMap, "frontSlide");
         frontArm = new PitchArm(hardwareMap, "frontPitch");

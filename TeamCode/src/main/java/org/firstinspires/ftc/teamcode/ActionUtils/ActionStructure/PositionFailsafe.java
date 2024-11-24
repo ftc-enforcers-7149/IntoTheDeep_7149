@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.Chassis.MecanumPowerDrive;
+import org.firstinspires.ftc.teamcode.Hardware.Chassis.MecanumPowerDrive;
 
 public class PositionFailsafe implements FailsafeTrigger{
 

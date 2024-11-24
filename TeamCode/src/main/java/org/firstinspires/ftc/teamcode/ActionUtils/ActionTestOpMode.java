@@ -3,24 +3,24 @@ package org.firstinspires.ftc.teamcode.ActionUtils;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.Pose2d;
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.ActionManager;
-import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.FailsafeAction;
-import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.PositionFailsafe;
+import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.PedroAction;
 import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.TeleActionSequence;
 import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.EventAction;
 import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.GamepadAction;
-import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.TeleInterruptActions;
 import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.TeleOpLoop;
-import org.firstinspires.ftc.teamcode.Chassis.MecanumPowerDrive;
-import org.firstinspires.ftc.teamcode.Hardware.OuttakeSlides;
-import org.firstinspires.ftc.teamcode.Hardware.PitchArm;
-import org.firstinspires.ftc.teamcode.pedroPathing.follower.Follower;
+import org.firstinspires.ftc.teamcode.Hardware.Chassis.MecanumPowerDrive;
+import org.firstinspires.ftc.teamcode.Hardware.Subsystems.OuttakeSlides;
+import org.firstinspires.ftc.teamcode.Hardware.Subsystems.PitchArm;
+import org.firstinspires.ftc.teamcode.PathingSystems.pedroPathing.follower.Follower;
+import org.firstinspires.ftc.teamcode.PathingSystems.pedroPathing.pathGeneration.BezierCurve;
+import org.firstinspires.ftc.teamcode.PathingSystems.pedroPathing.pathGeneration.BezierLine;
+import org.firstinspires.ftc.teamcode.PathingSystems.pedroPathing.pathGeneration.Path;
+import org.firstinspires.ftc.teamcode.PathingSystems.pedroPathing.pathGeneration.PathChain;
+import org.firstinspires.ftc.teamcode.PathingSystems.pedroPathing.pathGeneration.Point;
 
 
 @TeleOp(name = "ActionTester")
@@ -40,7 +40,6 @@ public class ActionTestOpMode extends LinearOpMode {
     EventAction slidesUp, slidesDown, slidesScore, armUp, armDown;
     ClawRotateAction clawOuttake, clawIntake;
 
-    //CubicBezier path1 = new CubicBezier(0.1, new NavPoint(-48, 0), new NavPoint(-48, 48), new NavPoint(-40, 48), new NavPoint(-48,40));
 
     @Override
     public void runOpMode() throws InterruptedException {

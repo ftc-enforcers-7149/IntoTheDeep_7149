@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.Hardware.VisionSubsystem;
+import org.firstinspires.ftc.teamcode.Hardware.Subsystems.VisionSubsystem;
 
 @Disabled
 @TeleOp(name = "Sample Orient")

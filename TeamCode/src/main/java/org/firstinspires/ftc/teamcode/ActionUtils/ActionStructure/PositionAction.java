@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure;
 
 import com.acmerobotics.roadrunner.Pose2d;
 
-import org.firstinspires.ftc.teamcode.Chassis.MecanumPowerDrive;
+import org.firstinspires.ftc.teamcode.Hardware.Chassis.MecanumPowerDrive;
 
 /**
  * Used in conjunction with movement actions to apply position activated functions during motion

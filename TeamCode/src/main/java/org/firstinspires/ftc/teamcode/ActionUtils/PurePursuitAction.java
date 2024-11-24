@@ -4,12 +4,12 @@ import com.acmerobotics.dashboard.canvas.Canvas;
 
 import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.CombinedTelemetry;
 import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.EventAction;
-import org.firstinspires.ftc.teamcode.Chassis.MecanumPowerDrive;
-import org.firstinspires.ftc.teamcode.PurePursuit.HermiteCurve;
-import org.firstinspires.ftc.teamcode.PurePursuit.NavPoint;
-import org.firstinspires.ftc.teamcode.PurePursuit.PurePursuitController;
-import org.firstinspires.ftc.teamcode.PurePursuit.PurePursuitReturn;
-import org.firstinspires.ftc.teamcode.RRTuning.Drawing;
+import org.firstinspires.ftc.teamcode.Hardware.Chassis.MecanumPowerDrive;
+import org.firstinspires.ftc.teamcode.PathingSystems.PurePursuit.HermiteCurve;
+import org.firstinspires.ftc.teamcode.PathingSystems.PurePursuit.NavPoint;
+import org.firstinspires.ftc.teamcode.PathingSystems.PurePursuit.PurePursuitController;
+import org.firstinspires.ftc.teamcode.PathingSystems.PurePursuit.PurePursuitReturn;
+import org.firstinspires.ftc.teamcode.PathingSystems.RRTuning.Drawing;
 
 public class PurePursuitAction extends EventAction {
 
