@@ -3,21 +3,22 @@ package org.firstinspires.ftc.teamcode.Testing_Files;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.Servo;
 
-@Disabled
-@TeleOp(name = ".5Servo")
-public class clawServoSet extends LinearOpMode {
-    Servo claw;
-
+//@Disabled
+@TeleOp(name = ".CRServoTest")
+public class clawCRServotest extends LinearOpMode {
+    CRServo CRServo;
+    Servo servoPos;
     @Override
     public void runOpMode() {
-        claw = hardwareMap.get(Servo.class, "servo");
-        double pos = 0.0;
+        CRServo = hardwareMap.get(CRServo.class, "servoCR");
+        servoPos = hardwareMap.get(Servo.class, "servoS");
 
-        claw.setPosition(.5); //set to 0
-
+        CRServo.setPower(.5); //set to 0
+        servoPos.setPosition(.5);
         Gamepad currentGamepad1 = new Gamepad();
 
         Gamepad previousGamepad1 = new Gamepad();
@@ -43,8 +44,10 @@ public class clawServoSet extends LinearOpMode {
 
 
             //open/close
-            claw.setPosition(.5);
-            telemetry.addData("CurrentPosition: ", claw.getPosition());
+            CRServo.setPower(.5);
+            servoPos.setPosition(.5);
+            telemetry.addData("CurrentPower: ", CRServo.getPower());
+            telemetry.addData("CurrentPosition", servoPos.getPosition());
             telemetry.update();
         }
     }

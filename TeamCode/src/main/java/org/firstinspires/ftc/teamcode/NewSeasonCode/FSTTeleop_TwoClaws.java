@@ -31,7 +31,7 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
     ElapsedTime wristTimer;
     ElapsedTime loopTime;
 
-    CRServo ext1, ext2;
+    CRServo rightExt, leftExt;
 
     OuttakeSlides slidesFront;
     OuttakeSlides slidesBack;
@@ -97,7 +97,7 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
 //    final int SAMPLE_ABOVE_PITCH_POS = 975, SAMPLE_PICKUP_PITCH_POS = 1050;
     //with camera SAMPLE_PICKUP_PITCH_POS= 1005, 970
     final int SAMPLE_ABOVE_PITCH_POS = 910, SAMPLE_PICKUP_PITCH_POS = 1020, SAMPLE_OUT_PITCH_POS = 985;
-//new with camera
+    //new with camera
     final int SAMPLE_ABOVE_SLIDE_POS = 0, SAMPLE_PICKUP_SLIDE_POS = 0;
     final int SPECIMEN_ABOVE_PITCH_POS = 200, SPECIMEN_PICKUP_PITCH_POS = 400, SPECIMEN_OUT_PITCH_POS = 400;
 
@@ -116,8 +116,11 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
         drive = new MecanumPowerDrive(hardwareMap, new Pose2d(0,0,0), telemetry);
 
         slidesFront = new OuttakeSlides(hardwareMap, "frontSlide");
-        ext1 = hardwareMap.get(CRServo.class, "ext1");
-        ext2 = hardwareMap.get(CRServo.class, "ext2");
+        //right side
+        rightExt = hardwareMap.get(CRServo.class, "rightExt");
+        
+        //left side
+        leftExt = hardwareMap.get(CRServo.class, "leftExt");
 
         loopTime = new ElapsedTime();
 
@@ -397,8 +400,8 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
 
                             pitchFrontTarget = SAMPLE_ABOVE_PITCH_POS;
 
-                            ext1.setPower(gamepad2.right_stick_y);
-                            ext2.setPower(-gamepad2.right_stick_y);
+                            rightExt.setPower(gamepad2.right_stick_y);
+                            leftExt.setPower(-gamepad2.right_stick_y);
 
                             if (gamepad2.left_stick_x != 0) {
                                 changeWrist = true;
@@ -735,7 +738,7 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
                         pitchBackTarget = 200;
                     }
 
-                        clawBack.setPower(0);
+                    clawBack.setPower(0);
 
 
                     if (gamepad2.triangle) {
