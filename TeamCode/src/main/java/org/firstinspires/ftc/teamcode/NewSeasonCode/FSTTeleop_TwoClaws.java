@@ -101,11 +101,6 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
     final int SAMPLE_ABOVE_SLIDE_POS = 0, SAMPLE_PICKUP_SLIDE_POS = 0;
     final int SPECIMEN_ABOVE_PITCH_POS = 200, SPECIMEN_PICKUP_PITCH_POS = 400, SPECIMEN_OUT_PITCH_POS = 400;
 
-
-    //old values are for 425
-    final double backMotorOffsetAbove = 2.56;
-    final double backMotorOffsetDown = 2.58;
-
     /*
 
     Right Trigger --> Pulls pitch down to inttake --> Pulls pitch down and turns on claw
