@@ -5,15 +5,20 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
+import com.qualcomm.robotcore.hardware.IMU;
 
-@TeleOp(name = "MarsRoverV1.5")
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+
+@TeleOp(name = "MarsRoverV2")
 public class MarsRoverDrivePivot extends LinearOpMode {
 
     //This opMode controls the wheels on each side at the same time (split wire)
     //and controls the pivots on each side at the same time & position (split wire)
 
     CRServo leftDrive, rightDrive;
-    Servo frontRightPivot, frontLeftPivot;
+    Servo frontRightPivot, frontLeftPivot, pitchServo;
+    IMU imu;
 
 
     @Override
@@ -22,8 +27,14 @@ public class MarsRoverDrivePivot extends LinearOpMode {
         leftDrive = hardwareMap.get(CRServo.class, "leftDrive");
         rightDrive = hardwareMap.get(CRServo.class, "rightDrive");
 
+        //for current set up, steering should be 2 front wheels in same direction, back 2 wheels in same direction
         frontRightPivot = hardwareMap.get(Servo.class, "rightLeftPivot");
         frontLeftPivot = hardwareMap.get(Servo.class, "leftRightPivot");
+
+        //for the pitch balancing
+        pitchServo = hardwareMap.get(Servo.class, "pitchServo");
+
+        imu = hardwareMap.get(IMU.class, "imu");
 
 
         rightDrive.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -33,6 +44,11 @@ public class MarsRoverDrivePivot extends LinearOpMode {
         frontRightPivot.setPosition(0.5);
         frontLeftPivot.setPosition(0.5);
 
+        IMU.Parameters imuParams = new IMU.Parameters(new RevHubOrientationOnRobot(
+                RevHubOrientationOnRobot.LogoFacingDirection.UP,
+                RevHubOrientationOnRobot.UsbFacingDirection.FORWARD
+        ));
+
         waitForStart();
 
         if (isStopRequested()) {
@@ -40,6 +56,25 @@ public class MarsRoverDrivePivot extends LinearOpMode {
         }
 
         while (opModeIsActive() && !isStopRequested()) {
+
+            // Get pitch angle
+            double pitch = imu.getRobotYawPitchRollAngles().getPitch(AngleUnit.DEGREES);
+
+            // Map angles to servo positions (assumes 0-180 degrees range)
+            double pitchServoPos = (pitch + 90) / 180.0; // Scale to 0-1
+
+            // Limit servo range between 0 and 1
+            pitchServoPos = Math.min(Math.max(pitchServoPos, 0), 1);
+
+            // Move servos
+            pitchServo.setPosition(pitchServoPos);
+
+            // Telemetry for debugging
+            telemetry.addData("Pitch", pitch);
+            telemetry.addData("Pitch Servo", pitchServoPos);
+
+
+
 
             //the front set and back set of wheels are set to the x variable of left joystick
             //the front set is going to move with the direction of the joystick
