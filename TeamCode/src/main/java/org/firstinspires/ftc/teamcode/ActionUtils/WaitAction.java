@@ -27,13 +27,21 @@ public class WaitAction extends EventAction {
     @Override
     public boolean run(CombinedTelemetry t) {
 
+        isRunning = true;
+
         if (!started) {
             timer.reset();
             started = true;
         }
 
         t.getTelemetry().addData("WaitAction", timeMs + "  " + timer.milliseconds());
-        return (timer.milliseconds() + interruptedTime) < timeMs;
+
+        if (!((timer.milliseconds() + interruptedTime) < timeMs)) {
+            stop(false);
+            return false;
+        }
+
+        return true;
     }
 
     @Override
@@ -44,6 +52,8 @@ public class WaitAction extends EventAction {
 
     @Override
     public void stop(boolean interrupted) {
+
+        isRunning = false;
 
         //save the time at which the action was interrupted
         if (interrupted) {

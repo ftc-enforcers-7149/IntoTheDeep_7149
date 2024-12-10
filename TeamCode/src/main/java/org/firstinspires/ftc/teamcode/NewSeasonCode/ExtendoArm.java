@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 
-@Disabled
+
 @TeleOp(name="Extending Arm")
 public class ExtendoArm extends LinearOpMode {
 

@@ -7,7 +7,7 @@ import org.firstinspires.ftc.teamcode.Hardware.Chassis.MecanumPowerDrive;
 
 public class PositionFailsafe implements FailsafeTrigger{
 
-    private MecanumPowerDrive drive;
+    private ActionLocalizer localizer;
     private Pose2d target;
 
     private int offenseNum;
@@ -20,8 +20,8 @@ public class PositionFailsafe implements FailsafeTrigger{
 
     private ElapsedTime timer;
 
-    public PositionFailsafe(MecanumPowerDrive dr, Pose2d targ, double tolerance, int maxOffenseNum, int maxTimeMs) {
-        drive = dr;
+    public PositionFailsafe(ActionLocalizer localizer, Pose2d targ, double tolerance, int maxOffenseNum, int maxTimeMs) {
+        this.localizer = localizer;
         target = targ;
 
         toleranceDist = tolerance;
@@ -39,7 +39,7 @@ public class PositionFailsafe implements FailsafeTrigger{
     @Override
     public boolean triggered() {
 
-        Pose2d pose = drive.pose;
+        Pose2d pose = localizer.getLocalizerPose();
 
         offenseTriggered = ( Math.hypot(pose.position.x - target.position.x, pose.position.y - target.position.y)
                 > toleranceDist );

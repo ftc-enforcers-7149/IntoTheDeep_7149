@@ -14,7 +14,7 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import org.firstinspires.ftc.teamcode.Hardware.Chassis.MecanumPowerDrive;
 import org.firstinspires.ftc.teamcode.Hardware.Subsystems.OuttakeSlides;
 
-@Disabled
+
 @TeleOp(name = "Hanging")
 public class HangControl extends LinearOpMode {
 
@@ -132,8 +132,8 @@ public class HangControl extends LinearOpMode {
 
         while (opModeIsActive() && !isStopRequested()) {
 
-            slidesBack.slideMotor.setPower(-gamepad1.left_stick_y);
-            pitchMotorBack.setPower(-gamepad1.right_stick_y);
+            slidesFront.slideMotor.setPower(-gamepad1.left_stick_y);
+            pitchMotorFront.setPower(-gamepad1.right_stick_y);
 
         }
     }

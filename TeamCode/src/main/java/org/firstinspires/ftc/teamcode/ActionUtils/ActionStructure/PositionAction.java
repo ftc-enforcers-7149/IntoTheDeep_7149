@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure;
 
 import com.acmerobotics.roadrunner.Pose2d;
 
+import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.Shapes.Shape;
 import org.firstinspires.ftc.teamcode.Hardware.Chassis.MecanumPowerDrive;
 
 /**
@@ -9,35 +10,26 @@ import org.firstinspires.ftc.teamcode.Hardware.Chassis.MecanumPowerDrive;
  */
 public class PositionAction extends EventAction {
 
-    //TODO: Turn this into an EventAction or not?,
-    // could be useful if you randomly want to execute something
-    // if you happen to be in a certain position.
-    // Would need to get robot pose through a
-    // MecanumDrive obj or if global static odom class is used
-
-
     private EventAction action;
-    private Pose2d position;
-    private double tolerance;
 
-    private MecanumPowerDrive drive;
+    private Shape triggerArea;
+
+    private ActionLocalizer localizer;
 
     private boolean activated;
 
-    public PositionAction(MecanumPowerDrive dr, EventAction act, Pose2d pos, double tol) {
+    public PositionAction(ActionLocalizer localizer, EventAction act, Shape area) {
         action = act;
-        position = pos;
-        tolerance = tol;
+        triggerArea = area;
         activated = false;
 
-        drive = dr;
+        this.localizer = localizer;
     }
 
     @Override
     public boolean run(CombinedTelemetry t) {
 
-        if (!activated && Math.hypot(position.position.x - drive.pose.position.x,
-                position.position.y - drive.pose.position.y) < tolerance) {
+        if (!activated && triggerArea.withinBounds(localizer.getLocalizerPose())) {
 
             activated = true;
         }

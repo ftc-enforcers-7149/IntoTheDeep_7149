@@ -13,13 +13,14 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.ActionLocalizer;
 import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.PeriodicAction;
 import org.firstinspires.ftc.teamcode.PathingSystems.PurePursuit.NavPoint;
 import org.firstinspires.ftc.teamcode.PathingSystems.RRTuning.Drawing;
 import org.firstinspires.ftc.teamcode.PathingSystems.RRTuning.MecanumDrive;
 
 @Config
-public class MecanumPowerDrive extends MecanumDrive implements PeriodicAction {
+public class MecanumPowerDrive extends MecanumDrive implements PeriodicAction, ActionLocalizer {
 
     Telemetry telemetry;
     FtcDashboard dashboard;
@@ -196,4 +197,8 @@ public class MecanumPowerDrive extends MecanumDrive implements PeriodicAction {
         telemetry.addData("Drive Velocity", currentVelocity.position.x + "  " + currentVelocity.position.y + "  " + Math.toDegrees(currentVelocity.heading.toDouble()));
     }
 
+    @Override
+    public Pose2d getLocalizerPose() {
+        return this.currentPose;
+    }
 }

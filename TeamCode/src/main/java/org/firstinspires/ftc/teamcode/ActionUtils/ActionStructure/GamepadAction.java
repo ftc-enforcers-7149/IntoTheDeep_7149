@@ -3,7 +3,9 @@ package org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
 import java.util.Comparator;
+import java.util.function.BiPredicate;
 import java.util.function.Consumer;
+import java.util.function.DoublePredicate;
 import java.util.function.Predicate;
 
 public class GamepadAction extends EventAction {
@@ -15,6 +17,14 @@ public class GamepadAction extends EventAction {
 
     private boolean triggered, lastTriggered;
 
+    //TODO: For enhanced actions, create a class that combines a trigger and an eventAction (or arrayList of each)
+    // and have factory classes that add one of these objects to a list
+    // and the main class loops through the list of those objs and tests each one
+    // using the gamepad
+    // AND
+    // each type of trigger (whileHeld, whenReleased) needs their own type of method/predicate
+    // to be tested using the actual predicates of the actions
+
 
     public GamepadAction(EventAction act, Gamepad gpad, Predicate<? super Gamepad> trigger) {
         action = act;
@@ -23,6 +33,7 @@ public class GamepadAction extends EventAction {
         gamepad = gpad;
         triggered = false;
         lastTriggered = false;
+
     }
 
     @Override
@@ -79,6 +90,10 @@ public class GamepadAction extends EventAction {
 
     public boolean isTriggered() {
         return triggered;
+    }
+
+    public EventAction getAction() {
+        return action;
     }
 }
 

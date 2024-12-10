@@ -8,14 +8,25 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.ActionManager;
 import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.EventAction;
 import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.ParallelAction;
+import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.PedroAction;
+import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.PositionAction;
 import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.SequentialAction;
+import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.Shapes.MultiShape;
+import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.Shapes.Rectangle;
+import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.Shapes.Triangle;
 import org.firstinspires.ftc.teamcode.ActionUtils.ClawRotateAction;
+import org.firstinspires.ftc.teamcode.ActionUtils.EndAction;
 import org.firstinspires.ftc.teamcode.ActionUtils.P2PAction;
 import org.firstinspires.ftc.teamcode.ActionUtils.TimedAction;
 import org.firstinspires.ftc.teamcode.ActionUtils.WaitAction;
 import org.firstinspires.ftc.teamcode.Hardware.Chassis.MecanumPowerDrive;
 import org.firstinspires.ftc.teamcode.Hardware.Subsystems.OuttakeSlides;
 import org.firstinspires.ftc.teamcode.Hardware.Subsystems.PitchArm;
+import org.firstinspires.ftc.teamcode.PathingSystems.pedroPathing.follower.Follower;
+import org.firstinspires.ftc.teamcode.PathingSystems.pedroPathing.pathGeneration.BezierLine;
+import org.firstinspires.ftc.teamcode.PathingSystems.pedroPathing.pathGeneration.Path;
+import org.firstinspires.ftc.teamcode.PathingSystems.pedroPathing.pathGeneration.PathChain;
+import org.firstinspires.ftc.teamcode.PathingSystems.pedroPathing.pathGeneration.Point;
 
 public class RightSpecimen extends LinearOpMode {
 
@@ -90,6 +101,19 @@ public class RightSpecimen extends LinearOpMode {
         actionManager = new ActionManager(telemetry, hardwareMap);
         actionManager.attachPeriodicActions(drive, frontSlides, frontArm, backSlides, backArm);
 
+        //=========TEST==========
+        Follower follower = new Follower(hardwareMap);
+        PositionAction posAction = new PositionAction(follower, clawBackIntake, new MultiShape(
+                new Rectangle(new Point(0,30), new Point(15,0)),
+                new Triangle(new Point(0, 30), new Point(0, 38), new Point(15, 30))) );
+        //=======================
+
+        Path path = new Path(new BezierLine(new Point(20, 20), new Point(40, 40)));
+        path.setLinearHeadingInterpolation(0, Math.PI, 0.5);
+
+        PedroAction betterDriveAction = new PedroAction(follower,
+                new PathChain(path),
+                false);
 
         waitForStart();
 
@@ -104,6 +128,10 @@ public class RightSpecimen extends LinearOpMode {
                 new SequentialAction(
 
                         //score preload
+                        //TODO
+                        new EndAction(betterDriveAction, posAction),
+                        //TODO
+
 
                         new ParallelAction(moveChamber, slidesUpChamber),
                         armUpChamber,

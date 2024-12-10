@@ -21,6 +21,7 @@ import static org.firstinspires.ftc.teamcode.PathingSystems.pedroPathing.tuning.
 
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.acmerobotics.roadrunner.Pose2d;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -28,6 +29,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.ActionLocalizer;
 import org.firstinspires.ftc.teamcode.PathingSystems.pedroPathing.localization.Pose;
 import org.firstinspires.ftc.teamcode.PathingSystems.pedroPathing.pathGeneration.BezierPoint;
 import org.firstinspires.ftc.teamcode.PathingSystems.pedroPathing.pathGeneration.MathFunctions;
@@ -59,7 +61,7 @@ import java.util.List;
  * @version 1.0, 3/4/2024
  */
 @Config
-public class Follower {
+public class Follower implements ActionLocalizer {
     private HardwareMap hardwareMap;
 
     private DcMotorEx leftFront;
@@ -1021,5 +1023,11 @@ public class Follower {
      */
     public void resetIMU() {
         poseUpdater.resetIMU();
+    }
+
+    @Override
+    public Pose2d getLocalizerPose() {
+        Pose position = getPose();
+        return new Pose2d(position.getX(), position.getY(), position.getHeading());
     }
 }

@@ -24,12 +24,10 @@ public class TeleActionSequence extends EventAction{
     @Override
     public boolean run(CombinedTelemetry t) {
 
-        t.getTelemetry().addData("RunActionSize", runActions.size());
-
         //when all actions are finished, this action is finished
         if (runActions.isEmpty()) {
             //reset the running actions and clear the finished actions
-            runActions = finishedActions;
+            runActions.addAll(finishedActions);
             finishedActions.clear();
             return false;
         }

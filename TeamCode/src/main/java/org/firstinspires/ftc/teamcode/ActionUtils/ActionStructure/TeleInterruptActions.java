@@ -11,7 +11,7 @@ public class TeleInterruptActions<E> extends EventAction{
 
     private ArrayList<GamepadAction> runActions;
     private EventAction mainAction;
-    private GamepadAction runningAction;
+    private EventAction runningAction;
 
     private Predicate<? super E> actionTrigger;
     private E triggerObj;
@@ -40,25 +40,35 @@ public class TeleInterruptActions<E> extends EventAction{
 
         isRunning = true;
 
+        t.getTelemetry().addData("Stopped", stopped);
+        t.getTelemetry().addData("PRev", prevStopped);
+
+        //if the main action isn't stopped, continue running it
         AllActions: if (!stopped) {
             mainAction.run(t);
 
+            //go through all actions to see if one is triggered
             for (GamepadAction act : runActions) {
                 act.run(t);
+                //if this action is triggered, stop the first one
                 if (act.isTriggered()) {
                     stopped = true;
+                    act.init(); //reset the trigger on this action so it doesn't stay triggered forever
                     mainAction.stop(true);
-                    runningAction = act;
+                    //get the base action from the gamepad action and init it
+                    runningAction = act.getAction();
                     runningAction.init();
                     break AllActions;
                 }
             }
         }
 
-        if (stopped && !prevStopped) {
-            runningAction.run(t);
-            stopped = runningAction.isTriggered();
+        //if the main action is stopped, run the secondary action
+        if (stopped) {
+            stopped = runningAction.run(t);
+            //stopped = runningAction.isTriggered();
 
+            //if the trigger is triggered, stop the secondary and restart the main
             if (actionTrigger.test(triggerObj)) {
                 stopped = false;
                 runningAction.stop(true);
@@ -66,6 +76,7 @@ public class TeleInterruptActions<E> extends EventAction{
             }
         }
 
+        //if this secondary action just stopped, restart the main
         if (!stopped && prevStopped) {
             runningAction.stop(false);
         }
