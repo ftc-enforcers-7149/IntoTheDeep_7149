@@ -32,8 +32,16 @@ public class LLSampleVision implements PeriodicAction {
 
     }
 
+    public double getServoPos() {
+        return getResultInfo()[0] / Math.PI;
+    }
+
     public void stopLimelight() {
         limelight.stop();
+    }
+
+    public void closeLimelight() {
+        limelight.close();
     }
 
     public void startLimelight() {

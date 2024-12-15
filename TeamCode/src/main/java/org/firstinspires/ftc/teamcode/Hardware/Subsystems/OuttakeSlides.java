@@ -14,7 +14,7 @@ public class OuttakeSlides implements PeriodicAction {
 
     public DcMotorEx slideMotor;
 
-    public static double kp = 0.008, ki = 0, kd = 0.00026, ff=0.00012;
+    public static double kp = 0.018, ki = 0, kd = 0.00026, ff=0.00012;
 
     private PIDFController slideController;
 

@@ -66,6 +66,9 @@ public class CameraTest extends LinearOpMode {
 
         //TesterPipeline processor = new TesterPipeline();
 
+        WebcamName cam = hardwareMap.get(WebcamName.class, "limelight");
+
+
         VisionPortal portal = new VisionPortal.Builder()
                 .setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"))
                 .setCameraResolution(new Size(320,240))
