@@ -657,6 +657,12 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
                 inStageFront = Intake.IDLE;
             }
 
+            if (gamepad1.dpad_right) {
+                slidesFront.slideMotor.setPower(1);
+                stageFront = Stages.IDLE;
+                inStageFront = Intake.IDLE;
+            }
+
             if (gamepad1.dpad_up) {
                 pitchMotorFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 pitchMotorFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
