@@ -13,23 +13,17 @@ import com.qualcomm.robotcore.hardware.ServoImplEx;
 
 import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.ActionManager;
 import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.InstantAction;
-import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.PedroAction;
 import org.firstinspires.ftc.teamcode.ActionUtils.WristRotateAction;
 import org.firstinspires.ftc.teamcode.ActionUtils.ClawRotateAction;
 import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.EventAction;
 import org.firstinspires.ftc.teamcode.ActionUtils.P2PAction;
 import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.ParallelAction;
 import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.SequentialAction;
-import org.firstinspires.ftc.teamcode.ActionUtils.TimedAction;
-import org.firstinspires.ftc.teamcode.ActionUtils.WaitAction;
+import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.TimedAction;
+import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.WaitAction;
 import org.firstinspires.ftc.teamcode.Hardware.Chassis.MecanumPowerDrive;
 import org.firstinspires.ftc.teamcode.Hardware.Subsystems.OuttakeSlides;
 import org.firstinspires.ftc.teamcode.Hardware.Subsystems.PitchArm;
-import org.firstinspires.ftc.teamcode.PathingSystems.pedroPathing.follower.Follower;
-import org.firstinspires.ftc.teamcode.PathingSystems.pedroPathing.pathGeneration.BezierLine;
-import org.firstinspires.ftc.teamcode.PathingSystems.pedroPathing.pathGeneration.Path;
-import org.firstinspires.ftc.teamcode.PathingSystems.pedroPathing.pathGeneration.PathChain;
-import org.firstinspires.ftc.teamcode.PathingSystems.pedroPathing.pathGeneration.Point;
 
 
 @Autonomous(name = "BlueLeftChamber")

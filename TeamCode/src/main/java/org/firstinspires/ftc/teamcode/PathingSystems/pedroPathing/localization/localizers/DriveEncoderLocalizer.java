@@ -9,12 +9,12 @@ import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.teamcode.PathingSystems.pedroPathing.localization.Encoder;
+import org.firstinspires.ftc.teamcode.PathingSystems.pedroPathing.localization.Localizer;
 import org.firstinspires.ftc.teamcode.PathingSystems.pedroPathing.localization.Matrix;
 import org.firstinspires.ftc.teamcode.PathingSystems.pedroPathing.localization.Pose;
 import org.firstinspires.ftc.teamcode.PathingSystems.pedroPathing.pathGeneration.MathFunctions;
 import org.firstinspires.ftc.teamcode.PathingSystems.pedroPathing.pathGeneration.Vector;
-import org.firstinspires.ftc.teamcode.PathingSystems.pedroPathing.localization.Encoder;
-import org.firstinspires.ftc.teamcode.PathingSystems.pedroPathing.localization.Localizer;
 import org.firstinspires.ftc.teamcode.PathingSystems.pedroPathing.util.NanoTimer;
 
 /**
@@ -71,8 +71,8 @@ public class DriveEncoderLocalizer extends Localizer {
 
         // TODO: reverse any encoders necessary
         leftFront.setDirection(Encoder.REVERSE);
-        rightRear.setDirection(Encoder.REVERSE);
-        leftRear.setDirection(Encoder.FORWARD);
+        leftRear.setDirection(Encoder.REVERSE);
+        rightFront.setDirection(Encoder.FORWARD);
         rightRear.setDirection(Encoder.FORWARD);
 
         setStartPose(setStartPose);

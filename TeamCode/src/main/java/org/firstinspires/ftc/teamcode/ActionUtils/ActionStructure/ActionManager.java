@@ -50,11 +50,6 @@ public class ActionManager {
 
     public void runActionManager(EventAction a) {
 
-
-        //TODO: For gamepad actions, use factories with a .whenPressed()
-        // or .whenHeld() methods to specify the trigger types, etc
-
-
         FtcDashboard dash = FtcDashboard.getInstance();
 
         boolean b = true;

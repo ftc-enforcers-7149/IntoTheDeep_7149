@@ -56,6 +56,10 @@ public class MecanumPowerDrive extends MecanumDrive implements PeriodicAction, A
     public PIDFController yPID = new PIDFController(kpy, 0, kdy, 0);
     public PIDFController angPID = new PIDFController(kpt, 0, kdt, 0);
 
+    public static double driftP = 1.3, driftD = 0.07;
+
+    public PIDFController headingDriftPID = new PIDFController(driftP, 0, driftD, 0);
+
     public MecanumPowerDrive(HardwareMap hMap, Pose2d startPos, Telemetry tel){
         super(hMap, startPos);
         startPose = startPos;

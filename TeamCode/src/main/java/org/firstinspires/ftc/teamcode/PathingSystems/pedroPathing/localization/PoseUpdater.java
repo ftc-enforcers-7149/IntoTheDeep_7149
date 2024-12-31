@@ -5,7 +5,6 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.teamcode.PathingSystems.pedroPathing.localization.localizers.ThreeWheelIMULocalizer;
 import org.firstinspires.ftc.teamcode.PathingSystems.pedroPathing.localization.localizers.ThreeWheelLocalizer;
 import org.firstinspires.ftc.teamcode.PathingSystems.pedroPathing.pathGeneration.MathFunctions;
 import org.firstinspires.ftc.teamcode.PathingSystems.pedroPathing.pathGeneration.Vector;
@@ -69,7 +68,7 @@ public class PoseUpdater {
      */
     public PoseUpdater(HardwareMap hardwareMap) {
         // TODO: replace the second argument with your preferred localizer
-        this(hardwareMap, new ThreeWheelIMULocalizer(hardwareMap));
+        this(hardwareMap, new ThreeWheelLocalizer(hardwareMap));
     }
 
     /**
@@ -350,7 +349,7 @@ public class PoseUpdater {
     /**
      *
      */
-    public void resetIMU() {
+    public void resetIMU() throws InterruptedException {
         localizer.resetIMU();
     }
 }

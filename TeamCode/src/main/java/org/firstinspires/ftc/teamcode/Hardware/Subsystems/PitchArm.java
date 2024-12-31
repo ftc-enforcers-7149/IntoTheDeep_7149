@@ -14,7 +14,7 @@ public class PitchArm implements PeriodicAction {
 
     public DcMotorEx pitchMotor;
 
-    public static double kp = 0.022, ki = 0, kd = 0.0004;
+    public static double kp = 0.023, ki = 0, kd = 0.00042;
 
     public static double ffCoefficient = 0;
 

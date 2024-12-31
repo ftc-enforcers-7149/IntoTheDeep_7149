@@ -8,9 +8,9 @@ import org.firstinspires.ftc.teamcode.PathingSystems.pedroPathing.follower.Follo
 import org.firstinspires.ftc.teamcode.PathingSystems.pedroPathing.localization.Pose;
 import org.firstinspires.ftc.teamcode.PathingSystems.pedroPathing.pathGeneration.MathFunctions;
 import org.firstinspires.ftc.teamcode.PathingSystems.pedroPathing.pathGeneration.Path;
+import org.firstinspires.ftc.teamcode.PathingSystems.pedroPathing.pathGeneration.PathChain;
 import org.firstinspires.ftc.teamcode.PathingSystems.pedroPathing.pathGeneration.Point;
 import org.firstinspires.ftc.teamcode.PathingSystems.pedroPathing.pathGeneration.Vector;
-import org.firstinspires.ftc.teamcode.PathingSystems.pedroPathing.pathGeneration.PathChain;
 
 /**
  * This is the Drawing class. It handles the drawing of stuff on FTC Dashboard, like the robot.

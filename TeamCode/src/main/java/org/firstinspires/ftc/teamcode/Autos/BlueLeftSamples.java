@@ -13,7 +13,7 @@ import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.EventAction;
 import org.firstinspires.ftc.teamcode.ActionUtils.P2PAction;
 import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.ParallelAction;
 import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.SequentialAction;
-import org.firstinspires.ftc.teamcode.ActionUtils.TimedAction;
+import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.TimedAction;
 import org.firstinspires.ftc.teamcode.Hardware.Chassis.MecanumPowerDrive;
 import org.firstinspires.ftc.teamcode.Hardware.Subsystems.OuttakeSlides;
 import org.firstinspires.ftc.teamcode.Hardware.Subsystems.PitchArm;
