@@ -4,18 +4,24 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+
 public class EndAction extends EventAction {
 
     private ArrayList<EventAction> secondaryActions;
     private EventAction firstAction;
 
-
+    /**
+     * Runs primary and secondary actions in parallel. Stops all actions once the first action is completed
+     */
     public EndAction(EventAction action1, List<EventAction> actionList) {
         firstAction = action1;
         //ensure we are given an arrayList, or else we get exceptions when removing actions from list
         secondaryActions = new ArrayList<EventAction>((List<EventAction>) actionList);
     }
 
+    /**
+     * Runs primary and secondary actions in parallel. Stops all actions once the first action is completed
+     */
     public EndAction(EventAction action1, EventAction...actions) {
         this(action1, Arrays.asList(actions));
     }
@@ -26,7 +32,7 @@ public class EndAction extends EventAction {
         isRunning = true;
 
         //when the first action ends, end all of the other actions
-        boolean finished = firstAction.run(t);
+        boolean finished = !firstAction.run(t);
 
         if (finished) {
             stop(false);

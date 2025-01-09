@@ -18,10 +18,12 @@ import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.VisionProcessor;
 import org.opencv.android.Utils;
 import org.opencv.core.Mat;
+import org.openftc.easyopencv.OpenCvCamera;
+import org.openftc.easyopencv.OpenCvCameraFactory;
 
 import java.util.concurrent.atomic.AtomicReference;
 
-@Disabled
+
 @TeleOp(name="CameraTest")
 public class CameraTest extends LinearOpMode {
 
@@ -62,11 +64,12 @@ public class CameraTest extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
 
+        boolean gotSnapshot = false;
+        int loops = 0;
+
         CameraStreamProc processor = new CameraStreamProc();
 
         //TesterPipeline processor = new TesterPipeline();
-
-        WebcamName cam = hardwareMap.get(WebcamName.class, "limelight");
 
 
         VisionPortal portal = new VisionPortal.Builder()
@@ -84,9 +87,30 @@ public class CameraTest extends LinearOpMode {
 
         while(opModeIsActive() && !isStopRequested()){
 
+            if (gamepad1.cross) {
+                portal.resumeStreaming();
+                gotSnapshot = true;
+            }
+
+            if (gamepad1.triangle) {
+                portal.stopStreaming();
+                gotSnapshot = false;
+            }
+
+            VisionPortal.CameraState state = portal.getCameraState();
+
+            if (state == VisionPortal.CameraState.STARTING_STREAM) {
+                loops++;
+            }
+
             FtcDashboard.getInstance().sendImage(processor.getLastFrame());
 
+            telemetry.addData("Camera State", state.name());
+            telemetry.addData("Loops to Start Stream", loops);
+            telemetry.addData("Snapshot", gotSnapshot);
             telemetry.update();
+
+
 
         }
 

@@ -25,6 +25,7 @@ import static org.firstinspires.ftc.teamcode.PathingSystems.pedroPathing.tuning.
 
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.acmerobotics.roadrunner.Pose2d;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -32,6 +33,8 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.ActionLocalizer;
+import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.PeriodicAction;
 import org.firstinspires.ftc.teamcode.PathingSystems.pedroPathing.localization.Localizer;
 import org.firstinspires.ftc.teamcode.PathingSystems.pedroPathing.localization.Pose;
 import org.firstinspires.ftc.teamcode.PathingSystems.pedroPathing.localization.PoseUpdater;
@@ -64,7 +67,7 @@ import java.util.List;
  * @version 1.0, 3/4/2024
  */
 @Config
-public class Follower {
+public class Follower implements ActionLocalizer, PeriodicAction {
     private HardwareMap hardwareMap;
 
     private DcMotorEx leftFront;
@@ -146,6 +149,8 @@ public class Follower {
     public static boolean useHeading = true;
     public static boolean useDrive = true;
 
+    private Telemetry telemetry;
+
     /**
      * This creates a new Follower given a HardwareMap.
      *
@@ -153,6 +158,18 @@ public class Follower {
      */
     public Follower(HardwareMap hardwareMap) {
         this.hardwareMap = hardwareMap;
+        initialize();
+    }
+
+    /**
+     * This creates a new Follower given a HardwareMap and a telemetry reference.
+     *
+     * @param hardwareMap HardwareMap required
+     * @param telemetry The opMode's telemetry object
+     */
+    public Follower(HardwareMap hardwareMap, Telemetry telemetry) {
+        this.hardwareMap = hardwareMap;
+        this.telemetry = telemetry;
         initialize();
     }
 
@@ -1061,5 +1078,20 @@ public class Follower {
      */
     private void resetIMU() throws InterruptedException {
         poseUpdater.resetIMU();
+    }
+
+    @Override
+    public Pose2d getLocalizerPose() {
+        Pose currentPose = getPose();
+        return new Pose2d(currentPose.getX(), currentPose.getY(), currentPose.getHeading());
+    }
+
+    @Override
+    public void periodic() {
+        if (telemetry != null){
+            Pose pose = getPose();
+            telemetry.addData("Drive Position", pose.getX() + "  " + pose.getY() + "  " + Math.toDegrees(pose.getHeading()));
+        }
+        this.update();
     }
 }

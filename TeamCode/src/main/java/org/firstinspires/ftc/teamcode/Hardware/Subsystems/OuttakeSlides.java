@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.Hardware.Subsystems;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.controller.PIDFController;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -10,11 +11,12 @@ import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.CombinedTeleme
 import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.EventAction;
 import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.PeriodicAction;
 
+@Config
 public class OuttakeSlides implements PeriodicAction {
 
     public DcMotorEx slideMotor;
 
-    public static double kp = 0.018, ki = 0, kd = 0.00026, ff=0.00012;
+    public static double kp = 0.02, ki = 0, kd = 0.00026, ff=0.00012;
 
     private PIDFController slideController;
 
@@ -51,10 +53,10 @@ public class OuttakeSlides implements PeriodicAction {
     @Override
     public void periodic() {
 
-        if (Math.abs(slideMotor.getVelocity()) < 0.01 && slideMotor.getCurrentPosition() < 100 && slideMotor.getPower() < -0.01) {
-            slideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            slideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        }
+//        if (Math.abs(slideMotor.getVelocity()) < 0.01 && slideMotor.getCurrentPosition() < 100 && slideMotor.getPower() < -0.01) {
+//            slideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//            slideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+//        }
 
         //always have PIDF running in background, unless motor is interrupted
         if (!motorInterrupted) {

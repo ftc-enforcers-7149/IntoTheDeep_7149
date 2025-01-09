@@ -26,6 +26,5 @@ public class CombinedTelemetry {
     public void registerAction(String actionName, String actionInfo){
         telemetry.addData("-----" ,"-----");
         telemetry.addData(actionName, " " + actionInfo);
-        telemetry.addData("-----" ,"-----");
     }
 }

@@ -21,10 +21,11 @@ public class PedroAction extends EventAction{
         startedPath = false;
     }
 
+
     @Override
     public boolean run(CombinedTelemetry t) {
 
-        follower.update();
+        t.registerAction("Pedro Action", "t=" + follower.getCurrentTValue());
 
         if (!startedPath) {
             follower.followPath(pathChain, holdEnd);

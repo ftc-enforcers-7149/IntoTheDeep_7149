@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.Hardware.Subsystems;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.controller.PIDFController;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -10,11 +11,12 @@ import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.CombinedTeleme
 import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.EventAction;
 import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.PeriodicAction;
 
+@Config
 public class PitchArm implements PeriodicAction {
 
     public DcMotorEx pitchMotor;
 
-    public static double kp = 0.023, ki = 0, kd = 0.00042;
+    public static double kp = 0.012, ki = 0, kd = 0.0003;
 
     public static double ffCoefficient = 0;
 
@@ -42,7 +44,7 @@ public class PitchArm implements PeriodicAction {
     }
 
     public void setPIDFCoefficients(double p, double i, double d, double f) {
-        pitchController.setPIDF(p, i, d, f);
+        pitchController = new PIDFController(p, i, d, f);
     }
 
     public EventAction getPitchingAction(int targ) {

@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.PathingSystems.pedroPathing.localization.localizers;
 
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -43,6 +44,7 @@ import org.firstinspires.ftc.teamcode.PathingSystems.pedroPathing.util.NanoTimer
  * @author Ethan Doak - Gobilda
  * @version 1.0, 10/2/2024
  */
+@Config
 public class PinpointLocalizer extends Localizer {
     private HardwareMap hardwareMap;
     private GoBildaPinpointDriver odo;
@@ -53,6 +55,8 @@ public class PinpointLocalizer extends Localizer {
     private NanoTimer timer;
     private Pose currentVelocity;
     private Pose previousPinpointPose;
+
+    public static double xOffset = 7.56, yOffset = -0.15;
 
     /**
      * This creates a new PinpointLocalizer from a HardwareMap, with a starting Pose at (0,0)
@@ -76,15 +80,15 @@ public class PinpointLocalizer extends Localizer {
 
         //The default units are inches, but you can swap the units if you wish.
         //If you have already tuned the TwoWheelLocalizer, you can simply use the forwardEncoderPose's y value and strafeEncoderPose's x values.
-        setOffsets(-2.815, 0.125, DistanceUnit.INCH); //these are tuned for 3110-0002-0001 Product Insight #1
+        setOffsets(xOffset, yOffset, DistanceUnit.INCH); //these are tuned for 3110-0002-0001 Product Insight #1
 
         //TODO: Tune urself if needed
 //        odo.setYawScalar(1.0);
 
-        odo.setEncoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD);
+        odo.setEncoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_SWINGARM_POD);
         //odo.setEncoderResolution(13.26291192);
 
-        odo.setEncoderDirections(GoBildaPinpointDriver.EncoderDirection.REVERSED, GoBildaPinpointDriver.EncoderDirection.FORWARD);
+        odo.setEncoderDirections(GoBildaPinpointDriver.EncoderDirection.FORWARD, GoBildaPinpointDriver.EncoderDirection.REVERSED);
 
         resetPinpoint();
 
