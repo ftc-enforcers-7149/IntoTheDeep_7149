@@ -21,15 +21,15 @@ public class MarsRoverDrivePivot extends LinearOpMode {
     IMU imu;
 
 
-    @Override
+//    @Override
     public void runOpMode() throws InterruptedException {
 
         leftDrive = hardwareMap.get(CRServo.class, "leftDrive");
         rightDrive = hardwareMap.get(CRServo.class, "rightDrive");
 
         //for current set up, steering should be 2 front wheels in same direction, back 2 wheels in same direction
-        frontRightPivot = hardwareMap.get(Servo.class, "rightLeftPivot");
-        frontLeftPivot = hardwareMap.get(Servo.class, "leftRightPivot");
+        frontRightPivot = hardwareMap.get(Servo.class, "frontSteer");
+        frontLeftPivot = hardwareMap.get(Servo.class, "backSteer");
 
         //for the pitch balancing
         pitchServo = hardwareMap.get(Servo.class, "pitchServo");
@@ -74,14 +74,26 @@ public class MarsRoverDrivePivot extends LinearOpMode {
             telemetry.addData("Pitch Servo", pitchServoPos);
 
 
+            double drive = -gamepad1.left_stick_y;  // Forward/backward
+            double turn = gamepad1.right_stick_x;  // Left/right turn
 
+            // Calculate power for each side
+            double leftPower = drive + turn;  // Inside wheel slows down during a turn
+            double rightPower = drive - turn; // Outside wheel speeds up during a turn
+
+            // Normalize power to ensure values are within -1 to 1
+            double maxPower = Math.max(Math.abs(leftPower), Math.abs(rightPower));
+            if (maxPower > 1.0) {
+                leftPower /= maxPower;
+                rightPower /= maxPower;
+            }
 
             //the front set and back set of wheels are set to the x variable of left joystick
             //the front set is going to move with the direction of the joystick
             //the back set will go the opposite direction
-            leftDrive.setPower(-gamepad1.right_stick_y);
+            leftDrive.setPower(leftPower);
 
-            rightDrive.setPower(-gamepad1.right_stick_y);
+            rightDrive.setPower(rightPower);
 
             //each side's pivot is connected to the respective joystick
             //servos should be facing directly forwards when at 0.5 position
@@ -107,6 +119,7 @@ public class MarsRoverDrivePivot extends LinearOpMode {
 
 
             telemetry.update();
+
 
         }
     }

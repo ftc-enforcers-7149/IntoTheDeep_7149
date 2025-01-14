@@ -5,7 +5,6 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
-@TeleOp(name = "MarsRoverV1")
 public class MarsRoverDrive extends LinearOpMode {
 
     CRServo frontLeft, frontRight, backLeft, backRight;
