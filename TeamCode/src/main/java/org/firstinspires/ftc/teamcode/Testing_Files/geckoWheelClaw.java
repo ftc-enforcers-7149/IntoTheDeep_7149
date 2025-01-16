@@ -30,20 +30,20 @@ public class geckoWheelClaw extends LinearOpMode {
 
             currentGamepad1.copy(gamepad1);
 
+            claw.setPower(gamepad1.right_stick_y);
+//            if (gamepad1.left_bumper) {
+//                claw.setPower(1);
+//            }
+//
+//            if (gamepad1.right_bumper) {
+//                claw.setPower(-1);
+//            }
+//
+//            if (gamepad1.x){
+//                claw.setPower(0);
+//            }
 
-            if (gamepad1.left_bumper) {
-                claw.setPower(1);
-            }
-
-            if (gamepad1.right_bumper) {
-                claw.setPower(-1);
-            }
-
-            if (gamepad1.x){
-                claw.setPower(0);
-            }
-
-            telemetry.addData("CurrentPosition: ", claw.getPower());
+            telemetry.addData("CurrentPower: ", claw.getPower());
             telemetry.update();
 
         }
