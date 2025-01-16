@@ -20,7 +20,7 @@ import org.firstinspires.ftc.teamcode.PathingSystems.pedroPathing.pathGeneration
 import org.firstinspires.ftc.teamcode.PathingSystems.pedroPathing.pathGeneration.PathChain;
 import org.firstinspires.ftc.teamcode.PathingSystems.pedroPathing.pathGeneration.Point;
 
-
+@Disabled
 @Autonomous(name = "MovementTest")
 public class MovementTest extends LinearOpMode {
 

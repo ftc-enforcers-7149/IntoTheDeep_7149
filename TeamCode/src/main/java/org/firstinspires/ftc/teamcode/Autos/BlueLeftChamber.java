@@ -4,6 +4,7 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -25,7 +26,7 @@ import org.firstinspires.ftc.teamcode.Hardware.Chassis.MecanumPowerDrive;
 import org.firstinspires.ftc.teamcode.Hardware.Subsystems.OuttakeSlides;
 import org.firstinspires.ftc.teamcode.Hardware.Subsystems.PitchArm;
 
-
+@Disabled
 @Autonomous(name = "BlueLeftChamber")
 public class BlueLeftChamber extends LinearOpMode {
 

@@ -23,7 +23,7 @@ import org.openftc.easyopencv.OpenCvCameraFactory;
 
 import java.util.concurrent.atomic.AtomicReference;
 
-
+@Disabled
 @TeleOp(name="CameraTest")
 public class CameraTest extends LinearOpMode {
 

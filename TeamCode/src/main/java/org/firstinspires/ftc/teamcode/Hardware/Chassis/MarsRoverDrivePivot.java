@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.Hardware.Chassis;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -10,6 +11,7 @@ import com.qualcomm.robotcore.hardware.IMU;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
+@Disabled
 @TeleOp(name = "MarsRoverV2")
 public class MarsRoverDrivePivot extends LinearOpMode {
 

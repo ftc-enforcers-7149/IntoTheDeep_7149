@@ -92,7 +92,7 @@ public class RightSpecimen extends LinearOpMode {
         backArm.pitchMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         backArm.pitchMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        frontArm.setPIDFCoefficients(0.05, 0, 0.0005,0);
+        frontArm.setPIDFCoefficients(0.054, 0, 0.0005,0);
         //backSlides.setPIDFCoefficients(0.08, 0, 0.00026, 0.00012);
         backArm.setPIDFCoefficients(0.016, 0, 0.0003,0);
 
@@ -107,9 +107,9 @@ public class RightSpecimen extends LinearOpMode {
         slidesBackDownChamber = backSlides.getExtensionAction(0);
         slidesBackAboveWall = backSlides.getExtensionAction(300);
 
-        armDownSample = frontArm.getPitchingAction(1050);
+        armDownSample = frontArm.getPitchingAction(1040);
         armUpSample = frontArm.getPitchingAction(0);
-        armAboveSample = frontArm.getPitchingAction(820);
+        armAboveSample = frontArm.getPitchingAction(780);
 
         armBackDownChamber = backArm.getPitchingAction(0);
         armBackUpChamber = backArm.getPitchingAction(150);
@@ -122,10 +122,10 @@ public class RightSpecimen extends LinearOpMode {
         imu.initialize(imuParams);
 
 
-        clawOuttake = new ClawRotateAction(hardwareMap, "frontClaw", -0.5);
+        clawOuttake = new ClawRotateAction(hardwareMap, "frontClaw", -0.6);
         clawIntake = new ClawRotateAction(hardwareMap, "frontClaw", 1);
 
-        clawBackOuttake = new ClawRotateAction(hardwareMap, "backClaw", 0.5);
+        clawBackOuttake = new ClawRotateAction(hardwareMap, "backClaw", 0.7);
         clawBackIntake = new ClawRotateAction(hardwareMap, "backClaw", 1);
 
         rightExt = hardwareMap.get(ServoImplEx.class, "rightExt");
@@ -150,7 +150,7 @@ public class RightSpecimen extends LinearOpMode {
         });
 
         slowFollower = new InstantAction(() -> {
-            follower.setMaxPower(0.3);
+            follower.setMaxPower(0.4);
         });
 
         quickFollower = new InstantAction(() -> {
@@ -158,7 +158,7 @@ public class RightSpecimen extends LinearOpMode {
         });
 
         medFollower = new InstantAction(() -> {
-            follower.setMaxPower(0.5);
+            follower.setMaxPower(0.6);
         });
 
 
@@ -175,38 +175,38 @@ public class RightSpecimen extends LinearOpMode {
 
         chamberPath1 = new Path(new BezierLine(
                 new Point(8.75, 62),
-                new Point(31, 64)
+                new Point(30, 64)
         ));
         chamberPath1.setConstantHeadingInterpolation(Math.toRadians(180));
 
 
         samplePath1 = new Path(new BezierCurve(
-                new Point(31, 64),
-                new Point(31, 54),
+                new Point(30, 64),
+                new Point(30, 54),
                 SAMPLE_1_PICKUP
         ));
         samplePath1.setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(-45));
 
         depositPath1 = new Path(new BezierLine(
                 SAMPLE_1_PICKUP,
-                MathFunctions.addPoints(SAMPLE_1_PICKUP, new Point(-1, -4))
+                MathFunctions.addPoints(SAMPLE_1_PICKUP, new Point(-2, -4))
         ));
         depositPath1.setLinearHeadingInterpolation(Math.toRadians(-45), Math.toRadians(-135));
 
         samplePath2 = new Path(new BezierLine(
-                MathFunctions.addPoints(SAMPLE_1_PICKUP, new Point(-1, -4)),
+                MathFunctions.addPoints(SAMPLE_1_PICKUP, new Point(-2, -4)),
                 SAMPLE_2_PICKUP
         ));
         samplePath2.setLinearHeadingInterpolation(Math.toRadians(-135), Math.toRadians(-45));
 
         depositPath2 = new Path(new BezierLine(
                 SAMPLE_2_PICKUP,
-                MathFunctions.addPoints(SAMPLE_2_PICKUP, new Point(-1, -4))
+                MathFunctions.addPoints(SAMPLE_2_PICKUP, new Point(-2, -4))
         ));
         depositPath2.setLinearHeadingInterpolation(Math.toRadians(-45), Math.toRadians(-135));
 
         samplePath3 = new Path(new BezierCurve(
-                MathFunctions.addPoints(SAMPLE_2_PICKUP, new Point(-1, -4)),
+                MathFunctions.addPoints(SAMPLE_2_PICKUP, new Point(-2, -4)),
                 new Point(24,38),
                 SAMPLE_3_PICKUP
         ));
@@ -214,28 +214,28 @@ public class RightSpecimen extends LinearOpMode {
 
         depositPath3 = new Path(new BezierLine(
                 SAMPLE_3_PICKUP,
-                MathFunctions.addPoints(SAMPLE_3_PICKUP, new Point(-1, 7))
+                MathFunctions.addPoints(SAMPLE_3_PICKUP, new Point(-2, 7))
         ));
         depositPath3.setLinearHeadingInterpolation(Math.toRadians(-45), Math.toRadians(-135));
 
         //---------------
 
         wallPath2 = new Path(new BezierCurve(
-                MathFunctions.addPoints(SAMPLE_3_PICKUP, new Point(-1, 7)),
+                MathFunctions.addPoints(SAMPLE_3_PICKUP, new Point(-2, 7)),
                 new Point(36, 36),
-                MathFunctions.addPoints(AutoConstants.SPECIMEN_PICKUP, new Point(-1, 0))
+                MathFunctions.addPoints(AutoConstants.SPECIMEN_PICKUP, new Point(-2.5, 0))
         ));
         wallPath2.setLinearHeadingInterpolation(Math.toRadians(-135), 0, 0.2);
         wallPath2.setZeroPowerAccelerationMultiplier(6);
 
         chamberPath2 = new Path(new BezierLine(
-                MathFunctions.addPoints(AutoConstants.SPECIMEN_PICKUP, new Point(-0.5, 0)),
-                new Point(35, 58)
+                MathFunctions.addPoints(AutoConstants.SPECIMEN_PICKUP, new Point(-2.5, 0)),
+                new Point(36, 61)
         ));
         chamberPath2.setLinearHeadingInterpolation(0, Math.toRadians(180.01), 0.6);
 
         wallPath3 = new Path(new BezierCurve(
-                new Point(35, 58),
+                new Point(36, 61),
                 new Point(30, 40),
                 AutoConstants.SPECIMEN_PICKUP
         ));
@@ -244,12 +244,12 @@ public class RightSpecimen extends LinearOpMode {
 
         chamberPath3 = new Path(new BezierLine(
                 AutoConstants.SPECIMEN_PICKUP,
-                new Point(35, 60)
+                new Point(36, 62)
         ));
         chamberPath3.setLinearHeadingInterpolation(0, Math.toRadians(180.01), 0.6);
 
         wallPath4 = new Path(new BezierCurve(
-                new Point(35, 60),
+                new Point(36, 62),
                 new Point(30, 40),
                 AutoConstants.SPECIMEN_PICKUP
         ));
@@ -258,12 +258,12 @@ public class RightSpecimen extends LinearOpMode {
 
         chamberPath4 = new Path(new BezierLine(
                 AutoConstants.SPECIMEN_PICKUP,
-                new Point(35, 62)
+                new Point(36, 66)
         ));
         chamberPath4.setLinearHeadingInterpolation(0, Math.toRadians(180.01), 0.6);
 
         wallPath5 = new Path(new BezierCurve(
-                new Point(35, 62),
+                new Point(36, 66),
                 new Point(30, 40),
                 AutoConstants.SPECIMEN_PICKUP
         ));
@@ -272,15 +272,15 @@ public class RightSpecimen extends LinearOpMode {
 
         chamberPath5 = new Path(new BezierLine(
                 AutoConstants.SPECIMEN_PICKUP,
-                new Point(35, 64)
+                new Point(36, 68)
         ));
         chamberPath5.setLinearHeadingInterpolation(0, Math.toRadians(180.01), 0.6);
 
         parkPath = new Path(new BezierLine(
-                new Point(35, 64),
-                new Point(20, 30)
+                new Point(36, 68),
+                new Point(24, 36)
         ));
-        parkPath.setLinearHeadingInterpolation(Math.toRadians(180.01), Math.toRadians(225), 0.3);
+        parkPath.setLinearHeadingInterpolation(Math.toRadians(180.01), Math.toRadians(215), 0.3);
 
 
         //==========PEDRO ACTION CREATION====================
@@ -340,36 +340,41 @@ public class RightSpecimen extends LinearOpMode {
 
                         //score first spec on chamber
 
-                        new ParallelAction(medFollower, moveChamber1, slidesBackUpChamber,
-                                armBackUpChamber, extensionOut),
+                        new ParallelAction(medFollower,
+                                new SequentialAction(new WaitAction(200),moveChamber1),
+                                slidesBackUpChamber,
+                                armBackUpChamber, extensionOut
+                        ),
                         quickFollower,
-                        slidesBackScoreChamber,
                         new ParallelAction(
                                 //new SequentialAction(new WaitAction(500), slowFollower),
-                                moveSample1, slidesBackDownChamber, armBackDownChamber,
-                                new TimedAction(clawBackOuttake, 300), armAboveSample),
+                                moveSample1, slidesBackDownChamber,
+                                armBackDownChamber,
+                                armAboveSample,
+                                new TimedAction(clawBackOuttake, 300)
+                        ),
 
                         //pickup the first sample and deposit it
 
                         new EndAction(new SequentialAction(armDownSample, new WaitAction(400)), clawIntake),
                         new ParallelAction(/*quickFollower,*/ depositSample1, armAboveSample),
-                        new TimedAction(clawOuttake, 300),
+                        new TimedAction(clawOuttake, 250),
 
                         //pickup second sample and deposit it
 
                         //slowFollower,
                         moveSample2,
-                        new EndAction(new SequentialAction(armDownSample, new WaitAction(400)), clawIntake),
+                        new EndAction(new SequentialAction(armDownSample, new WaitAction(300)), clawIntake),
                         new ParallelAction(/*quickFollower,*/ depositSample2, armAboveSample),
-                        new TimedAction(clawOuttake, 300),
+                        new TimedAction(clawOuttake, 250),
 
                         //pickup third sample and deposit it
 
                         //slowFollower,
                         moveSample3,
-                        new EndAction(new SequentialAction(armDownSample, new WaitAction(400)), clawIntake),
+                        new EndAction(new SequentialAction(armDownSample, new WaitAction(300)), clawIntake),
                         new ParallelAction(/*quickFollower,*/ depositSample3, armAboveSample),
-                        new TimedAction(clawOuttake, 300),
+                        new TimedAction(clawOuttake, 250),
 
                         //get spec 2 off the wall and score it
                         //stop intaking 200ms after arriving at wall
@@ -378,8 +383,9 @@ public class RightSpecimen extends LinearOpMode {
                                 new EndAction(new SequentialAction(moveWall2, new WaitAction(300)),
                                         clawBackIntake),
                                 extensionIn,
-                                armUpSample,
-                                new SequentialAction(new WaitAction(200), slowFollower)),
+                                armUpSample
+                                //new SequentialAction(new WaitAction(200), slowFollower)
+                        ),
                         imuReset,
                         new ParallelAction(quickFollower, new TimedAction(clawBackOuttake, 200), moveChamber2, slidesBackUpChamber),
                         slidesBackScoreChamber,
@@ -393,8 +399,9 @@ public class RightSpecimen extends LinearOpMode {
                                     new SequentialAction(moveWall3, new WaitAction(300)),
                                     new SequentialAction(new TimedAction(clawBackOuttake, 300),
                                         clawBackIntake)),
-                                slidesBackDownChamber,
-                                new SequentialAction(new WaitAction(800), slowFollower)),
+                                slidesBackDownChamber
+                                //new SequentialAction(new WaitAction(800), slowFollower)
+                        ),
                         new ParallelAction(quickFollower, new TimedAction(clawBackOuttake, 200), moveChamber3, slidesBackUpChamber),
                         slidesBackScoreChamber,
 
@@ -405,8 +412,9 @@ public class RightSpecimen extends LinearOpMode {
                                         new SequentialAction(moveWall4, new WaitAction(300)),
                                         new SequentialAction(new TimedAction(clawBackOuttake, 300),
                                                 clawBackIntake)),
-                                slidesBackDownChamber,
-                                new SequentialAction(new WaitAction(800), slowFollower)),
+                                slidesBackDownChamber
+                                //new SequentialAction(new WaitAction(800), slowFollower)
+                        ),
                         new ParallelAction(quickFollower, new TimedAction(clawBackOuttake, 200), moveChamber4, slidesBackUpChamber),
                         slidesBackScoreChamber,
 
@@ -417,8 +425,9 @@ public class RightSpecimen extends LinearOpMode {
                                         new SequentialAction(moveWall5, new WaitAction(300)),
                                         new SequentialAction(new TimedAction(clawBackOuttake, 300),
                                                 clawBackIntake)),
-                                slidesBackDownChamber,
-                                new SequentialAction(new WaitAction(800), slowFollower)),
+                                slidesBackDownChamber
+                                //new SequentialAction(new WaitAction(800), slowFollower)
+                        ),
                         new ParallelAction(quickFollower, new TimedAction(clawBackOuttake, 200), moveChamber5, slidesBackUpChamber),
                         slidesBackScoreChamber,
 

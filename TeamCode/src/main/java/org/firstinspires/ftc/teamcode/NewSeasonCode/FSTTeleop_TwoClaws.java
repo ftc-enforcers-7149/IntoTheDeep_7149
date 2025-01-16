@@ -109,7 +109,7 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
 //    final int SAMPLE_ABOVE_PITCH_POS = 910, SAMPLE_PICKUP_PITCH_POS = 1020;
     //    final int SAMPLE_ABOVE_PITCH_POS = 970, SAMPLE_PICKUP_P1ITCH_POS = 990;
     //with camera SAMPLE_PICKUP_PITCH_POS= 1005, 970
-    public static int SAMPLE_ABOVE_PITCH_POS = 920, SAMPLE_PICKUP_PITCH_POS = 985, SAMPLE_OUT_PITCH_POS = 960;
+    public static int SAMPLE_ABOVE_PITCH_POS = 920, SAMPLE_PICKUP_PITCH_POS = 1000, SAMPLE_OUT_PITCH_POS = 960;
     //new with camera
     final int SAMPLE_ABOVE_SLIDE_POS = 100, SAMPLE_PICKUP_SLIDE_POS = 100;
     final int SPECIMEN_ABOVE_PITCH_POS = 200, SPECIMEN_PICKUP_PITCH_POS = 400, SPECIMEN_OUT_PITCH_POS = 400;
@@ -741,7 +741,7 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
                         stageBack = Stages.SLIDEUP;
                         //stageBack = Stages.OUTTAKING;
                         outStageBack = Outtake.CHAMBER;
-                        slideBackTarget = 1600;
+                        slideBackTarget = 1800;
 
                         //old
 //                        slideBackTarget = 1300;
@@ -770,7 +770,7 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
 
                     pitchBackTarget = 0;
 
-                    slideBackTarget = 1600;
+                    slideBackTarget = 1800;
 
                     //??
 //                    double power2 = pitchController2.calculate(pitchMotorBack.getCurrentPosition(), pitchBackTarget);
@@ -1059,9 +1059,19 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
 
             if (gamepad1.triangle) {
                 slidesBack.slideMotor.setPower(-1);
+
                 stageBack = Stages.IDLE;
                 inStageBack = Intake.IDLE;
             }
+
+            if (gamepad1.circle) {
+                pitchMotorBack.setPower(-1);
+
+                stageBack = Stages.IDLE;
+                inStageBack = Intake.IDLE;
+            }
+
+
 
 
             //FtcDashboard.getInstance().sendImage(visionSystem.getDetector().getLastFrame());

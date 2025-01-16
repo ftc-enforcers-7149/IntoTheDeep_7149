@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.ActionUtils;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Gamepad;
@@ -18,7 +19,7 @@ import org.firstinspires.ftc.teamcode.Hardware.Chassis.MecanumPowerDrive;
 import org.firstinspires.ftc.teamcode.Hardware.Subsystems.OuttakeSlides;
 import org.firstinspires.ftc.teamcode.Hardware.Subsystems.PitchArm;
 
-
+@Disabled
 @TeleOp(name = "ActionTester")
 public class ActionTestOpMode extends LinearOpMode {
 
