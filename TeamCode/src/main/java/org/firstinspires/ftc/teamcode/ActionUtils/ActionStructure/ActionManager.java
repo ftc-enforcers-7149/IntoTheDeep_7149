@@ -50,6 +50,11 @@ public class ActionManager {
 
     public void runActionManager(EventAction a) {
 
+
+        //TODO:
+        // Make conditional actions (certain actions are run under given conditions)
+        // Use the build in triggers classes and create a functional interface that
+
         FtcDashboard dash = FtcDashboard.getInstance();
 
         boolean b = true;
@@ -77,7 +82,6 @@ public class ActionManager {
             telemetry.update();
         }
 
-        //TODO: Have periodic actions running in the back to update actionInfo objects associated with actions
     }
 
 }

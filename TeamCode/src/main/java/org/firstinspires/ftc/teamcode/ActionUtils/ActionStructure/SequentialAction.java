@@ -10,7 +10,7 @@ public class SequentialAction extends EventAction {
 
     public SequentialAction(List<EventAction> actionList) {
         //ensure we are given an arrayList, or else we get exceptions when removing actions from list
-        actions = new ArrayList<EventAction>((List<EventAction>) actionList);
+        actions = new ArrayList<EventAction>(actionList);
     }
 
     public SequentialAction(EventAction...actions) {
