@@ -796,7 +796,7 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
 
                     pitchBackTarget = 0;
 
-                    pitchBackpos = BACK_PITCH_IDLE;
+//                    pitchBackpos = BACK_PITCH_IDLE;change
                     slideBackTarget = 1800;
 
                     //??
@@ -806,9 +806,9 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
                     telemetry.addData("Sliding Up", pitchPower2);
                     telemetry.addData("Pos", slidesBack.slideMotor.getCurrentPosition());
 
-                    if ((Math.abs(slidesBack.slideMotor.getCurrentPosition() - slideBackTarget) < 40)) {
-                        stageBack = Stages.OUTTAKING;
-                    }
+//                    if ((Math.abs(slidesBack.slideMotor.getCurrentPosition() - slideBackTarget) < 40)) {
+                    stageBack = Stages.OUTTAKING;
+//                    } changed
 
                     break;
                 }
@@ -829,7 +829,7 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
                     }
 
 
-                    if (gamepad2.triangle) {
+                    if (gamepad2.triangle && !prevGamepad2.triangle) {
                         stageBack = Stages.SLIDEDOWN;
                         //stageBack = Stages.IDLE;
                         slideBackTarget = 750;
@@ -873,10 +873,10 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
                     telemetry.addData("Sliding Velocity", slidesBack.slideMotor.getVelocity());
                     telemetry.addData("Pos", slidesBack.slideMotor.getCurrentPosition());
 
-                    if (slidesBack.slideMotor.getCurrentPosition() < 750) {
+//                    if (slidesBack.slideMotor.getCurrentPosition() < 750) { change
                         pitchBackTarget = 0;
                         pitchBackpos = BACK_PITCH_IDLE;
-                    }
+//                    } change
 
                     slideBackTarget = 0;
 
@@ -887,9 +887,9 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
                         stageBack = Stages.IDLE;
                     }
 
-                    if (Math.abs(slidesBack.slideMotor.getCurrentPosition() - slideBackTarget) < 30) {
+//                    if (Math.abs(slidesBack.slideMotor.getCurrentPosition() - slideBackTarget) < 30) { change
                         stageBack = Stages.IDLE;
-                    }
+//                    } change
 
                     break;
 
