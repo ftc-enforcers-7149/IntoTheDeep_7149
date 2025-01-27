@@ -436,7 +436,7 @@ public class RightSpecimen extends LinearOpMode {
                         new ParallelAction(park, slidesBackDownChamber)
 
 
-                )
+                ), (telemetry) -> {}
         );
 
 

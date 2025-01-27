@@ -179,7 +179,7 @@ public class BlueLeftChamber extends LinearOpMode {
 //                        moveToPark,
 //                        new ParallelAction(moveToPark2, armPark, extensionOut)
 
-                )
+                ), (telemetry) -> {}
         );
 
         telemetry.addData("Finished", "Actions");

@@ -4,6 +4,7 @@ package org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.hardware.lynx.LynxModule;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -14,6 +15,10 @@ import java.util.Arrays;
 import java.util.List;
 
 public class ActionManager {
+
+    public interface TelemetryUpdater{
+        public void update(Telemetry t);
+    }
 
     private ArrayList<PeriodicAction> periodicActions;
 
@@ -39,6 +44,10 @@ public class ActionManager {
         }
     }
 
+    public ActionManager(OpMode opMode) {
+        this(opMode.telemetry, opMode.hardwareMap);
+    }
+
     public void attachPeriodicActions(List<PeriodicAction> periodic) {
         periodicActions = new ArrayList<PeriodicAction>((List<PeriodicAction>) periodic);
     }
@@ -48,12 +57,7 @@ public class ActionManager {
     }
 
 
-    public void runActionManager(EventAction a) {
-
-
-        //TODO:
-        // Make conditional actions (certain actions are run under given conditions)
-        // Use the build in triggers classes and create a functional interface that
+    public void runActionManager(EventAction a, TelemetryUpdater telemetryUpdate) {
 
         FtcDashboard dash = FtcDashboard.getInstance();
 
@@ -78,6 +82,9 @@ public class ActionManager {
             dash.sendTelemetryPacket(t.getPacket());
             telemetry.addLine("");
             telemetry.addData("LoopTime(ms)", loopTime.milliseconds());
+            telemetry.addLine("");
+            telemetryUpdate.update(telemetry);
+
             loopTime.reset();
             telemetry.update();
         }

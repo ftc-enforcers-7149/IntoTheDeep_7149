@@ -331,7 +331,7 @@ public class LeftBasket extends LinearOpMode {
 
 
 
-                )
+                ), (telemetry) -> {}
 
         );
     }

@@ -76,7 +76,7 @@ public class MovementTest extends LinearOpMode {
 
                     move1, move2
 
-                )
+                ), (telemetry) -> {}
         );
 
         telemetry.addData("Finished", "Actions");

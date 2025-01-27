@@ -28,7 +28,6 @@ import org.firstinspires.ftc.teamcode.PathingSystems.pedroPathing.util.SingleRun
 
 import java.util.ArrayList;
 
-//@Photon
 @Config
 @TeleOp(name = "FST TeleOp Main")
 public class FSTTeleop_TwoClaws extends LinearOpMode {

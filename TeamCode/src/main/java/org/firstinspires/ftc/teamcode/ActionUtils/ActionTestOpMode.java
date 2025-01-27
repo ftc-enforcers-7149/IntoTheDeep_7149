@@ -96,7 +96,7 @@ public class ActionTestOpMode extends LinearOpMode {
             return b;
         }, slidesDown);
 
-        ConditionalAction chooseAct2 = new ConditionalAction( () -> index == 0, slidesDown);
+        ConditionalAction chooseAct2 = new ConditionalAction( () -> index == 0, slidesDown, slidesUp);
 //
 //
 
@@ -172,7 +172,7 @@ public class ActionTestOpMode extends LinearOpMode {
 //                        )
 //
 
-                )
+                ), (telemetry) -> {}
         );
 
         telemetry.addData("Finished", "Actions");
