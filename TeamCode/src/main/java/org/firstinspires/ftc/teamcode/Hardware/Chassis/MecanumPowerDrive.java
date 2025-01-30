@@ -83,6 +83,11 @@ public class MecanumPowerDrive extends MecanumDrive implements PeriodicAction, A
         imu.initialize(imuParams);
     }
 
+    public void initializeIMU(HardwareMap hmap, IMU.Parameters parameters) {
+        imu = hmap.get(IMU.class, "imu");
+        imu.initialize(parameters);
+    }
+
 
 
     public void setRobotCentricPower(double x, double y, double rx){

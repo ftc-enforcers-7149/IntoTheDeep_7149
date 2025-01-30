@@ -17,7 +17,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.Hardware.Chassis.MecanumPowerDrive;
 import org.firstinspires.ftc.teamcode.Hardware.Subsystems.OuttakeSlides;
-import org.firstinspires.ftc.teamcode.Hardware.Subsystems.VisionSubsystem;
+import org.firstinspires.ftc.teamcode.Hardware.Subsystems.V3Systems.VisionSubsystem;
 
 @Disabled
 @Config

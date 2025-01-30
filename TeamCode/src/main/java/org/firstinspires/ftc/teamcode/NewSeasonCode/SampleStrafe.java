@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.Hardware.Chassis.MecanumPowerDrive;
-import org.firstinspires.ftc.teamcode.Hardware.Subsystems.VisionSubsystem;
+import org.firstinspires.ftc.teamcode.Hardware.Subsystems.V3Systems.VisionSubsystem;
 import org.opencv.core.RotatedRect;
 
 @Disabled

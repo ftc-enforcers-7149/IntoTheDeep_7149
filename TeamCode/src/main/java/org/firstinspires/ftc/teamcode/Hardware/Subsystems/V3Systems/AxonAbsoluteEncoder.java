@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Hardware.Subsystems;
+package org.firstinspires.ftc.teamcode.Hardware.Subsystems.V3Systems;
 
 import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -38,6 +38,8 @@ public class AxonAbsoluteEncoder implements PeriodicAction {
         } else {
             absolutePosition += currentPosition - lastPosition;
         }
+
+        lastPosition = currentPosition;
 
     }
 

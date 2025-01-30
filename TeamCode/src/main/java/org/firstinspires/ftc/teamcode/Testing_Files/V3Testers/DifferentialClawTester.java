@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Testing_Files;
+package org.firstinspires.ftc.teamcode.Testing_Files.V3Testers;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -8,7 +8,7 @@ import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.EventAction;
 import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.InstantAction;
 import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.SequentialAction;
 import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.WaitAction;
-import org.firstinspires.ftc.teamcode.Hardware.Subsystems.ClawDifferential;
+import org.firstinspires.ftc.teamcode.Hardware.Subsystems.V3Systems.ClawDifferential;
 
 @TeleOp(name="V3 Diffy Test", group="Testers")
 public class DifferentialClawTester extends LinearOpMode {

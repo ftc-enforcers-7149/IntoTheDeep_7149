@@ -1,9 +1,9 @@
-package org.firstinspires.ftc.teamcode.Testing_Files;
+package org.firstinspires.ftc.teamcode.Testing_Files.V3Testers;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.Hardware.Subsystems.OuttakeExtendo;
+import org.firstinspires.ftc.teamcode.Hardware.Subsystems.V3Systems.OuttakeExtendo;
 
 @TeleOp(name = "Extendo Test",group="Testers")
 public class ExtendoTest extends LinearOpMode {
