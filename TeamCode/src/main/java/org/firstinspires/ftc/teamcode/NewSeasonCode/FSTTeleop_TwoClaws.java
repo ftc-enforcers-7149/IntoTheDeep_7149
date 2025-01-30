@@ -56,7 +56,8 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
 
     DcMotorEx pitchMotorFront;
     CRServo clawBack;
-    DcMotorEx pitchMotorBack;
+    //DcMotorEx pitchMotorBack;
+    DcMotorEx hangMotor;
 
     MecanumPowerDrive drive;
 
@@ -119,7 +120,7 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
     //new with camera
     final int SAMPLE_ABOVE_SLIDE_POS = 100, SAMPLE_PICKUP_SLIDE_POS = 100;
     final int SPECIMEN_ABOVE_PITCH_POS = 200, SPECIMEN_PICKUP_PITCH_POS = 400, SPECIMEN_OUT_PITCH_POS = 400;
-    final double BACK_PITCH_IDLE = 0.0, BACK_PITCH_ABOVE = 0.36, BACK_PITCH_PICKUP = 0.4, BACK_PITCH_WALL = 0.135, BACK_PITCH_CHAMBER = 0.1;
+    final double BACK_PITCH_IDLE = 0.0, BACK_PITCH_ABOVE = 0.36, BACK_PITCH_PICKUP = 0.4, BACK_PITCH_WALL = 0.135/1.25, BACK_PITCH_CHAMBER = 0.1/3;
 
 
 
@@ -168,9 +169,10 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
         //good
         pitchController2 = new PIDFController(0.012, 0, 0.0003,0);
         //good
-        slideController2 = new PIDFController(0.008, 0, 0.00026, 0.00012);
+        slideController2 = new PIDFController(0.03, 0, 0.0004, 0.0);
         //good
         slidesBack = new OuttakeSlides(hardwareMap, "backSlide");
+        slidesBack.slideMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         //slidesBack.slideMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         clawBack = hardwareMap.get(CRServo.class, "backClaw");
 
@@ -179,12 +181,15 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
         pitchBack1 = hardwareMap.get(Servo.class, "pitchBack1");
         pitchBack2 = hardwareMap.get(Servo.class, "pitchBack2");
 
+        //hang motor
+        hangMotor = hardwareMap.get(DcMotorEx.class, "hangMotor");
 
 
 
-        pitchMotorBack = hardwareMap.get(DcMotorEx.class, "backPitch");
+        //pitchMotorBack = hardwareMap.get(DcMotorEx.class, "backPitch");
+//change
 
-        pitchMotorBack.setDirection(DcMotorSimple.Direction.REVERSE);
+        //pitchMotorBack.setDirection(DcMotorSimple.Direction.REVERSE);
 
         slideBackInitPos = slidesBack.initialPos;
 
@@ -206,7 +211,7 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
 
         pitchMotorFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         slidesFront.slideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        pitchMotorBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        //pitchMotorBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         slidesBack.slideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         while(opModeIsActive() && !isStopRequested()) {
@@ -238,6 +243,9 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
             pitchMotorFront.setPower(pitchPower);
 
 
+            //hang motor
+            hangMotor.setPower(gamepad2.right_stick_y);
+
             //BACK PID POWERING
             double slidePower2 = slideController2.calculate(slidesBack.slideMotor.getCurrentPosition(), slideBackTarget);
 
@@ -245,10 +253,10 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
                 slidesBack.slideMotor.setPower(slidePower2);
             }
 
-            double pitchPower2 = pitchController2.calculate(pitchMotorBack.getCurrentPosition(), pitchBackTarget);
-            if (Math.abs(pitchPower2 - lastPitchPower2) > 0.02) {
-                pitchMotorBack.setPower(pitchPower2);
-            }
+//            double pitchPower2 = pitchController2.calculate(pitchMotorBack.getCurrentPosition(), pitchBackTarget);
+//            if (Math.abs(pitchPower2 - lastPitchPower2) > 0.02) {
+//                pitchMotorBack.setPower(pitchPower2);
+//            }
 
             wristFront.setPosition(1 - frontWristPos);
 
@@ -267,7 +275,7 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
             lastSlidePower = slidePower;
             lastSlidePower2 = slidePower2;
             lastPitchPower = pitchPower;
-            lastPitchPower2 = pitchPower2;
+            //lastPitchPower2 = pitchPower2;
 
             //==============FRONT OUTTAKE FST=============================
 
@@ -765,10 +773,12 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
                         stageBack = Stages.SLIDEUP;
                         //stageBack = Stages.OUTTAKING;
                         outStageBack = Outtake.CHAMBER;
-                        slideBackTarget = 1800;
 
-                        //old
-//                        slideBackTarget = 1300;
+                        //for 312rpm motor
+//                        slideBackTarget = 1800;
+
+                        //for 435 rpm motor
+                        slideBackTarget = 590;
                     }
 
                     if (gamepad2.cross) {
@@ -796,19 +806,24 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
 
                     pitchBackTarget = 0;
 
-//                    pitchBackpos = BACK_PITCH_IDLE;change
-                    slideBackTarget = 1800;
+                    pitchBackpos = BACK_PITCH_IDLE;
+//                    changed
 
+                    //for 312rpm motor
+//                        slideBackTarget = 1800;
+
+                    //for 435 rpm motor
+                    slideBackTarget = 590;
                     //??
 //                    double power2 = pitchController2.calculate(pitchMotorBack.getCurrentPosition(), pitchBackTarget);
 //                    pitchMotorBack.setPower(power2);
 
-                    telemetry.addData("Sliding Up", pitchPower2);
+                    //telemetry.addData("Sliding Up", pitchPower2);
                     telemetry.addData("Pos", slidesBack.slideMotor.getCurrentPosition());
 
-//                    if ((Math.abs(slidesBack.slideMotor.getCurrentPosition() - slideBackTarget) < 40)) {
+                    if ((Math.abs(slidesBack.slideMotor.getCurrentPosition() - slideBackTarget) < 40)) {
                     stageBack = Stages.OUTTAKING;
-//                    } changed
+                    } //changed
 
                     break;
                 }
@@ -832,7 +847,7 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
                     if (gamepad2.triangle && !prevGamepad2.triangle) {
                         stageBack = Stages.SLIDEDOWN;
                         //stageBack = Stages.IDLE;
-                        slideBackTarget = 750;
+                        slideBackTarget = 380;
 
                     }
 
@@ -855,7 +870,7 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
                         pitchBackTarget = 200;
                         //ACTUAL HANGING FOR ROBOT
                         pitchBackpos = BACK_PITCH_CHAMBER;
-                        slideBackTarget = 750;
+                        slideBackTarget = 590;
 
                         if (Math.abs(slidesBack.slideMotor.getCurrentPosition() - 900) < 30) {
                             pitchFrontTarget = 0;
@@ -873,10 +888,10 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
                     telemetry.addData("Sliding Velocity", slidesBack.slideMotor.getVelocity());
                     telemetry.addData("Pos", slidesBack.slideMotor.getCurrentPosition());
 
-//                    if (slidesBack.slideMotor.getCurrentPosition() < 750) { change
+                    if (slidesBack.slideMotor.getCurrentPosition() < 320) {
                         pitchBackTarget = 0;
                         pitchBackpos = BACK_PITCH_IDLE;
-//                    } change
+                    }
 
                     slideBackTarget = 0;
 
@@ -887,9 +902,9 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
                         stageBack = Stages.IDLE;
                     }
 
-//                    if (Math.abs(slidesBack.slideMotor.getCurrentPosition() - slideBackTarget) < 30) { change
+                    if (Math.abs(slidesBack.slideMotor.getCurrentPosition() - slideBackTarget) < 30) { //changed
                         stageBack = Stages.IDLE;
-//                    } change
+                    } //changed
 
                     break;
 
@@ -898,8 +913,8 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
 
                 case PITCHDOWN: {
 
-                    telemetry.addData("Pitching Down", pitchPower2);
-                    telemetry.addData("Pos", pitchMotorBack.getCurrentPosition());
+                    //telemetry.addData("Pitching Down", pitchPower2);
+                    //telemetry.addData("Pos", pitchMotorBack.getCurrentPosition());
 
                     if (inStageBack == Intake.ABOVE || inStageBack == Intake.SPECIMEN_ABOVE) {
                         clawBack.setPower(0);
@@ -921,11 +936,11 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
 
                         case ABOVE: {
 
-                            slideBackTarget = SAMPLE_ABOVE_SLIDE_POS;
+                            slideBackTarget = 0;
+//                            slideBackTarget = SAMPLE_ABOVE_SLIDE_POS; changed
 
                             pitchBackTarget = (int) (SAMPLE_ABOVE_PITCH_POS) + 20;
                             pitchBackpos = BACK_PITCH_ABOVE;
-
 
                             //eject unwanted samples
                             if (gamepad1.right_trigger > 0.05) {
@@ -956,7 +971,8 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
                             pitchBackTarget = (int) (SAMPLE_PICKUP_PITCH_POS) + 60;
                             pitchBackpos = BACK_PITCH_PICKUP;
 
-                            slideBackTarget = SAMPLE_PICKUP_SLIDE_POS;
+                            slideBackTarget = 0;
+//                            slideBackTarget = SAMPLE_PICKUP_SLIDE_POS; changed
 
                             if (gamepad2.dpad_right) {
                                 clawBack.setPower(-1);
@@ -977,7 +993,8 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
                         case SPECIMEN_ABOVE: {
 
                             pitchBackTarget = 0; //(int) (SPECIMEN_ABOVE_PITCH_POS * 2.5);
-                            pitchBackpos = BACK_PITCH_IDLE;
+                            pitchBackpos = BACK_PITCH_WALL;
+                            //weird might have to change to back pitch wall, original was idle
 
                             //eject unwanted samples
                             if (gamepad1.right_trigger > 0.05) {
@@ -1004,7 +1021,10 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
                                 inStageBack =  Intake.IDLE;
                                 stageBack = Stages.SLIDEUP;
                                 outStageBack = Outtake.CHAMBER;
-                                slideBackTarget = 950;
+
+                                slideBackTarget = 590;
+//                                slideBackTarget = 950; changed
+
                                 pitchBackTarget = 200;
                                 pitchBackpos = BACK_PITCH_CHAMBER;
                                 //stage back chamber
@@ -1018,7 +1038,7 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
                             pitchBackTarget = 0; //(int) (SPECIMEN_PICKUP_PITCH_POS * 2.5);
                             pitchBackpos = BACK_PITCH_WALL;
 
-                            slideBackTarget = 0;
+                            //slideBackTarget = 0;
 
                             clawBack.setPower(1);
 
@@ -1027,7 +1047,8 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
                                 //stageBack = Stages.PITCHUP;
                                 pitchBackTarget = 0; //(int) (SPECIMEN_ABOVE_PITCH_POS * 2.5);
                                 pitchBackpos = BACK_PITCH_WALL;
-                                slideBackTarget = 170;
+                                //weird might have to change to back pitch idle
+                                slideBackTarget = 120;
                                 //raise specimen off wall
                             }
 
@@ -1066,7 +1087,7 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
                     clawBack.setPower(0);
 
                     telemetry.addData("Pitching Up", pitchPower);
-                    telemetry.addData("Pos", pitchMotorBack.getCurrentPosition());
+                    //telemetry.addData("Pos", pitchMotorBack.getCurrentPosition());
 
                     if (Math.abs(pitchBack1.getPosition() - pitchBackpos) < 0.01) {
                         if (inStageBack == Intake.IDLE) {
@@ -1108,7 +1129,7 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
             }
 
             if (gamepad1.circle) {
-                pitchMotorBack.setPower(-1);
+                //pitchMotorBack.setPower(-1);
 
                 stageBack = Stages.IDLE;
                 inStageBack = Intake.IDLE;
@@ -1137,11 +1158,13 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
             telemetry.addData("Front Pitch Target", pitchFrontTarget);
             telemetry.addData("","");
             telemetry.addData("Back Slide Position", slidesBack.slideMotor.getCurrentPosition());
-            telemetry.addData("Back Pitch Position", pitchMotorBack.getCurrentPosition());
+            //telemetry.addData("Back Pitch Position", pitchMotorBack.getCurrentPosition());
             telemetry.addData("Back Slide Target", slideBackTarget);
             telemetry.addData("Back Pitch Target", pitchBackTarget);
             telemetry.addData("Back Pitch Position", pitchBack1.getPosition());
             telemetry.addData("Back Pitch Position Target Servo", pitchBackpos);
+            telemetry.addData("Hang Power", hangMotor.getPower());
+            //hang motor
 
 
             telemetry.addData("","");
@@ -1155,7 +1178,7 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
             telemetry.addData("------", "------");
 
             telemetry.addData("Back Slide Position", slidesBack.slideMotor.getCurrentPosition());
-            telemetry.addData("Back Pitch Position", pitchMotorBack.getCurrentPosition());
+            //telemetry.addData("Back Pitch Position", pitchMotorBack.getCurrentPosition());
 
             telemetry.addData("StageBack", stageBack);
             telemetry.addData("Intake Stage Back", inStageBack);
