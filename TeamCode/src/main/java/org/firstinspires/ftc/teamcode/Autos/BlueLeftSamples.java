@@ -79,7 +79,7 @@ public class BlueLeftSamples extends LinearOpMode {
                         slidesUp,
                         new TimedAction(clawOuttake, 2000),
                         slidesDown
-                )
+                ), (telemetry) -> {}
 
         );
 

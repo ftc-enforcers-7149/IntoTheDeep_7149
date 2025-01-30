@@ -40,8 +40,8 @@ public class TeleInterruptActions<E> extends EventAction{
 
         isRunning = true;
 
-        t.getTelemetry().addData("Stopped", stopped);
-        t.getTelemetry().addData("PRev", prevStopped);
+//        t.getTelemetry().addData("Stopped", stopped);
+//        t.getTelemetry().addData("PRev", prevStopped);
 
         //if the main action isn't stopped, continue running it
         AllActions: if (!stopped) {
