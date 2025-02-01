@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.ActionUtils;
 
+import com.qualcomm.robotcore.hardware.Servo;
+
 import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.CombinedTelemetry;
 import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.EventAction;
 import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.ParallelAction;
@@ -10,19 +12,20 @@ import org.firstinspires.ftc.teamcode.Hardware.Subsystems.LLSampleVision;
 import org.firstinspires.ftc.teamcode.Hardware.Subsystems.V3Systems.ClawDifferential;
 import org.firstinspires.ftc.teamcode.Hardware.Subsystems.V3Systems.OuttakeExtendo;
 import org.firstinspires.ftc.teamcode.PathingSystems.pedroPathing.follower.Follower;
+import org.firstinspires.ftc.teamcode.PathingSystems.pedroPathing.localization.Pose;
 import org.firstinspires.ftc.teamcode.PathingSystems.pedroPathing.pathGeneration.BezierLine;
 import org.firstinspires.ftc.teamcode.PathingSystems.pedroPathing.pathGeneration.MathFunctions;
 import org.firstinspires.ftc.teamcode.PathingSystems.pedroPathing.pathGeneration.Path;
 import org.firstinspires.ftc.teamcode.PathingSystems.pedroPathing.pathGeneration.PathChain;
 import org.firstinspires.ftc.teamcode.PathingSystems.pedroPathing.pathGeneration.Point;
+import org.firstinspires.ftc.teamcode.PathingSystems.pedroPathing.pathGeneration.Vector;
 
-public class AutoSamplePickupAction extends EventAction {
+public class MotionSamplePickupAction extends EventAction {
 
     private EventAction pickupAction, aboveAction, autoAction, totalAction;
 
     private LLSampleVision visionSystem;
-    private OuttakeExtendo extendo;
-    private ClawDifferential diffyClaw;
+    private Servo clawWrist;
     private Follower follower;
 
     private boolean positionReceived;  //true once the robot has a sample it can go after
@@ -38,13 +41,12 @@ public class AutoSamplePickupAction extends EventAction {
     // Limelight should properly encode positions and add the 1 at the start
     // Limelight should also order sample info with closest sample first, then second closest, and on
 
-    public AutoSamplePickupAction(LLSampleVision vision, OuttakeExtendo ext, ClawDifferential diffy, Follower follow, EventAction aboveSample, EventAction pickupSample) {
+    public MotionSamplePickupAction(LLSampleVision vision, Servo wrist, Follower follow, EventAction aboveSample, EventAction pickupSample) {
         pickupAction = pickupSample;
         aboveAction = aboveSample;
 
         visionSystem = vision;
-        extendo = ext;
-        diffyClaw = diffy;
+        clawWrist = wrist;
         follower = follow;
 
         autoAction = pickupAction;
@@ -89,7 +91,9 @@ public class AutoSamplePickupAction extends EventAction {
             }
 
             Point currentPos = new Point(follower.getPose().getX(), follower.getPose().getY());
-            Point moveVector = new Point(chosenX, follower.getHeadingVector().getTheta() - (Math.PI/2));
+            Point moveVectorX = new Point(chosenX, follower.getHeadingVector().getTheta() - (Math.PI/2));
+            Point moveVectorY = new Point(chosenY - HardwareConstants.MAX_EXTENDO_LENGTH, follower.getHeadingVector().getTheta());
+            Point moveVector = MathFunctions.addPoints(moveVectorX, moveVectorY);
 
             Path moveToPoint = new Path(new BezierLine(
                     currentPos,
@@ -97,8 +101,7 @@ public class AutoSamplePickupAction extends EventAction {
             ));
             autoAction = new PedroAction(follower, new PathChain(moveToPoint), true);
 
-            extendo.setLength(chosenY);
-            diffyClaw.setRotationAngle(chosenRot);
+            clawWrist.setPosition(chosenRot / 180.0);
             totalAction = new SequentialAction(
                     new ParallelAction(autoAction, aboveAction),
                     pickupAction);
