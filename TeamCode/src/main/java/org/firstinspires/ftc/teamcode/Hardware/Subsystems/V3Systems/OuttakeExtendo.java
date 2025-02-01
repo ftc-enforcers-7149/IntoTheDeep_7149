@@ -22,6 +22,14 @@ public class OuttakeExtendo {
         extendoPos = pos;
     }
 
+    public void setLength(double length) {
+        setExtension(convertLengthToPos(length));
+    }
+
+    public double convertLengthToPos(double length) {
+        return length / 7;
+    }
+
     public double getExtensionPos(){
         return extendoPos;
     }
