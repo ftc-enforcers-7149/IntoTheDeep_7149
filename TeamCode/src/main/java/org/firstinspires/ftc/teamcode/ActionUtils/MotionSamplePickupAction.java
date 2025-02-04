@@ -65,9 +65,9 @@ public class MotionSamplePickupAction extends EventAction {
             double chosenX = 0.0, chosenY = 0.0, chosenRot = 0.0;
 
             //go through all the samples until a valid one is found
-            for (double pos : sampleInfo) {
+            for (int i = 0; i < sampleInfo.length; i++) {
 
-                String posStr = pos + "";
+                String posStr = sampleInfo[i] + "";
 
                 //decode the sample information
                 double sampleX = Integer.parseInt(posStr.substring(1, 5)) / 100.0;
@@ -82,7 +82,7 @@ public class MotionSamplePickupAction extends EventAction {
                 chosenY = sampleY;
                 chosenRot = sampleRot;
                 positionReceived = true;
-
+                sampleIndex = i;
             }
 
             //if a position still hasn't been chosen, terminate the action as no samples are within reach
@@ -90,15 +90,17 @@ public class MotionSamplePickupAction extends EventAction {
                 return false;
             }
 
+            double heading = follower.getHeadingVector().getTheta();
             Point currentPos = new Point(follower.getPose().getX(), follower.getPose().getY());
-            Point moveVectorX = new Point(chosenX, follower.getHeadingVector().getTheta() - (Math.PI/2));
-            Point moveVectorY = new Point(chosenY - HardwareConstants.MAX_EXTENDO_LENGTH, follower.getHeadingVector().getTheta());
+            Point moveVectorX = new Point(chosenX, heading - (Math.PI/2));
+            Point moveVectorY = new Point(chosenY - HardwareConstants.MAX_EXTENDO_LENGTH, heading);
             Point moveVector = MathFunctions.addPoints(moveVectorX, moveVectorY);
 
             Path moveToPoint = new Path(new BezierLine(
                     currentPos,
                     MathFunctions.addPoints(currentPos, moveVector)
             ));
+            moveToPoint.setConstantHeadingInterpolation(heading);
             autoAction = new PedroAction(follower, new PathChain(moveToPoint), true);
 
             clawWrist.setPosition(chosenRot / 180.0);
@@ -126,10 +128,12 @@ public class MotionSamplePickupAction extends EventAction {
     @Override
     public void init() {
         positionReceived = false;
+        sampleIndex = -1;
     }
 
     @Override
     public void stop(boolean interrupted) {
         positionReceived = false;
+        sampleIndex = 1;
     }
 }
