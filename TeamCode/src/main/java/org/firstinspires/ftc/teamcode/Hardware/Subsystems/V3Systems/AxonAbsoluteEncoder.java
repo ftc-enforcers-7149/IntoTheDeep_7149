@@ -30,7 +30,7 @@ public class AxonAbsoluteEncoder implements PeriodicAction {
 
         //wrap around from 0 -> 360 (go backward)
         if (currentPosition > 300 && lastPosition < 60) {
-            absolutePosition += -(lastPosition + (360 - currentPosition));
+            absolutePosition += -1 * (lastPosition + (360 - currentPosition));
 
             //wrap around from 360 -> 0
         } else if (currentPosition < 0 && lastPosition > 300) {

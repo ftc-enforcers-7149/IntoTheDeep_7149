@@ -117,7 +117,6 @@ public class SampleDetector extends OpenCvPipeline implements VisionProcessor, C
         //calculate the average brightness of the frame
         //averageBrightness = Core.mean(brightness).val[1];
 
-
         Core.inRange(colorConvert, lowerYellow, upperYellow, yellowRange);
 
         //TODO: Make the kernal size adaptive based on :
