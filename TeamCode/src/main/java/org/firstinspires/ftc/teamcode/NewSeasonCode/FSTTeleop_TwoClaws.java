@@ -116,9 +116,9 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
     //new with camera
     final int SAMPLE_ABOVE_SLIDE_POS = 100, SAMPLE_PICKUP_SLIDE_POS = 100;
     final int SPECIMEN_ABOVE_PITCH_POS = 200, SPECIMEN_PICKUP_PITCH_POS = 400, SPECIMEN_OUT_PITCH_POS = 400;
-    final int FRONT_SLIDE_HIGH_BASKET = 0, FRONT_SLIDE_LOW_BASKET = 0, BACK_SLIDE_HIGH_CHAMBER = 625, BACK_SLIDE_LOW_CHAMBER = 50;
+    final int FRONT_SLIDE_HIGH_BASKET = 1950, FRONT_SLIDE_LOW_BASKET = 600, BACK_SLIDE_HIGH_CHAMBER = 610, BACK_SLIDE_LOW_CHAMBER = 50; //TODO high & low basket values
     final double BACK_PITCH_IDLE = 0.0, BACK_PITCH_ABOVE = 0.36, BACK_PITCH_PICKUP = 0.4, BACK_PITCH_WALL = 0.133, BACK_PITCH_CHAMBER = 0.111;
-    //final double BACK_PITCH_IDLE = 0.4, BACK_PITCH_ABOVE = 0.04, BACK_PITCH_PICKUP = 0.0, BACK_PITCH_WALL = 0.267, BACK_PITCH_CHAMBER = 0.289;
+    //final double BACK_PITCH_IDLE = 0.4, BACK_PITCH_ABOVE = 0.04, BACK_PITCH_PICKUP = 0.0, BACK_PITCH_WALL = 0.267, BACK_PITCH_CHAMBER = 0.289; for when we reverse the servos and stuff so we can hang
 //NEW ANGLES 25 degrees = .111, 30 degrees = .1333, 35 degrees = .1554, 40 degrees = .1778, 45 degrees = .2
 // 1 degree = .00444444444444
 
@@ -163,11 +163,11 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
 
         pitchController = new PIDFController(0.022, 0, 0.0004,0);
         //good
-        slideController = new PIDFController(0.026, 0, 0.00026, 0.00012);
+        slideController = new PIDFController(0.025, 0, 0.0004, 0.00016);
         //good
         pitchController2 = new PIDFController(0.012, 0, 0.0003,0);
         //good
-        slideController2 = new PIDFController(0.04, 0, 0.0004, 0.0005);
+        slideController2 = new PIDFController(0.02, 0, 0.0004, 0.0002);
         //good
         slidesBack = new OuttakeSlides(hardwareMap, "backSlide");
         slidesBack.slideMotor.setDirection(DcMotorSimple.Direction.FORWARD);
