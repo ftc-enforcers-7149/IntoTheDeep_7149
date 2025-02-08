@@ -43,7 +43,6 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
     Servo pitchBack1, pitchBack2;
 
 
-
     PIDFController pitchController;
     public static double kP = 0.026, kD = 0.00026;
     PIDFController slideController;
@@ -112,7 +111,7 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
 //    final int SAMPLE_ABOVE_PITCH_POS = 910, SAMPLE_PICKUP_PITCH_POS = 1020;
     //    final int SAMPLE_ABOVE_PITCH_POS = 970, SAMPLE_PICKUP_P1ITCH_POS = 990;
     //with camera SAMPLE_PICKUP_PITCH_POS= 1005, 970
-    public static int SAMPLE_ABOVE_PITCH_POS = 920, SAMPLE_PICKUP_PITCH_POS = 1000, SAMPLE_OUT_PITCH_POS = 960;
+    public static int SAMPLE_ABOVE_PITCH_POS = 920, SAMPLE_PICKUP_PITCH_POS = 1010, SAMPLE_OUT_PITCH_POS = 960;
     //new with camera
     final int SAMPLE_ABOVE_SLIDE_POS = 100, SAMPLE_PICKUP_SLIDE_POS = 100;
     final int SPECIMEN_ABOVE_PITCH_POS = 200, SPECIMEN_PICKUP_PITCH_POS = 400, SPECIMEN_OUT_PITCH_POS = 400;
@@ -175,13 +174,11 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
         clawBack = hardwareMap.get(CRServo.class, "backClaw");
 
 
-
         pitchBack1 = hardwareMap.get(Servo.class, "pitchBack1");
         pitchBack2 = hardwareMap.get(Servo.class, "pitchBack2");
 
         //hang motor
         hangMotor = hardwareMap.get(DcMotorEx.class, "hangMotor");
-
 
 
         //pitchMotorBack = hardwareMap.get(DcMotorEx.class, "backPitch");

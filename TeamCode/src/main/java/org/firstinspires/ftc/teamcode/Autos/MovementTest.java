@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.Autos;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
-import com.acmerobotics.roadrunner.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -10,15 +9,13 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.ActionManager;
 import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.PedroAction;
 import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.SequentialAction;
-import org.firstinspires.ftc.teamcode.ActionUtils.P2PAction;
-import org.firstinspires.ftc.teamcode.Hardware.Chassis.MecanumPowerDrive;
-import org.firstinspires.ftc.teamcode.PathingSystems.pedroPathing.follower.Follower;
-import org.firstinspires.ftc.teamcode.PathingSystems.pedroPathing.localization.Pose;
-import org.firstinspires.ftc.teamcode.PathingSystems.pedroPathing.pathGeneration.BezierCurve;
-import org.firstinspires.ftc.teamcode.PathingSystems.pedroPathing.pathGeneration.BezierLine;
-import org.firstinspires.ftc.teamcode.PathingSystems.pedroPathing.pathGeneration.Path;
-import org.firstinspires.ftc.teamcode.PathingSystems.pedroPathing.pathGeneration.PathChain;
-import org.firstinspires.ftc.teamcode.PathingSystems.pedroPathing.pathGeneration.Point;
+import org.firstinspires.ftc.teamcode.pedroPathing.follower.Follower;
+import org.firstinspires.ftc.teamcode.pedroPathing.localization.Pose;
+import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.BezierCurve;
+import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.BezierLine;
+import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Path;
+import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.PathChain;
+import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Point;
 
 @Disabled
 @Autonomous(name = "MovementTest")

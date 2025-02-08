@@ -25,14 +25,14 @@ import org.firstinspires.ftc.teamcode.ActionUtils.ClawRotateAction;
 import org.firstinspires.ftc.teamcode.GlobalData.AutoConstants;
 import org.firstinspires.ftc.teamcode.Hardware.Subsystems.OuttakeSlides;
 import org.firstinspires.ftc.teamcode.Hardware.Subsystems.PitchArm;
-import org.firstinspires.ftc.teamcode.PathingSystems.pedroPathing.follower.Follower;
-import org.firstinspires.ftc.teamcode.PathingSystems.pedroPathing.localization.Pose;
-import org.firstinspires.ftc.teamcode.PathingSystems.pedroPathing.pathGeneration.BezierCurve;
-import org.firstinspires.ftc.teamcode.PathingSystems.pedroPathing.pathGeneration.BezierLine;
-import org.firstinspires.ftc.teamcode.PathingSystems.pedroPathing.pathGeneration.MathFunctions;
-import org.firstinspires.ftc.teamcode.PathingSystems.pedroPathing.pathGeneration.Path;
-import org.firstinspires.ftc.teamcode.PathingSystems.pedroPathing.pathGeneration.PathChain;
-import org.firstinspires.ftc.teamcode.PathingSystems.pedroPathing.pathGeneration.Point;
+import org.firstinspires.ftc.teamcode.pedroPathing.follower.Follower;
+import org.firstinspires.ftc.teamcode.pedroPathing.localization.Pose;
+import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.BezierCurve;
+import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.BezierLine;
+import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.MathFunctions;
+import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Path;
+import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.PathChain;
+import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Point;
 
 @Autonomous(name = "5 Spec - Updated")
 public class UpdatedRightSpecimen extends LinearOpMode {

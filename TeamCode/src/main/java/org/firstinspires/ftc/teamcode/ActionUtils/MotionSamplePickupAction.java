@@ -9,16 +9,12 @@ import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.PedroAction;
 import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.SequentialAction;
 import org.firstinspires.ftc.teamcode.GlobalData.HardwareConstants;
 import org.firstinspires.ftc.teamcode.Hardware.Subsystems.LLSampleVision;
-import org.firstinspires.ftc.teamcode.Hardware.Subsystems.V3Systems.ClawDifferential;
-import org.firstinspires.ftc.teamcode.Hardware.Subsystems.V3Systems.OuttakeExtendo;
-import org.firstinspires.ftc.teamcode.PathingSystems.pedroPathing.follower.Follower;
-import org.firstinspires.ftc.teamcode.PathingSystems.pedroPathing.localization.Pose;
-import org.firstinspires.ftc.teamcode.PathingSystems.pedroPathing.pathGeneration.BezierLine;
-import org.firstinspires.ftc.teamcode.PathingSystems.pedroPathing.pathGeneration.MathFunctions;
-import org.firstinspires.ftc.teamcode.PathingSystems.pedroPathing.pathGeneration.Path;
-import org.firstinspires.ftc.teamcode.PathingSystems.pedroPathing.pathGeneration.PathChain;
-import org.firstinspires.ftc.teamcode.PathingSystems.pedroPathing.pathGeneration.Point;
-import org.firstinspires.ftc.teamcode.PathingSystems.pedroPathing.pathGeneration.Vector;
+import org.firstinspires.ftc.teamcode.pedroPathing.follower.Follower;
+import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.BezierLine;
+import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.MathFunctions;
+import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Path;
+import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.PathChain;
+import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Point;
 
 public class MotionSamplePickupAction extends EventAction {
 

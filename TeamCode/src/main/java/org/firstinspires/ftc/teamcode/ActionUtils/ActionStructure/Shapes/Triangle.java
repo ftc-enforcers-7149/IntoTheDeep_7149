@@ -1,8 +1,8 @@
 package org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.Shapes;
 
-import org.firstinspires.ftc.teamcode.PathingSystems.pedroPathing.localization.Pose;
-import org.firstinspires.ftc.teamcode.PathingSystems.pedroPathing.pathGeneration.MathFunctions;
-import org.firstinspires.ftc.teamcode.PathingSystems.pedroPathing.pathGeneration.Point;
+import org.firstinspires.ftc.teamcode.pedroPathing.localization.Pose;
+import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.MathFunctions;
+import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Point;
 
 public class Triangle extends Shape{
 

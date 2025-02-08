@@ -2,8 +2,8 @@ package org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.Shapes;
 
 import com.acmerobotics.roadrunner.Pose2d;
 
-import org.firstinspires.ftc.teamcode.PathingSystems.pedroPathing.localization.Pose;
-import org.firstinspires.ftc.teamcode.PathingSystems.pedroPathing.pathGeneration.Point;
+import org.firstinspires.ftc.teamcode.pedroPathing.localization.Pose;
+import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Point;
 
 /**
  * Polygon abstract superclass made using Pedro Pathing geometry classes

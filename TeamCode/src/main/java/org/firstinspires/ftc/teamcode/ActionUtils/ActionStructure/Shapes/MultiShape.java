@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.Shapes;
 
-import org.firstinspires.ftc.teamcode.PathingSystems.pedroPathing.localization.Pose;
+import org.firstinspires.ftc.teamcode.pedroPathing.localization.Pose;
 
 public class MultiShape extends Shape{
 
