@@ -6,8 +6,8 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.Servo;
 
-@Disabled
-@TeleOp(name = ".5Servo")
+//@Disabled
+@TeleOp(name = "Servo")
 public class clawServoSet extends LinearOpMode {
     Servo claw;
 
@@ -16,7 +16,7 @@ public class clawServoSet extends LinearOpMode {
         claw = hardwareMap.get(Servo.class, "servo");
         double pos = 0.0;
 
-        claw.setPosition(.5); //set to 0
+        claw.setPosition(0); //set to 0
 
         Gamepad currentGamepad1 = new Gamepad();
 
@@ -31,19 +31,19 @@ public class clawServoSet extends LinearOpMode {
 
             currentGamepad1.copy(gamepad1);
 
-//            test
-//            if (gamepad1.dpad_up && !previousGamepad1.dpad_up) {
-//                pos = pos +.01;
-//                claw.setPosition(pos);
-//            }
-//            if (gamepad1.dpad_down && !previousGamepad1.dpad_down) {
-//                pos = pos -.01;
-//                claw.setPosition(pos);
-//            }
+
+            if (gamepad1.dpad_up && !previousGamepad1.dpad_up) {
+                pos = pos +.01;
+                claw.setPosition(pos);
+            }
+            if (gamepad1.dpad_down && !previousGamepad1.dpad_down) {
+                pos = pos -.01;
+                claw.setPosition(pos);
+            }
 
 
             //open/close
-            claw.setPosition(.5);
+//            claw.setPosition(0);
             telemetry.addData("CurrentPosition: ", claw.getPosition());
             telemetry.update();
         }
