@@ -10,6 +10,7 @@ import com.pedropathing.pathgen.MathFunctions;
 import com.pedropathing.pathgen.Path;
 import com.pedropathing.pathgen.PathChain;
 import com.pedropathing.pathgen.Point;
+import com.pedropathing.util.Constants;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -35,6 +36,8 @@ import org.firstinspires.ftc.teamcode.GlobalData.AutoFunctions;
 import org.firstinspires.ftc.teamcode.Hardware.Chassis.PeriodicFollower;
 import org.firstinspires.ftc.teamcode.Hardware.Subsystems.OuttakeSlides;
 import org.firstinspires.ftc.teamcode.Hardware.Subsystems.PitchArm;
+import org.firstinspires.ftc.teamcode.pedroPathing.constants.FConstants;
+import org.firstinspires.ftc.teamcode.pedroPathing.constants.LConstants;
 
 
 @Autonomous(name = "5 Spec - Updated")
@@ -170,6 +173,7 @@ public class UpdatedRightSpecimen extends LinearOpMode {
             follower.setMaxPower(0.6);
         });
 
+        Constants.setConstants(FConstants.class, LConstants.class);
         follower = new Follower(hardwareMap);
         follower.setStartingPose(new Pose(8.75, 62, Math.toRadians(180)));
 
