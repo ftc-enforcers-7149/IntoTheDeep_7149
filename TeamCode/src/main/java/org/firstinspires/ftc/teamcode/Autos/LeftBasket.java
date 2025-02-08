@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.Autos;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.pedropathing.pathgen.MathFunctions;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -23,22 +24,23 @@ import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.TimedAction;
 import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.WaitAction;
 import org.firstinspires.ftc.teamcode.ActionUtils.ClawRotateAction;
 import org.firstinspires.ftc.teamcode.GlobalData.AutoConstants;
+import org.firstinspires.ftc.teamcode.Hardware.Chassis.PeriodicFollower;
 import org.firstinspires.ftc.teamcode.Hardware.Subsystems.OuttakeSlides;
 import org.firstinspires.ftc.teamcode.Hardware.Subsystems.PitchArm;
-import org.firstinspires.ftc.teamcode.pedroPathing.follower.Follower;
-import org.firstinspires.ftc.teamcode.pedroPathing.localization.Pose;
-import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.BezierCurve;
-import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.BezierLine;
-import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.MathFunctions;
-import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Path;
-import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.PathChain;
-import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Point;
+import com.pedropathing.follower.Follower;
+import com.pedropathing.localization.Pose;
+import com.pedropathing.pathgen.BezierCurve;
+import com.pedropathing.pathgen.BezierLine;
+import com.pedropathing.pathgen.Path;
+import com.pedropathing.pathgen.PathChain;
+import com.pedropathing.pathgen.Point;
 
 @Autonomous(name = "Basket Auto")
 public class LeftBasket extends LinearOpMode {
 
     ActionManager actionManager;
     Follower follower;
+    PeriodicFollower perFollower;
 
     OuttakeSlides frontSlides, backSlides;
     PitchArm frontArm, backArm;
@@ -161,9 +163,10 @@ public class LeftBasket extends LinearOpMode {
         });
 
 
-        follower = new Follower(hardwareMap, telemetry);
+        follower = new Follower(hardwareMap);
         follower.setStartingPose(new Pose(8.625, 105.125, Math.toRadians(90)));
 
+        perFollower = new PeriodicFollower(follower);
 
         //=================PATH CREATION==================
 
@@ -248,7 +251,7 @@ public class LeftBasket extends LinearOpMode {
         //=========================================
 
         actionManager = new ActionManager(telemetry, hardwareMap);
-        actionManager.attachPeriodicActions(follower, frontArm, frontSlides, backArm, backSlides);
+        actionManager.attachPeriodicActions(perFollower, frontArm, frontSlides, backArm, backSlides);
 
         wristFront.setPosition(0);
         leftExt.setPosition(1);

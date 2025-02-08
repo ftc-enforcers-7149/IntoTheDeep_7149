@@ -2,6 +2,14 @@ package org.firstinspires.ftc.teamcode.Autos;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.pedropathing.follower.Follower;
+import com.pedropathing.localization.Pose;
+import com.pedropathing.pathgen.BezierCurve;
+import com.pedropathing.pathgen.BezierLine;
+import com.pedropathing.pathgen.MathFunctions;
+import com.pedropathing.pathgen.Path;
+import com.pedropathing.pathgen.PathChain;
+import com.pedropathing.pathgen.Point;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -23,16 +31,11 @@ import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.TimedAction;
 import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.WaitAction;
 import org.firstinspires.ftc.teamcode.ActionUtils.ClawRotateAction;
 import org.firstinspires.ftc.teamcode.GlobalData.AutoConstants;
+import org.firstinspires.ftc.teamcode.GlobalData.AutoFunctions;
+import org.firstinspires.ftc.teamcode.Hardware.Chassis.PeriodicFollower;
 import org.firstinspires.ftc.teamcode.Hardware.Subsystems.OuttakeSlides;
 import org.firstinspires.ftc.teamcode.Hardware.Subsystems.PitchArm;
-import org.firstinspires.ftc.teamcode.pedroPathing.follower.Follower;
-import org.firstinspires.ftc.teamcode.pedroPathing.localization.Pose;
-import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.BezierCurve;
-import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.BezierLine;
-import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.MathFunctions;
-import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Path;
-import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.PathChain;
-import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Point;
+
 
 @Autonomous(name = "5 Spec - Updated")
 public class UpdatedRightSpecimen extends LinearOpMode {
@@ -98,10 +101,10 @@ public class UpdatedRightSpecimen extends LinearOpMode {
         slidesScoreChamber = frontSlides.getExtensionAction(550);
         slidesDownChamber = frontSlides.getExtensionAction(0);
 
-        slidesBackUpChamber = backSlides.getExtensionAction(1800);
-        slidesBackScoreChamber = backSlides.getExtensionAction(1000);
+        slidesBackUpChamber = backSlides.getExtensionAction(610);
+        slidesBackScoreChamber = backSlides.getExtensionAction(300);
         slidesBackDownChamber = backSlides.getExtensionAction(0);
-        slidesBackAboveWall = backSlides.getExtensionAction(300);
+        slidesBackAboveWall = backSlides.getExtensionAction(150);
 
         armDownSample = frontArm.getPitchingAction(1040);
         armUpSample = frontArm.getPitchingAction(0);
@@ -167,9 +170,10 @@ public class UpdatedRightSpecimen extends LinearOpMode {
             follower.setMaxPower(0.6);
         });
 
-
-        follower = new Follower(hardwareMap, telemetry);
+        follower = new Follower(hardwareMap);
         follower.setStartingPose(new Pose(8.75, 62, Math.toRadians(180)));
+
+        PeriodicFollower perFollower = new PeriodicFollower(follower);
 
 
         //==========PATH CREATION================================
@@ -324,7 +328,7 @@ public class UpdatedRightSpecimen extends LinearOpMode {
 
 
         actionManager = new ActionManager(telemetry, hardwareMap);
-        actionManager.attachPeriodicActions(follower, frontArm, backSlides);
+        actionManager.attachPeriodicActions(perFollower, frontArm, backSlides);
 
         wristFront.setPosition(0.25);
         leftExt.setPosition(1);

@@ -1,8 +1,8 @@
 package org.firstinspires.ftc.teamcode.GlobalData;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.pedropathing.pathgen.Point;
 
-import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Point;
 
 @Config
 public class AutoConstants {

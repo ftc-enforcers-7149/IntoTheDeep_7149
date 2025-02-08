@@ -72,6 +72,7 @@ public class ActionManager {
                 hub.clearBulkCache();
             }
 
+            //update hardware linked to the action manager
             for (PeriodicAction perAct : periodicActions) {
                 perAct.periodic();
             }

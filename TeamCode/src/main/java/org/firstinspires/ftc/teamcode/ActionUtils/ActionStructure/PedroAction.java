@@ -1,7 +1,8 @@
 package org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure;
 
-import org.firstinspires.ftc.teamcode.pedroPathing.follower.Follower;
-import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.PathChain;
+
+import com.pedropathing.follower.Follower;
+import com.pedropathing.pathgen.PathChain;
 
 public class PedroAction extends EventAction{
 
