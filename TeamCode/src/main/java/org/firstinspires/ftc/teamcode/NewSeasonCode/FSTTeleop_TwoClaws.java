@@ -527,7 +527,7 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
 
                             break;
                         }
-
+//
                         case PICKUP: {
 
                             pitchChange += (int) gamepad2.left_stick_y;
