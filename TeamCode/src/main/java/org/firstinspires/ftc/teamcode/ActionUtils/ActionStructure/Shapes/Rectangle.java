@@ -1,8 +1,10 @@
 package org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.Shapes;
 
-import org.firstinspires.ftc.teamcode.pedroPathing.localization.Pose;
-import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.MathFunctions;
-import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Point;
+import com.pedropathing.localization.Pose;
+import com.pedropathing.pathgen.MathFunctions;
+import com.pedropathing.pathgen.Point;
+
+import org.firstinspires.ftc.teamcode.GlobalData.AutoFunctions;
 
 public class Rectangle extends Shape {
 
@@ -13,8 +15,8 @@ public class Rectangle extends Shape {
     public Rectangle(Point topLeft, Point topRight, Point bottomLeft, Point bottomRight) {
         this.vertices = new Point[] {topLeft, topRight, bottomLeft, bottomRight};
 
-        height = MathFunctions.distance(vertices[1], vertices[2]);
-        width = MathFunctions.distance(vertices[0], vertices[1]);
+        height = AutoFunctions.getDistance(vertices[1], vertices[2]);
+        width = AutoFunctions.getDistance(vertices[0], vertices[1]);
     }
 
     public Rectangle(Point topLeft, Point bottomRight) {
