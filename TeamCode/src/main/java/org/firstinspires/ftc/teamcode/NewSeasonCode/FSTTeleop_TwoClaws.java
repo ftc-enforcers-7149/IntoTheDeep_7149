@@ -18,9 +18,14 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
+import com.qualcomm.robotcore.util.ReadWriteFile;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.teamcode.GlobalData.Alliance_Color;
 import org.firstinspires.ftc.teamcode.Hardware.Chassis.MecanumPowerDrive;
+import org.firstinspires.ftc.teamcode.Hardware.Subsystems.ColorClaw;
+import org.firstinspires.ftc.teamcode.Hardware.Subsystems.LLSampleVision;
 import org.firstinspires.ftc.teamcode.Hardware.Subsystems.OuttakeSlides;
 
 import java.util.ArrayList;
@@ -29,7 +34,10 @@ import java.util.ArrayList;
 @TeleOp(name = "FST TeleOp Main")
 public class FSTTeleop_TwoClaws extends LinearOpMode {
 
-    //LLSampleVision llDetector;
+    LLSampleVision llDetector;
+    ColorClaw colorClaw;
+
+    Alliance_Color alliance;
 
     ElapsedTime wristTimer;
     ElapsedTime loopTime;
@@ -52,7 +60,7 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
     DcMotorEx pitchMotorFront;
     CRServo clawBack;
     //DcMotorEx pitchMotorBack;
-    DcMotorEx hangMotor;
+    //DcMotorEx hangMotor;
 
     MecanumPowerDrive drive;
 
@@ -111,11 +119,11 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
 //    final int SAMPLE_ABOVE_PITCH_POS = 910, SAMPLE_PICKUP_PITCH_POS = 1020;
     //    final int SAMPLE_ABOVE_PITCH_POS = 970, SAMPLE_PICKUP_P1ITCH_POS = 990;
     //with camera SAMPLE_PICKUP_PITCH_POS= 1005, 970
-    public static int SAMPLE_ABOVE_PITCH_POS = 920, SAMPLE_PICKUP_PITCH_POS = 1010, SAMPLE_OUT_PITCH_POS = 960;
+    public static int SAMPLE_ABOVE_PITCH_POS = 920, SAMPLE_PICKUP_PITCH_POS = 995, SAMPLE_OUT_PITCH_POS = 950;
     //new with camera
     final int SAMPLE_ABOVE_SLIDE_POS = 100, SAMPLE_PICKUP_SLIDE_POS = 100;
     final int SPECIMEN_ABOVE_PITCH_POS = 200, SPECIMEN_PICKUP_PITCH_POS = 400, SPECIMEN_OUT_PITCH_POS = 400;
-    final int FRONT_SLIDE_HIGH_BASKET = 1980, FRONT_SLIDE_LOW_BASKET = 600, BACK_SLIDE_HIGH_CHAMBER = 610, BACK_SLIDE_LOW_CHAMBER = 50; //TODO high & low basket values
+    final int FRONT_SLIDE_HIGH_BASKET = 2010, FRONT_SLIDE_LOW_BASKET = 600, BACK_SLIDE_HIGH_CHAMBER = 610, BACK_SLIDE_LOW_CHAMBER = 50; //TODO high & low basket values
     final double BACK_PITCH_IDLE = 0.0, BACK_PITCH_ABOVE = 0.36, BACK_PITCH_PICKUP = 0.4, BACK_PITCH_WALL = 0.133, BACK_PITCH_CHAMBER = 0.111;
     //final double BACK_PITCH_IDLE = 0.4, BACK_PITCH_ABOVE = 0.04, BACK_PITCH_PICKUP = 0.0, BACK_PITCH_WALL = 0.267, BACK_PITCH_CHAMBER = 0.289; for when we reverse the servos and stuff so we can hang
 //NEW ANGLES 25 degrees = .111, 30 degrees = .1333, 35 degrees = .1554, 40 degrees = .1778, 45 degrees = .2
@@ -160,7 +168,7 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
         //pitchMotorFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         pitchMotorFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        pitchController = new PIDFController(0.022, 0, 0.0004,0);
+        pitchController = new PIDFController(0.011, 0, 0.00035,0);
         //good
         slideController = new PIDFController(0.025, 0, 0.0004, 0.00016);
         //good
@@ -178,7 +186,7 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
         pitchBack2 = hardwareMap.get(Servo.class, "pitchBack2");
 
         //hang motor
-        hangMotor = hardwareMap.get(DcMotorEx.class, "hangMotor");
+     //   hangMotor = hardwareMap.get(DcMotorEx.class, "hangMotor");
 
 
         //pitchMotorBack = hardwareMap.get(DcMotorEx.class, "backPitch");
@@ -192,13 +200,28 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
         currentGamepad2 = new Gamepad();
 
         //llDetector = new LLSampleVision(this, 0);
+        colorClaw = new ColorClaw(this);
 
         ArrayList<LynxModule> allHubs = new ArrayList<LynxModule>(hardwareMap.getAll(LynxModule.class));
         for (LynxModule hub : allHubs) {
             hub.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
         }
 
-        waitForStart();
+        alliance = Alliance_Color.NONE;
+
+        while (!isStarted()) {
+
+            if (gamepad2.left_bumper) {
+                alliance = Alliance_Color.BLUE;
+            } else if (gamepad2.right_bumper) {
+                alliance = Alliance_Color.RED;
+            }
+
+            telemetry.addData("Status", "Ready to Start");
+            telemetry.addData("Alliance", alliance.name());
+            telemetry.update();
+
+        }
 
         if (isStopRequested()){
             return;
@@ -239,7 +262,7 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
 
 
             //hang motor
-            hangMotor.setPower(gamepad2.right_stick_y);
+           // hangMotor.setPower(gamepad2.right_stick_y);
 
             //BACK PID POWERING
             double slidePower2 = slideController2.calculate(slidesBack.slideMotor.getCurrentPosition(), slideBackTarget);
@@ -271,6 +294,8 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
             lastSlidePower2 = slidePower2;
             lastPitchPower = pitchPower;
             //lastPitchPower2 = pitchPower2;
+
+            ColorClaw.SampleColor color = colorClaw.getSampleColor();
 
             //==============FRONT OUTTAKE FST=============================
 
@@ -467,7 +492,7 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
 
                             pitchFrontTarget = SAMPLE_ABOVE_PITCH_POS;
 
-                            if (gamepad2.left_stick_x != 0) {
+                            if (Math.abs(gamepad2.left_stick_x) > 0.02) {
                                 changeWrist = true;
                             }
 
@@ -475,9 +500,10 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
                                 frontWristPos = Range.clip(frontWristPos + (frontWristSpeed * gamepad2.left_stick_x), 0, 1);
                             }
 
-//                            if (!changeWrist && wristTimer.milliseconds() > 300) {
+//                            if (!changeWrist /*&& wristTimer.milliseconds() > 20*/) {
 //                                    frontWristPos = 1 - llDetector.getServoPos();
 //                                    wristTimer.reset();
+//                                    telemetry.addData("Using Camera", "");
 //                            }
 
 
@@ -500,7 +526,8 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
                             telemetry.addData("Timer", wristTimer.milliseconds());
                             telemetry.addData("wrist pos", wristFront.getPosition());
                             //eject unwanted samples
-                            if (gamepad1.left_trigger > 0.05) {
+
+                            if (gamepad1.left_trigger > 0.05 || (!(color == ColorClaw.SampleColor.NONE || color == ColorClaw.SampleColor.YELLOW) && !color.name().equalsIgnoreCase(alliance.name()))) {
                                 clawFront.setPower(0.6);
                             } else {
                                 clawFront.setPower(0);
@@ -532,6 +559,10 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
                             pitchFrontTarget = SAMPLE_PICKUP_PITCH_POS + pitchChange;
 
                             slideFrontTarget = 0;
+
+                            if (color != ColorClaw.SampleColor.NONE) {
+                                gamepad2.rumble(200);
+                            }
 
 
                             if (gamepad2.dpad_left) {
@@ -626,6 +657,8 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
                     }
 
 
+
+
                     break;
                 }
 
@@ -650,7 +683,11 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
                         }
                     }
 
-                    clawFront.setPower(0);
+                    if (gamepad1.left_trigger > 0.05 || (!(color == ColorClaw.SampleColor.NONE || color == ColorClaw.SampleColor.YELLOW) && !color.name().equalsIgnoreCase(alliance.name()))) {
+                        clawFront.setPower(0.6);
+                    } else {
+                        clawFront.setPower(0);
+                    }
 
                     telemetry.addData("Pitching Up", pitchPower);
                     telemetry.addData("Pitch velo", pitchMotorFront.getVelocity());
@@ -828,9 +865,9 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
 
                 case OUTTAKING: {
 
-                    if (outStageBack == Outtake.CHAMBER) {
-                        pitchBackpos = BACK_PITCH_CHAMBER;
-                    }
+//                    if (outStageBack == Outtake.CHAMBER) {
+//                        pitchBackpos = 0; //BACK_PITCH_CHAMBER;
+//                    }
 
                     //eject samples
                     if (gamepad1.right_trigger > 0.05) {
@@ -840,11 +877,19 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
                     }
 
 
-                    if (gamepad2.triangle && !prevGamepad2.triangle) {
-                        stageBack = Stages.SLIDEDOWN;
+                    if (gamepad2.triangle && !prevGamepad2.triangle && slideBackTarget == BACK_SLIDE_HIGH_CHAMBER) {
+                        //stageBack = Stages.SLIDEDOWN;
                         //stageBack = Stages.IDLE;
-                        slideBackTarget = BACK_SLIDE_HIGH_CHAMBER;
-                        clawBack.setPower(-0.25);
+
+                        slideBackTarget = 400; //BACK_SLIDE_HIGH_CHAMBER;
+                        pitchBackpos = BACK_PITCH_WALL + 0.02;
+                        //clawBack.setPower(-0.25);
+                    }
+
+                    if (gamepad2.triangle && !prevGamepad2.triangle && Math.abs(slidesBack.slideMotor.getCurrentPosition() - 400) < 10) {
+                        stageBack = Stages.SLIDEDOWN;
+                        slideBackTarget = 0;
+                        pitchBackpos = BACK_PITCH_IDLE;
                     }
 
                     //unnecessary
@@ -883,11 +928,12 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
                     telemetry.addData("Sliding Velocity", slidesBack.slideMotor.getVelocity());
                     telemetry.addData("Pos", slidesBack.slideMotor.getCurrentPosition());
 
-                    if (slidesBack.slideMotor.getCurrentPosition() < 400) {
-                        pitchBackpos = BACK_PITCH_IDLE;
-                    } else if (slidesBack.slideMotor.getCurrentPosition() < 600) {
-                        pitchBackpos = BACK_PITCH_CHAMBER + 0.013;
-                    }
+//                    if (slidesBack.slideMotor.getCurrentPosition() < 400) {
+//                        pitchBackpos = BACK_PITCH_IDLE;
+//                    } else if (slidesBack.slideMotor.getCurrentPosition() < 600) {
+//                        pitchBackpos = BACK_PITCH_CHAMBER + 0.013;
+//                    }
+                    clawBack.setPower(1);
 
 
                     slideBackTarget = 0;
@@ -1141,28 +1187,33 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
             //FtcDashboard.getInstance().sendImage(visionSystem.getDetector().getLastFrame());
             telemetry.addData("Loop Time (ms)", loopTime.milliseconds());
             loopTime.reset();
+            telemetry.addData("Alliance: ", alliance.name());
+            telemetry.addData("Sample Color", color.name());
+            telemetry.addData("Sample Dist", colorClaw.getDistance(DistanceUnit.MM));
+
             telemetry.addData("Wrist Pos", frontWristPos);
             telemetry.addData("Extension Pos", extensionPos);
-            telemetry.addData("RightExt Pos", rightExt.getPosition());
-            telemetry.addData("LeftExt Pos", leftExt.getPosition());
+            //telemetry.addData("RightExt Pos", rightExt.getPosition());
+            //telemetry.addData("LeftExt Pos", leftExt.getPosition());
 
             //telemetry.addData("Servo Pos", llDetector.getServoPos());
+            //telemetry.addData("LL Status", llDetector.getRunningStatus());
 
             //telemetry.addData("Pitch Angle (rad)", Math.cos((pitchMotorFront.getCurrentPosition())/145.1 * 28 * Math.PI));
 
-            telemetry.addData("Front Slide Position", slidesFront.slideMotor.getCurrentPosition());
-            telemetry.addData("Front Slide Power", slidePower);
+            //telemetry.addData("Front Slide Position", slidesFront.slideMotor.getCurrentPosition());
+            //telemetry.addData("Front Slide Power", slidePower);
             telemetry.addData("Front Pitch Position", pitchMotorFront.getCurrentPosition());
-            telemetry.addData("Front Pitch Power", pitchPower);
-            telemetry.addData("Front Slide Target", slideFrontTarget);
+            //telemetry.addData("Front Pitch Power", pitchPower);
+            //telemetry.addData("Front Slide Target", slideFrontTarget);
             telemetry.addData("Front Pitch Target", pitchFrontTarget);
-            telemetry.addData("","");
-            telemetry.addData("Back Slide Position", slidesBack.slideMotor.getCurrentPosition());
+            //telemetry.addData("","");
+            //telemetry.addData("Back Slide Position", slidesBack.slideMotor.getCurrentPosition());
             //telemetry.addData("Back Pitch Position", pitchMotorBack.getCurrentPosition());
-            telemetry.addData("Back Slide Target", slideBackTarget);
-            telemetry.addData("Back Pitch Position", pitchBack1.getPosition());
-            telemetry.addData("Back Pitch Position Target Servo", pitchBackpos);
-            telemetry.addData("Hang Power", hangMotor.getPower());
+            //telemetry.addData("Back Slide Target", slideBackTarget);
+            //telemetry.addData("Back Pitch Position", pitchBack1.getPosition());
+            //telemetry.addData("Back Pitch Position Target Servo", pitchBackpos);
+         //   telemetry.addData("Hang Power", hangMotor.getPower());
             //hang motor
 
 
@@ -1186,8 +1237,6 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
 
 
         }
-
-
 
     }
 }

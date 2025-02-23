@@ -17,11 +17,12 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.ActionManager;
 import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.PedroAction;
 import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.SequentialAction;
+import org.firstinspires.ftc.teamcode.Hardware.Chassis.PeriodicFollower;
 import org.firstinspires.ftc.teamcode.pedroPathing.constants.FConstants;
 import org.firstinspires.ftc.teamcode.pedroPathing.constants.LConstants;
 
 
-@Disabled
+
 @Autonomous(name = "MovementTest")
 public class MovementTest extends LinearOpMode {
 
@@ -43,6 +44,7 @@ public class MovementTest extends LinearOpMode {
         Constants.setConstants(FConstants.class, LConstants.class);
         follower = new Follower(hardwareMap);
         follower.setStartingPose(new Pose(24, 72, 0));
+        PeriodicFollower perFollower = new PeriodicFollower(follower);
 
         path1 = new Path(
                         new BezierLine(
@@ -58,12 +60,12 @@ public class MovementTest extends LinearOpMode {
         path2.setLinearHeadingInterpolation(0, Math.toRadians(-45));
 
 
-        move1 = new PedroAction(follower, new PathChain(path1), false);
+        move1 = new PedroAction(follower, new PathChain(path1), true);
 
-        move2 = new PedroAction(follower, new PathChain(path2), false);
+        move2 = new PedroAction(follower, new PathChain(path2), true);
 
-        actionManager = new ActionManager(telemetry, hardwareMap);
-        actionManager.attachPeriodicActions();
+        actionManager = new ActionManager(this);
+        actionManager.attachPeriodicActions(perFollower);
 
         waitForStart();
 

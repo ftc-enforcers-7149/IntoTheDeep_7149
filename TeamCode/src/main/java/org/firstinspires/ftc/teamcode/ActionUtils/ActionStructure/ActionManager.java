@@ -56,6 +56,10 @@ public class ActionManager {
         attachPeriodicActions(Arrays.asList(periodic));
     }
 
+    public boolean removeAction(PeriodicAction action) {
+        return periodicActions.remove(action);
+    }
+
 
     public void runActionManager(EventAction a, TelemetryUpdater telemetryUpdate) {
 
