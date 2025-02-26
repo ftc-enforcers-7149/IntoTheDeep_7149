@@ -17,9 +17,10 @@ public class PIDF_MotorTester extends LinearOpMode {
 
     public static double kp = 0.001, ki = 0, kd = 0.001, ff = 0;
 
-    DcMotorEx motor;
+    DcMotorEx motor, motor2;
 
     public static boolean reversed = false;
+    public static boolean reversed2 = false;
     public boolean manualOverride = false;
 
     public static int target = 0;
@@ -36,6 +37,10 @@ public class PIDF_MotorTester extends LinearOpMode {
         motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
+        motor2 = hardwareMap.get(DcMotorEx.class, "motor2");
+        motor2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motor2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
         initialPos = motor.getCurrentPosition();
 
         controller = new PIDFController(kp, ki, kd, ff);
@@ -47,6 +52,8 @@ public class PIDF_MotorTester extends LinearOpMode {
         }
 
         motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        motor2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
 
         while (opModeIsActive() && !isStopRequested()) {
 
@@ -58,7 +65,15 @@ public class PIDF_MotorTester extends LinearOpMode {
                 motor.setDirection(DcMotorSimple.Direction.FORWARD);
             }
 
-            controller.setPIDF(kp, ki, kd, (Math.sin(angle) * ff));
+            if (reversed2) {
+                motor2.setDirection(DcMotorSimple.Direction.REVERSE);
+            } else {
+                motor.setDirection(DcMotorSimple.Direction.FORWARD);
+            }
+
+            //ff *= Math.sin(angle);  //angle ff compensation
+
+            controller.setPIDF(kp, ki, kd, ff);
 
             if (gamepad1.triangle) {
                 manualOverride = true;
@@ -69,9 +84,11 @@ public class PIDF_MotorTester extends LinearOpMode {
             if (!manualOverride) {
                 double power = controller.calculate(motor.getCurrentPosition() - initialPos, target);
                 motor.setPower(power);
+                motor2.setPower(power);
             } else {
                 controller.reset();
                 motor.setPower(-gamepad1.right_stick_y);
+                motor2.setPower(-gamepad1.right_stick_y);
             }
 
             telemetry.addData("Target Position", target);
