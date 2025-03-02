@@ -5,18 +5,20 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.ServoImplEx;
 
 //@Disabled
-@TeleOp(name = "Servo")
+@TeleOp(name = "Servo", group = "Testers")
 public class clawServoSet extends LinearOpMode {
-    Servo claw;
+    ServoImplEx claw;
 
 //    @Override
     public void runOpMode() {
-        claw = hardwareMap.get(Servo.class, "servo");
-        double pos = 0.0;
+        claw = hardwareMap.get(ServoImplEx.class, "servo");
 
-        claw.setPosition(0); //set to 0
+        double pos = 0.25;
+
+        claw.setPosition(pos); //set to 0
 
         Gamepad currentGamepad1 = new Gamepad();
 

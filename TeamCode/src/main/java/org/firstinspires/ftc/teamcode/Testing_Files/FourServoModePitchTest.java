@@ -1,17 +1,25 @@
 package org.firstinspires.ftc.teamcode.Testing_Files;
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.PwmControl;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
 
+@Config
 @TeleOp(name = "FourServoPitch(v2.5)", group = "Testers")
 public class FourServoModePitchTest extends LinearOpMode {
 
     ServoImplEx left1, left2, right1, right2;
 
+    public static double servoPos = 0;
+
     @Override
     public void runOpMode() throws InterruptedException {
+
+        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
         left1 = hardwareMap.get(ServoImplEx.class, "left1");
         left2 = hardwareMap.get(ServoImplEx.class, "left2");
@@ -23,11 +31,6 @@ public class FourServoModePitchTest extends LinearOpMode {
         right1.setPwmRange(new PwmControl.PwmRange(500, 2500));
         right2.setPwmRange(new PwmControl.PwmRange(500, 2500));
 
-        left1.setPosition(0);
-        left2.setPosition(0);
-        right1.setPosition(0);
-        right2.setPosition(0);
-
 
         waitForStart();
 
@@ -37,21 +40,13 @@ public class FourServoModePitchTest extends LinearOpMode {
 
         while (opModeIsActive() && !isStopRequested()) {
 
-            if (!gamepad1.left_bumper) {
 
-                left1.setPosition(gamepad1.left_stick_x);
-                left2.setPosition(gamepad1.left_stick_x);
-                right1.setPosition(gamepad1.left_stick_x);
-                right2.setPosition(gamepad1.left_stick_x);
+            left1.setPosition(servoPos);
+            left2.setPosition(servoPos);
+            right1.setPosition(servoPos);
+            right2.setPosition(servoPos);
 
-            } else {
 
-                left1.setPosition(0.7);
-                left2.setPosition(0.7);
-                right1.setPosition(0.7);
-                right2.setPosition(0.7);
-
-            }
 
         }
 
