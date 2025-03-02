@@ -8,6 +8,8 @@ public class FourServoPitchArm {
 
     private ServoImplEx left1, left2, right1, right2;
 
+    private double lastPos = -999;
+
     public FourServoPitchArm(OpMode opMode) {
 
         left1 = opMode.hardwareMap.get(ServoImplEx.class, "left1");
@@ -22,9 +24,16 @@ public class FourServoPitchArm {
     }
 
     public void setPosition(double pos) {
-        left1.setPosition(pos);
-        left2.setPosition(pos);
-        right1.setPosition(pos);
-        right2.setPosition(pos);
+
+        if (Math.abs(pos - lastPos) > 0.001) {
+
+            left1.setPosition(pos);
+            left2.setPosition(pos);
+            right1.setPosition(pos);
+            right2.setPosition(pos);
+
+        }
+
+        lastPos = pos;
     }
 }
