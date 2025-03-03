@@ -29,8 +29,10 @@ import org.firstinspires.ftc.teamcode.GlobalData.AutoConstants;
 import org.firstinspires.ftc.teamcode.GlobalData.HardwareConstants;
 import org.firstinspires.ftc.teamcode.Hardware.Chassis.PeriodicFollower;
 import org.firstinspires.ftc.teamcode.Hardware.Subsystems.ColorClaw;
+import org.firstinspires.ftc.teamcode.Hardware.Subsystems.FourServoPitchArm;
 import org.firstinspires.ftc.teamcode.Hardware.Subsystems.OuttakeSlides;
 import org.firstinspires.ftc.teamcode.Hardware.Subsystems.PitchArm;
+import org.firstinspires.ftc.teamcode.Hardware.Subsystems.V3Systems.TwoMotorSlides;
 import org.firstinspires.ftc.teamcode.pedroPathing.constants.FConstants;
 import org.firstinspires.ftc.teamcode.pedroPathing.constants.LConstants;
 
@@ -49,8 +51,9 @@ public class LeftBasket extends LinearOpMode {
     Follower follower;
     PeriodicFollower perFollower;
 
-    OuttakeSlides frontSlides, backSlides;
-    PitchArm frontArm;
+    TwoMotorSlides frontSlides;
+    OuttakeSlides backSlides;
+    FourServoPitchArm frontArm;
     ServoImplEx rightExt, leftExt;
     Servo pitchBack1, pitchBack2;
     ColorClaw colorClaw;
@@ -87,15 +90,14 @@ public class LeftBasket extends LinearOpMode {
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
 
-        frontSlides = new OuttakeSlides(hardwareMap, "frontSlide");
-        frontArm = new PitchArm(hardwareMap, "frontPitch");
+        frontSlides = new TwoMotorSlides(this);
+        frontArm = new FourServoPitchArm(this);
+        frontArm.setPosition(HardwareConstants.PITCH_ZERO);
         backSlides = new OuttakeSlides(hardwareMap, "backSlide");
         //backArm = new PitchArm(hardwareMap, "backPitch");
 
-        frontSlides.slideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        frontSlides.slideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        frontArm.pitchMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        frontArm.pitchMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        frontSlides.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        frontSlides.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         backSlides.slideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         backSlides.slideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 //        backArm.pitchMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -107,21 +109,27 @@ public class LeftBasket extends LinearOpMode {
 
         colorClaw = new ColorClaw(this);
 
-        frontArm.setPIDFCoefficients(0.0084, 0, 0.00014,0);
-        frontSlides.setPIDFCoefficients(0.026, 0, 0.00026, 0.00012);
+
         //backSlides.setPIDFCoefficients(0.08, 0, 0.00026, 0.00012);
         //backArm.setPIDFCoefficients(0.016, 0, 0.0003, 0);
 
-        frontSlides.slideMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         backSlides.slideMotor.setDirection(DcMotorSimple.Direction.FORWARD);
 
-        slidesUpBasket = frontSlides.getExtensionAction(2100);
+        slidesUpBasket = frontSlides.getExtensionAction(1500);
         slidesDownBasket = frontSlides.getExtensionAction(0);
 
-        armDownSample = frontArm.getPitchingAction(1000);
-        armUpSample = frontArm.getPitchingAction(0);
-        armAboveSample = frontArm.getPitchingAction(780);
-        subPitch = frontArm.getPitchingAction(780);
+        armDownSample = new InstantAction(() -> {
+            frontArm.setPosition(HardwareConstants.PITCH_PICKUP);
+        });
+        armUpSample = new InstantAction(() -> {
+            frontArm.setPosition(HardwareConstants.PITCH_ZERO);
+        });
+        armAboveSample = new InstantAction(() -> {
+            frontArm.setPosition(HardwareConstants.PITCH_HOVER);
+        });
+        subPitch = new InstantAction(() -> {
+            frontArm.setPosition(HardwareConstants.PITCH_HOVER - 0.1);
+        });;
 
         parkSlidesUp = backSlides.getExtensionAction(580);
         //parkPitch = backArm.getPitchingAction(300);
@@ -283,7 +291,7 @@ public class LeftBasket extends LinearOpMode {
         //=========================================
 
         actionManager = new ActionManager(telemetry, hardwareMap);
-        actionManager.attachPeriodicActions(perFollower, frontArm, frontSlides, backSlides);
+        actionManager.attachPeriodicActions(perFollower, frontSlides, backSlides);
 
         wristFront.setPosition(0);
         leftExt.setPosition(1);
@@ -377,7 +385,7 @@ public class LeftBasket extends LinearOpMode {
 
                         new ParallelAction(moveSample2, slidesDownBasket, wristPickup),
                         imuReset,
-                        new EndAction(new SequentialAction(armAboveSample, new WaitAction(1000), armDownSample, new WaitAction(1500)),
+                        new EndAction(new SequentialAction(armAboveSample, new WaitAction(1000), armDownSample, new WaitAction(1000)),
                                 clawIntake
                         ),
                         armUpSample,
@@ -390,7 +398,7 @@ public class LeftBasket extends LinearOpMode {
                         //pickup third sample
 
                         new ParallelAction(moveSample3, slidesDownBasket, wristPickup),
-                        new EndAction(new SequentialAction(armAboveSample, new WaitAction(1000), armDownSample, new WaitAction(1500)),
+                        new EndAction(new SequentialAction(armAboveSample, new WaitAction(1000), armDownSample, new WaitAction(1000)),
                                 clawIntake
                         ),
                         armUpSample,
@@ -403,7 +411,7 @@ public class LeftBasket extends LinearOpMode {
                         //pickup fourth sample
 
                         new ParallelAction(moveSample4, slidesDownBasket, wristPickupRot),
-                        new EndAction(new SequentialAction(armAboveSample, new WaitAction(1000), armDownSample, new WaitAction(1500)),
+                        new EndAction(new SequentialAction(armAboveSample, new WaitAction(1000), armDownSample, new WaitAction(1000)),
                                 clawIntake
                         ),
                         new ParallelAction(moveAwaySample4, armUpSample),

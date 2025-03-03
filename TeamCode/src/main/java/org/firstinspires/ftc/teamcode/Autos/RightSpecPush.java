@@ -32,9 +32,12 @@ import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.TimedAction;
 import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.WaitAction;
 import org.firstinspires.ftc.teamcode.ActionUtils.ClawRotateAction;
 import org.firstinspires.ftc.teamcode.GlobalData.AutoConstants;
+import org.firstinspires.ftc.teamcode.GlobalData.HardwareConstants;
 import org.firstinspires.ftc.teamcode.Hardware.Chassis.PeriodicFollower;
+import org.firstinspires.ftc.teamcode.Hardware.Subsystems.FourServoPitchArm;
 import org.firstinspires.ftc.teamcode.Hardware.Subsystems.OuttakeSlides;
 import org.firstinspires.ftc.teamcode.Hardware.Subsystems.PitchArm;
+import org.firstinspires.ftc.teamcode.Hardware.Subsystems.V3Systems.TwoMotorSlides;
 import org.firstinspires.ftc.teamcode.pedroPathing.constants.FConstants;
 import org.firstinspires.ftc.teamcode.pedroPathing.constants.LConstants;
 
@@ -45,8 +48,9 @@ public class RightSpecPush extends LinearOpMode {
     ActionManager actionManager;
     Follower follower;
 
-    OuttakeSlides frontSlides, backSlides;
-    PitchArm frontArm;
+    OuttakeSlides backSlides;
+    TwoMotorSlides frontSlides;
+    FourServoPitchArm frontArm;
     ServoImplEx rightExt, leftExt;
     Servo pitchBack1, pitchBack2;
 
@@ -80,30 +84,26 @@ public class RightSpecPush extends LinearOpMode {
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
 
-        frontSlides = new OuttakeSlides(hardwareMap, "frontSlide");
-        frontArm = new PitchArm(hardwareMap, "frontPitch");
+        frontSlides = new TwoMotorSlides(this);
+        frontArm = new FourServoPitchArm(this);
+        frontArm.setPosition(HardwareConstants.PITCH_ZERO);
+
         backSlides = new OuttakeSlides(hardwareMap, "backSlide");
         pitchBack1 = hardwareMap.get(Servo.class, "pitchBack1");
         pitchBack2 = hardwareMap.get(Servo.class, "pitchBack2");
         pitchBack1.setPosition(0);
         pitchBack2.setPosition(0);
 
-        frontSlides.slideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        frontSlides.slideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        frontArm.pitchMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        frontArm.pitchMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        frontSlides.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        frontSlides.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
         backSlides.slideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         backSlides.slideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
-
-        frontArm.setPIDFCoefficients(0.014, 0, 0.0005,0);
         backSlides.setPIDFCoefficients(0.02, 0, 0.0004, 0.0002);
-
-        frontSlides.slideMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         backSlides.slideMotor.setDirection(DcMotorSimple.Direction.FORWARD);
 
-        slidesUpChamber = frontSlides.getExtensionAction(650);
-        slidesScoreChamber = frontSlides.getExtensionAction(550);
+        slidesUpChamber = frontSlides.getExtensionAction(550);
+        slidesScoreChamber = frontSlides.getExtensionAction(450);
         slidesDownChamber = frontSlides.getExtensionAction(0);
 
         slidesBackUpChamber = backSlides.getExtensionAction(610);
@@ -111,11 +111,15 @@ public class RightSpecPush extends LinearOpMode {
         slidesBackDownChamber = backSlides.getExtensionAction(0);
         slidesBackAboveWall = backSlides.getExtensionAction(150);
 
-        armDownSample = frontArm.getPitchingAction(1040);
-        armUpSample = frontArm.getPitchingAction(0);
-        armAboveSample = frontArm.getPitchingAction(780);
-        armUpChamber = frontArm.getPitchingAction(250);
-        armDownChamber = frontArm.getPitchingAction(0);
+//        armDownSample = frontArm.getPitchingAction(1040);
+//        armUpSample = frontArm.getPitchingAction(0);
+//        armAboveSample = frontArm.getPitchingAction(780);
+        armUpChamber = new InstantAction(() -> {
+            frontArm.setPosition(0.4);
+        });
+        armDownChamber = new InstantAction(() -> {
+            frontArm.setPosition(HardwareConstants.PITCH_ZERO);
+        });
 
         armBackDownChamber = new InstantAction(() -> {
             pitchBack1.setPosition(0);
@@ -126,12 +130,12 @@ public class RightSpecPush extends LinearOpMode {
             pitchBack2.setPosition(0.11);
         });
         armBackSpecPickup = new InstantAction(() -> {
-            pitchBack1.setPosition(0.133);
-            pitchBack2.setPosition(0.133);
+            pitchBack1.setPosition(0.173);
+            pitchBack2.setPosition(0.173);
         });
         armBackSpecScore = new InstantAction(() -> {
-            pitchBack1.setPosition(0.153);
-            pitchBack2.setPosition(0.153);
+            pitchBack1.setPosition(0.18);
+            pitchBack2.setPosition(0.18);
         });
 
         imu = hardwareMap.get(IMU.class, "imu");
@@ -198,13 +202,13 @@ public class RightSpecPush extends LinearOpMode {
 
         chamberPath1 = new Path(new BezierLine(
                 new Point(8.75, 62),
-                new Point(32, 65)
+                new Point(32, 62)
         ));
         chamberPath1.setConstantHeadingInterpolation(Math.toRadians(0));
         chamberPath1.setZeroPowerAccelerationMultiplier(4);
 
         Path samplePath1_1 = new Path(new BezierCurve(
-                new Point(32, 65),
+                new Point(32, 62),
                 new Point(18, 35),
                 new Point(46.5, 35.5)
         ));
@@ -274,13 +278,14 @@ public class RightSpecPush extends LinearOpMode {
         chamberPath2 = new Path(new BezierCurve(
                 //MathFunctions.addPoints(SPEC_PICKUP, new Point(-2.5, 0)),
                 SPEC_PICKUP,
-                new Point(30, 66),
-                new Point(38.3, 64)
+                new Point(30, 76),
+                new Point(38, 75)
         ));
         chamberPath2.setLinearHeadingInterpolation(0, Math.toRadians(180.01), 0.6);
+        chamberPath2.setZeroPowerAccelerationMultiplier(1.4);
 
         wallPath3 = new Path(new BezierCurve(
-                new Point(38.3, 64),
+                new Point(38, 75),
                 new Point(30, 40),
                 SPEC_PICKUP
         ));
@@ -289,13 +294,14 @@ public class RightSpecPush extends LinearOpMode {
 
         chamberPath3 = new Path(new BezierCurve(
                 SPEC_PICKUP,
-                new Point(30, 70),
-                new Point(38.3, 68)
+                new Point(30, 75),
+                new Point(38, 73)
         ));
         chamberPath3.setLinearHeadingInterpolation(0, Math.toRadians(180.01), 0.6);
+        chamberPath3.setZeroPowerAccelerationMultiplier(1.4);
 
         wallPath4 = new Path(new BezierCurve(
-                new Point(38.3, 68),
+                new Point(38, 73),
                 new Point(30, 40),
                 SPEC_PICKUP
         ));
@@ -304,13 +310,14 @@ public class RightSpecPush extends LinearOpMode {
 
         chamberPath4 = new Path(new BezierCurve(
                 SPEC_PICKUP,
-                new Point(30, 72),
-                new Point(38.3, 70)
+                new Point(30, 73),
+                new Point(38, 71)
         ));
         chamberPath4.setLinearHeadingInterpolation(0, Math.toRadians(180.01), 0.6);
+        chamberPath4.setZeroPowerAccelerationMultiplier(1.4);
 
         wallPath5 = new Path(new BezierCurve(
-                new Point(38.3, 70),
+                new Point(38, 71),
                 new Point(30, 40),
                 SPEC_PICKUP
         ));
@@ -319,13 +326,14 @@ public class RightSpecPush extends LinearOpMode {
 
         chamberPath5 = new Path(new BezierCurve(
                 SPEC_PICKUP,
-                new Point(30, 76),
-                new Point(38.3, 73)
+                new Point(30, 73),
+                new Point(38, 69)
         ));
         chamberPath5.setLinearHeadingInterpolation(0, Math.toRadians(180.01), 0.6);
+        chamberPath5.setZeroPowerAccelerationMultiplier(1.4);
 
         parkPath = new Path(new BezierLine(
-                new Point(38.3, 73),
+                new Point(38, 69),
                 new Point(22, 30)
         ));
         parkPath.setLinearHeadingInterpolation(Math.toRadians(180.01), Math.toRadians(215), 0.3);
@@ -366,7 +374,7 @@ public class RightSpecPush extends LinearOpMode {
 
 
         actionManager = new ActionManager(telemetry, hardwareMap);
-        actionManager.attachPeriodicActions(perFollower, frontArm, backSlides, frontSlides);
+        actionManager.attachPeriodicActions(perFollower, backSlides, frontSlides);
 
         wristFront.setPosition(0.5);
         leftExt.setPosition(1);
@@ -425,7 +433,7 @@ public class RightSpecPush extends LinearOpMode {
                         //get spec 2 off the wall and score it
                         //stop intaking 200ms after arriving at wall
                         new ParallelAction(
-                                new EndAction(new SequentialAction(moveWall2),
+                                new EndAction(new SequentialAction(moveWall2, new WaitAction(100)),
                                         clawBackIntake),
                                 extensionIn,
                                 armBackSpecPickup
@@ -450,7 +458,7 @@ public class RightSpecPush extends LinearOpMode {
                         armBackDownChamber,
                         new ParallelAction(
                                 new EndAction(
-                                        new SequentialAction(moveWall3),
+                                        new SequentialAction(moveWall3, new WaitAction(100)),
                                         new SequentialAction(new TimedAction(clawBackOuttake, 300),
                                                 clawBackIntake)),
                                 new SequentialAction(slidesBackDownChamber, armBackSpecPickup)
@@ -475,7 +483,7 @@ public class RightSpecPush extends LinearOpMode {
                         armBackDownChamber,
                         new ParallelAction(
                                 new EndAction(
-                                        new SequentialAction(moveWall4),
+                                        new SequentialAction(moveWall4, new WaitAction(100)),
                                         new SequentialAction(new TimedAction(clawBackOuttake, 300),
                                                 clawBackIntake)),
                                 new SequentialAction(slidesBackDownChamber, armBackSpecPickup)
@@ -498,7 +506,7 @@ public class RightSpecPush extends LinearOpMode {
                         armBackDownChamber,
                         new ParallelAction(
                                 new EndAction(
-                                        new SequentialAction(moveWall5),
+                                        new SequentialAction(moveWall5, new WaitAction(100)),
                                         new SequentialAction(new TimedAction(clawBackOuttake, 300),
                                                 clawBackIntake)),
                                 new SequentialAction(slidesBackDownChamber, armBackSpecPickup)
