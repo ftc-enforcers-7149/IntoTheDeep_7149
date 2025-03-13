@@ -4,16 +4,17 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.controller.PIDFController;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
+import org.firstinspires.ftc.teamcode.Hardware.sqUIDF;
+
 @Config
-@TeleOp(name = "PIDF Tester", group = "Testers")
-public class PIDF_MotorTester extends LinearOpMode {
+@TeleOp(name = "sqUIDF Tester", group = "Testers")
+public class sqUIDF_MotorTester extends LinearOpMode {
 
     public static double kp = 0.001, ki = 0, kd = 0.001, ff = 0;
 
@@ -26,7 +27,7 @@ public class PIDF_MotorTester extends LinearOpMode {
     public static int target = 0;
     public int initialPos;
 
-    PIDFController controller;
+    sqUIDF controller;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -43,7 +44,7 @@ public class PIDF_MotorTester extends LinearOpMode {
 
         initialPos = motor.getCurrentPosition();
 
-        controller = new PIDFController(kp, ki, kd, ff);
+        controller = new sqUIDF(kp, ki, kd, ff);
 
         waitForStart();
 

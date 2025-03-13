@@ -18,17 +18,17 @@ import com.pedropathing.pathgen.Path;
 import com.pedropathing.pathgen.PathChain;
 import com.pedropathing.pathgen.Point;
 import com.pedropathing.util.Constants;
+import com.qualcomm.robotcore.util.Range;
 
 public class MotionSamplePickupAction extends EventAction {
 
-    private EventAction pickupAction, aboveAction, autoAction, totalAction;
+    private EventAction pickupAction, aboveAction, autoAction, findNewSample, totalAction;
 
     private LLSampleVision visionSystem;
     private Servo clawWrist;
     private Follower follower;
 
-    private boolean positionReceived;  //true once the robot has a sample it can go after
-    private int sampleIndex;  //which sample in the list to go after
+    private boolean positionReceived, findingNewSample;  //true once the robot has a sample it can go after
 
     //TODO:
     // Encode x, y, and rot values into one double for limelight results
@@ -50,8 +50,10 @@ public class MotionSamplePickupAction extends EventAction {
 
         autoAction = pickupAction;
         totalAction = pickupAction;
+        findNewSample = null;
+
         positionReceived = false;
-        sampleIndex = 0;
+        findingNewSample = false;
     }
 
     @Override
@@ -60,55 +62,70 @@ public class MotionSamplePickupAction extends EventAction {
         //if a sample hasn't been chosen, find one
         if (!positionReceived) {
 
-            double[] sampleInfo = visionSystem.getResultInfo();
-            double chosenX = 0.0, chosenY = 0.0, chosenRot = 0.0;
+            double[] sampleInfo;
 
-            //go through all the samples until a valid one is found
-            for (int i = 0; i < sampleInfo.length; i++) {
+            if (!findingNewSample) {
+                sampleInfo = visionSystem.getResultInfo();
+            } else {
+                sampleInfo = new double[]{0,0,0,0,0,0,0,0};
+            }
 
-                String posStr = sampleInfo[i] + "";
+            if (sampleInfo[0] == 1) {
+                positionReceived = true;
 
-                //decode the sample information
-                double sampleX = Integer.parseInt(posStr.substring(1, 5)) / 100.0;
-                double sampleY = Integer.parseInt(posStr.substring(5, 9)) / 100.0;
-                double sampleRot = Integer.parseInt(posStr.substring(9, 14)) / 100.0;
 
-                if (sampleY > HardwareConstants.MAX_EXTENDO_LENGTH) {
-                    continue;
+                double heading = follower.getPose().getHeading();
+                Point currentPos = new Point(follower.getPose().getX(), follower.getPose().getY());
+
+                Point moveVectorX = new Point(sampleInfo[2], (heading - Math.PI/2), Point.POLAR);
+                Point moveVectorY = new Point(-1 * (HardwareConstants.MAX_EXTENDO_LENGTH - sampleInfo[3]), (heading), Point.POLAR);
+                Point moveVector = MathFunctions.addPoints(moveVectorX, moveVectorY);
+
+                Path moveToPoint = new Path(new BezierLine(
+                        currentPos,
+                        MathFunctions.addPoints(currentPos, moveVector)
+                ));
+                moveToPoint.setConstantHeadingInterpolation(heading);
+                moveToPoint.setZeroPowerAccelerationMultiplier(1);
+
+                autoAction = new PedroAction(follower, new PathChain(moveToPoint), true);
+
+                clawWrist.setPosition(1 - Range.scale(sampleInfo[1] / 180, 0, 1, HardwareConstants.WRIST_MIN, HardwareConstants.WRIST_MAX));
+                totalAction = new SequentialAction(
+                        new ParallelAction(autoAction, aboveAction),
+                        pickupAction);
+
+                totalAction.init();
+                return totalAction.run(t);
+
+            } else {
+
+                findingNewSample = true;
+
+                if (findNewSample == null) {
+
+                    double heading = follower.getPose().getHeading();
+                    Point currentPos = new Point(follower.getPose().getX(), follower.getPose().getY());
+                    Point xVector = new Point(-6, (heading - Math.PI/2), Point.POLAR);
+
+                    Path strafePath = new Path(new BezierLine(
+                            currentPos,
+                            MathFunctions.addPoints(currentPos, xVector)
+                    ));
+                    strafePath.setConstantHeadingInterpolation(heading);
+                    findNewSample = new PedroAction(follower, new PathChain(strafePath), true);
+                    findNewSample.init();
                 }
 
-                chosenX = sampleX;
-                chosenY = sampleY;
-                chosenRot = sampleRot;
-                positionReceived = true;
-                sampleIndex = i;
+                if (!findNewSample.run(t)) {
+                    findingNewSample = false;
+                    findNewSample = null;
+                }
+
+                return true;
             }
 
-            //if a position still hasn't been chosen, terminate the action as no samples are within reach
-            if (!positionReceived) {
-                return false;
-            }
 
-            double heading = follower.getHeadingVector().getTheta();
-            Point currentPos = new Point(follower.getPose().getX(), follower.getPose().getY());
-            Point moveVectorX = new Point(chosenX, heading - (Math.PI/2));
-            Point moveVectorY = new Point(chosenY - HardwareConstants.MAX_EXTENDO_LENGTH, heading);
-            Point moveVector = MathFunctions.addPoints(moveVectorX, moveVectorY);
-
-            Path moveToPoint = new Path(new BezierLine(
-                    currentPos,
-                    MathFunctions.addPoints(currentPos, moveVector)
-            ));
-            moveToPoint.setConstantHeadingInterpolation(heading);
-            autoAction = new PedroAction(follower, new PathChain(moveToPoint), true);
-
-            clawWrist.setPosition(chosenRot / 180.0);
-            totalAction = new SequentialAction(
-                    new ParallelAction(autoAction, aboveAction),
-                    pickupAction);
-
-            totalAction.init();
-            return totalAction.run(t);
 
         } else {
 
@@ -127,12 +144,10 @@ public class MotionSamplePickupAction extends EventAction {
     @Override
     public void init() {
         positionReceived = false;
-        sampleIndex = -1;
     }
 
     @Override
     public void stop(boolean interrupted) {
         positionReceived = false;
-        sampleIndex = 1;
     }
 }

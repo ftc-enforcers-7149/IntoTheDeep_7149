@@ -25,11 +25,14 @@ import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.SequentialActi
 import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.TimedAction;
 import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.WaitAction;
 import org.firstinspires.ftc.teamcode.ActionUtils.ClawRotateAction;
+import org.firstinspires.ftc.teamcode.ActionUtils.MotionSamplePickupAction;
 import org.firstinspires.ftc.teamcode.GlobalData.AutoConstants;
+import org.firstinspires.ftc.teamcode.GlobalData.AutoFunctions;
 import org.firstinspires.ftc.teamcode.GlobalData.HardwareConstants;
 import org.firstinspires.ftc.teamcode.Hardware.Chassis.PeriodicFollower;
 import org.firstinspires.ftc.teamcode.Hardware.Subsystems.ColorClaw;
 import org.firstinspires.ftc.teamcode.Hardware.Subsystems.FourServoPitchArm;
+import org.firstinspires.ftc.teamcode.Hardware.Subsystems.LLSampleVision;
 import org.firstinspires.ftc.teamcode.Hardware.Subsystems.OuttakeSlides;
 import org.firstinspires.ftc.teamcode.Hardware.Subsystems.PitchArm;
 import org.firstinspires.ftc.teamcode.Hardware.Subsystems.V3Systems.TwoMotorSlides;
@@ -51,6 +54,8 @@ public class LeftBasket extends LinearOpMode {
     Follower follower;
     PeriodicFollower perFollower;
 
+    LLSampleVision visionSystem;
+
     TwoMotorSlides frontSlides;
     OuttakeSlides backSlides;
     FourServoPitchArm frontArm;
@@ -58,17 +63,18 @@ public class LeftBasket extends LinearOpMode {
     Servo pitchBack1, pitchBack2;
     ColorClaw colorClaw;
 
-    Servo wristFront;
+    ServoImplEx wristFront;
 
     IMU imu;
 
     EventAction slidesUpBasket, slidesDownBasket,
-            armDownSample, armAboveSample, armUpSample,
+            armDownSample, armAboveSample, armUpSample, armReverseSample,
             extensionOut, extensionIn,
             imuReset,
             slowFollower, quickFollower, medFollower,
             wristDropoff, wristPickup, wristPickupRot,
             subPitch,
+            samplePickupAction,
             parkSlidesUp, parkPitch;
 
     ClawRotateAction clawOuttake, clawIntake;
@@ -92,7 +98,7 @@ public class LeftBasket extends LinearOpMode {
 
         frontSlides = new TwoMotorSlides(this);
         frontArm = new FourServoPitchArm(this);
-        frontArm.setPosition(HardwareConstants.PITCH_ZERO);
+        frontArm.setPosition(HardwareConstants.PITCH_ZERO + 0.01);
         backSlides = new OuttakeSlides(hardwareMap, "backSlide");
         //backArm = new PitchArm(hardwareMap, "backPitch");
 
@@ -104,11 +110,11 @@ public class LeftBasket extends LinearOpMode {
 //        backArm.pitchMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         pitchBack1 = hardwareMap.get(Servo.class, "pitchBack1");
         pitchBack2 = hardwareMap.get(Servo.class, "pitchBack2");
-        pitchBack1.setPosition(0);
-        pitchBack2.setPosition(0);
+        pitchBack1.setPosition(HardwareConstants.BACK_PITCH_ZERO);
+        pitchBack2.setPosition(HardwareConstants.BACK_PITCH_ZERO);
 
         colorClaw = new ColorClaw(this);
-
+        visionSystem = new LLSampleVision(this, 0);
 
         //backSlides.setPIDFCoefficients(0.08, 0, 0.00026, 0.00012);
         //backArm.setPIDFCoefficients(0.016, 0, 0.0003, 0);
@@ -122,21 +128,27 @@ public class LeftBasket extends LinearOpMode {
             frontArm.setPosition(HardwareConstants.PITCH_PICKUP);
         });
         armUpSample = new InstantAction(() -> {
-            frontArm.setPosition(HardwareConstants.PITCH_ZERO);
+            frontArm.setPosition(HardwareConstants.PITCH_ZERO+0.01);
         });
         armAboveSample = new InstantAction(() -> {
             frontArm.setPosition(HardwareConstants.PITCH_HOVER);
         });
+        EventAction armAboveSub = new InstantAction(() -> {
+            frontArm.setPosition(HardwareConstants.PITCH_HOVER - 0.08);
+        });
         subPitch = new InstantAction(() -> {
-            frontArm.setPosition(HardwareConstants.PITCH_HOVER - 0.1);
-        });;
+            frontArm.setPosition(HardwareConstants.PITCH_CAMERA);
+        });
+        armReverseSample = new InstantAction(() -> {
+            frontArm.setPosition(HardwareConstants.PITCH_REVERSE);
+        });
 
         parkSlidesUp = backSlides.getExtensionAction(580);
         //parkPitch = backArm.getPitchingAction(300);
 
         parkPitch = new InstantAction(() -> {
-            pitchBack1.setPosition(0.15);
-            pitchBack2.setPosition(0.15);
+            pitchBack1.setPosition(HardwareConstants.BACK_PITCH_HOVER+0.15);
+            pitchBack2.setPosition(HardwareConstants.BACK_PITCH_HOVER+0.15);
         });
 
 
@@ -148,7 +160,7 @@ public class LeftBasket extends LinearOpMode {
         imu.initialize(imuParams);
 
 
-        clawOuttake = new ClawRotateAction(hardwareMap, "frontClaw", -0.85);
+        clawOuttake = new ClawRotateAction(hardwareMap, "frontClaw", -1);
         clawIntake = new ClawRotateAction(hardwareMap, "frontClaw", 1);
 
         rightExt = hardwareMap.get(ServoImplEx.class, "rightExt");
@@ -156,7 +168,8 @@ public class LeftBasket extends LinearOpMode {
         leftExt = hardwareMap.get(ServoImplEx.class, "leftExt");
         leftExt.setPwmRange(new PwmControl.PwmRange(500, 2500));
 
-        wristFront = hardwareMap.get(Servo.class, "frontWrist");
+        wristFront = hardwareMap.get(ServoImplEx.class, "frontWrist");
+        wristFront.setPwmRange(new PwmControl.PwmRange(500, 2500));
 
         extensionOut = new InstantAction(() -> {
             leftExt.setPosition(0.25);
@@ -169,15 +182,15 @@ public class LeftBasket extends LinearOpMode {
         });
 
         wristDropoff = new InstantAction(() -> {
-            wristFront.setPosition(1);
+            wristFront.setPosition(HardwareConstants.WRIST_MAX);
         });
 
         wristPickup = new InstantAction(() -> {
-            wristFront.setPosition(0.5);
+            wristFront.setPosition(HardwareConstants.WRIST_CENTER);
         });
 
         wristPickupRot = new InstantAction(() -> {
-            wristFront.setPosition(0.75);
+            wristFront.setPosition(AutoFunctions.map(0.75, 0.0, 1.0, HardwareConstants.WRIST_MIN, HardwareConstants.WRIST_MAX));
         });
 
         imuReset = new InstantAction(() -> {
@@ -262,12 +275,29 @@ public class LeftBasket extends LinearOpMode {
         ));
         basketPath4.setLinearHeadingInterpolation(Math.toRadians(90), Math.toRadians(135));
 
-        parkPath = new Path(new BezierCurve(
+
+        subPath1 = new Path(new BezierCurve(
                 MathFunctions.addPoints(AutoConstants.BASKET_DROPOFF, new Point(2.5, 2)),
                 new Point(64, 130),
-                new Point(62, 94)
+                new Point(62, 105)
         ));
-        parkPath.setLinearHeadingInterpolation(Math.toRadians(135), Math.toRadians(270), 0.3);
+        subPath1.setLinearHeadingInterpolation(Math.toRadians(135), Math.toRadians(270), 0.3);
+
+
+        basketPath5 = new Path(new BezierCurve(
+                new Point(62, 105),
+                new Point(66, 130),
+                MathFunctions.addPoints(AutoConstants.BASKET_DROPOFF, new Point(0.5, 1.5))
+        ));
+        basketPath5.setLinearHeadingInterpolation(Math.toRadians(270), Math.toRadians(135), 0.8);
+
+
+        parkPath = new Path(new BezierCurve(
+                MathFunctions.addPoints(AutoConstants.BASKET_DROPOFF, new Point(2.5, 2)),
+                new Point(66, 130),
+                new Point(62, 92)
+        ));
+        parkPath.setLinearHeadingInterpolation(Math.toRadians(135), Math.toRadians(90), 0.3);
         parkPath.setZeroPowerAccelerationMultiplier(2);
 
 
@@ -293,9 +323,20 @@ public class LeftBasket extends LinearOpMode {
         actionManager = new ActionManager(telemetry, hardwareMap);
         actionManager.attachPeriodicActions(perFollower, frontSlides, backSlides);
 
-        wristFront.setPosition(0);
+        wristFront.setPosition(0.5);
         leftExt.setPosition(1);
         rightExt.setPosition(1);
+
+        samplePickupAction = new MotionSamplePickupAction(
+                visionSystem,
+                wristFront,
+                follower,
+                new ParallelAction(armAboveSample, extensionOut),
+                new SequentialAction(
+                        new ParallelAction(armReverseSample, new TimedAction(clawOuttake, 500)),
+                        new ParallelAction(armDownSample, new TimedAction(clawIntake, 1000))
+                )
+        );
 
 
 //        Gamepad prevGamepad2 = new Gamepad();
@@ -421,29 +462,26 @@ public class LeftBasket extends LinearOpMode {
                         new ParallelAction(moveBasket4, slidesUpBasket, wristDropoff),
                         new TimedAction(clawOuttake, 500),
 
-//                        //get fifth sample
-//
-//                        new ParallelAction(
-//                                new PedroAction(follower, new PathChain(subPath1), true),
-//                                slidesDownBasket,
-//                                new SequentialAction(new WaitAction(2500), new ParallelAction(extensionOut, subPitch, subWrist))
-//                        ),
-//                        new WaitAction(200),
-//                        new EndAction(
-//                                new SequentialAction(armDownSample, new WaitAction(700)),
-//                                clawIntake
-//                        ),
-//
-//                        //dropoff fifth sample
-//
-//                        new ParallelAction(extensionIn, armUpSample),
-//                        new ParallelAction(
-//                                new PedroAction(follower, new PathChain(basketPath5), true),
-//                                wristDropoff,
-//                                extensionOut,
-//                                new SequentialAction(new WaitAction(1000), slidesUpBasket)
-//                        ),
-//                        new TimedAction(clawOuttake, 500),
+                        //get fifth sample
+
+                        new ParallelAction(
+                                new PedroAction(follower, new PathChain(subPath1), true),
+                                slidesDownBasket,
+                                new SequentialAction(new WaitAction(1000), new ParallelAction(extensionOut, subPitch, subWrist))
+                        ),
+                        new WaitAction(200),
+                        samplePickupAction,
+
+                        armAboveSample,
+                        //dropoff fifth sample
+                        new SequentialAction(extensionIn, new WaitAction(500), armUpSample),
+                        new ParallelAction(
+                                new PedroAction(follower, new PathChain(basketPath5), true),
+                                wristDropoff,
+                                extensionOut,
+                                new SequentialAction(new WaitAction(1000), slidesUpBasket)
+                        ),
+                        new TimedAction(clawOuttake, 500),
 
                         //go park
 
@@ -451,11 +489,11 @@ public class LeftBasket extends LinearOpMode {
                                 park,
                                 new SequentialAction(
                                         slidesDownBasket,
-//                                        new ParallelAction(
-//                                                parkSlidesUp,
-//                                                parkPitch
-//                                        ),
-                                extensionIn, wristPickupRot),
+                                        new ParallelAction(
+                                                parkSlidesUp,
+                                                parkPitch
+                                        ),
+                                extensionIn, wristPickup),
                                 new SequentialAction(new WaitAction(2000), slowFollower)
                         ),
                         new WaitAction(30000)
