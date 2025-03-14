@@ -2,14 +2,20 @@ package org.firstinspires.ftc.teamcode.Autos;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.pedropathing.follower.Follower;
+import com.pedropathing.localization.Pose;
+import com.pedropathing.pathgen.BezierCurve;
+import com.pedropathing.pathgen.BezierLine;
 import com.pedropathing.pathgen.MathFunctions;
+import com.pedropathing.pathgen.Path;
+import com.pedropathing.pathgen.PathChain;
+import com.pedropathing.pathgen.Point;
 import com.pedropathing.util.Constants;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.PwmControl;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -34,21 +40,12 @@ import org.firstinspires.ftc.teamcode.Hardware.Subsystems.ColorClaw;
 import org.firstinspires.ftc.teamcode.Hardware.Subsystems.FourServoPitchArm;
 import org.firstinspires.ftc.teamcode.Hardware.Subsystems.LLSampleVision;
 import org.firstinspires.ftc.teamcode.Hardware.Subsystems.OuttakeSlides;
-import org.firstinspires.ftc.teamcode.Hardware.Subsystems.PitchArm;
 import org.firstinspires.ftc.teamcode.Hardware.Subsystems.V3Systems.TwoMotorSlides;
 import org.firstinspires.ftc.teamcode.pedroPathing.constants.FConstants;
 import org.firstinspires.ftc.teamcode.pedroPathing.constants.LConstants;
 
-import com.pedropathing.follower.Follower;
-import com.pedropathing.localization.Pose;
-import com.pedropathing.pathgen.BezierCurve;
-import com.pedropathing.pathgen.BezierLine;
-import com.pedropathing.pathgen.Path;
-import com.pedropathing.pathgen.PathChain;
-import com.pedropathing.pathgen.Point;
-
-@Autonomous(name = "Basket Auto")
-public class LeftBasket extends LinearOpMode {
+@Autonomous(name = "Basket Auto - EXTRA")
+public class LeftBasketExtras extends LinearOpMode {
 
     ActionManager actionManager;
     Follower follower;
@@ -74,7 +71,7 @@ public class LeftBasket extends LinearOpMode {
             slowFollower, quickFollower, medFollower,
             wristDropoff, wristPickup, wristPickupRot,
             subPitch,
-            samplePickupAction,
+            samplePickupAction, samplePickupAction2,
             parkSlidesUp, parkPitch;
 
     ClawRotateAction clawOuttake, clawIntake;
@@ -82,10 +79,13 @@ public class LeftBasket extends LinearOpMode {
     PedroAction moveBasket1, moveSample2, moveBasket2,
             moveSample3, moveBasket3, moveSample4, moveAwaySample4, moveBasket4,
             moveSub1, moveBasket5,
+            moveSub2, moveBasket6,
             park;
 
     Path basketPath1, samplePath2, basketPath2, samplePath3, basketPath3,
-            samplePath4, awaySamplePath4, basketPath4, subPath1, basketPath5,
+            samplePath4, awaySamplePath4, basketPath4,
+            subPath1, basketPath5,
+            subPath2, basketPath6,
             parkPath;
 
     double subXOffset = 0, subYOffset = 0, wristOffset = 0.5;
@@ -134,7 +134,7 @@ public class LeftBasket extends LinearOpMode {
             frontArm.setPosition(HardwareConstants.PITCH_HOVER);
         });
         EventAction armAboveSub = new InstantAction(() -> {
-            frontArm.setPosition(HardwareConstants.PITCH_HOVER - 0.08);
+            frontArm.setPosition(HardwareConstants.PITCH_HOVER - 0.05);
         });
         subPitch = new InstantAction(() -> {
             frontArm.setPosition(HardwareConstants.PITCH_CAMERA);
@@ -271,29 +271,44 @@ public class LeftBasket extends LinearOpMode {
 
         basketPath4 = new Path(new BezierLine(
                 SAMPLE_3_PICKUP,
-                MathFunctions.addPoints(AutoConstants.BASKET_DROPOFF, new Point(2.5, 2))
+                MathFunctions.addPoints(AutoConstants.BASKET_DROPOFF, new Point(3, 1))
         ));
         basketPath4.setLinearHeadingInterpolation(Math.toRadians(90), Math.toRadians(135));
 
 
+
         subPath1 = new Path(new BezierCurve(
-                MathFunctions.addPoints(AutoConstants.BASKET_DROPOFF, new Point(2.5, 2)),
+                MathFunctions.addPoints(AutoConstants.BASKET_DROPOFF, new Point(3, 1)),
                 new Point(64, 130),
                 new Point(62, 105)
         ));
         subPath1.setLinearHeadingInterpolation(Math.toRadians(135), Math.toRadians(270), 0.3);
 
-
         basketPath5 = new Path(new BezierCurve(
                 new Point(62, 105),
                 new Point(66, 130),
-                MathFunctions.addPoints(AutoConstants.BASKET_DROPOFF, new Point(0.5, 1.5))
+                MathFunctions.addPoints(AutoConstants.BASKET_DROPOFF, new Point(1, 1))
         ));
         basketPath5.setLinearHeadingInterpolation(Math.toRadians(270), Math.toRadians(135), 0.8);
 
+        subPath2 = new Path(new BezierCurve(
+                MathFunctions.addPoints(AutoConstants.BASKET_DROPOFF, new Point(1, 1)),
+                new Point(66, 130),
+                new Point(66, 105)
+        ));
+        subPath2.setLinearHeadingInterpolation(Math.toRadians(135), Math.toRadians(270), 0.3);
+
+        basketPath6 = new Path(new BezierCurve(
+                new Point(66, 105),
+                new Point(66, 130),
+                MathFunctions.addPoints(AutoConstants.BASKET_DROPOFF, new Point(1, 1))
+        ));
+        basketPath6.setLinearHeadingInterpolation(Math.toRadians(270), Math.toRadians(135), 0.8);
+
+
 
         parkPath = new Path(new BezierCurve(
-                MathFunctions.addPoints(AutoConstants.BASKET_DROPOFF, new Point(2.5, 2)),
+                MathFunctions.addPoints(AutoConstants.BASKET_DROPOFF, new Point(1, 1)),
                 new Point(66, 130),
                 new Point(62, 92)
         ));
@@ -331,9 +346,20 @@ public class LeftBasket extends LinearOpMode {
                 visionSystem,
                 wristFront,
                 follower,
-                new ParallelAction(armAboveSample, extensionOut),
+                new ParallelAction(armAboveSub, extensionOut),
                 new SequentialAction(
-                        new ParallelAction(armReverseSample, new TimedAction(clawOuttake, 500)),
+                        new ParallelAction(armReverseSample, new TimedAction(clawOuttake, 200)),
+                        new ParallelAction(armDownSample, new TimedAction(clawIntake, 1000))
+                )
+        );
+
+        samplePickupAction2 = new MotionSamplePickupAction(
+                visionSystem,
+                wristFront,
+                follower,
+                new ParallelAction(armAboveSub, extensionOut),
+                new SequentialAction(
+                        new ParallelAction(armReverseSample, new TimedAction(clawOuttake, 200)),
                         new ParallelAction(armDownSample, new TimedAction(clawIntake, 1000))
                 )
         );
@@ -426,7 +452,7 @@ public class LeftBasket extends LinearOpMode {
 
                         new ParallelAction(moveSample2, slidesDownBasket, wristPickup),
                         imuReset,
-                        new EndAction(new SequentialAction(armAboveSample, new WaitAction(1000), armDownSample, new WaitAction(1000)),
+                        new EndAction(new SequentialAction(armAboveSample, new WaitAction(600), armDownSample, new WaitAction(600)),
                                 clawIntake
                         ),
                         armUpSample,
@@ -439,7 +465,7 @@ public class LeftBasket extends LinearOpMode {
                         //pickup third sample
 
                         new ParallelAction(moveSample3, slidesDownBasket, wristPickup),
-                        new EndAction(new SequentialAction(armAboveSample, new WaitAction(1000), armDownSample, new WaitAction(1000)),
+                        new EndAction(new SequentialAction(armAboveSample, new WaitAction(600), armDownSample, new WaitAction(600)),
                                 clawIntake
                         ),
                         armUpSample,
@@ -452,42 +478,65 @@ public class LeftBasket extends LinearOpMode {
                         //pickup fourth sample
 
                         new ParallelAction(moveSample4, slidesDownBasket, wristPickupRot),
-                        new EndAction(new SequentialAction(armAboveSample, new WaitAction(1000), armDownSample, new WaitAction(1000)),
+                        new EndAction(new SequentialAction(armAboveSample, new WaitAction(600), armDownSample, new WaitAction(600)),
                                 clawIntake
                         ),
                         new ParallelAction(moveAwaySample4, armUpSample),
 
                         //dropoff fourth sample
-
                         new ParallelAction(moveBasket4, slidesUpBasket, wristDropoff),
                         new TimedAction(clawOuttake, 500),
 
                         //get fifth sample
 
-//                        new ParallelAction(
-//                                new PedroAction(follower, new PathChain(subPath1), true),
-//                                slidesDownBasket,
-//                                new SequentialAction(new WaitAction(1000), new ParallelAction(extensionOut, subPitch, subWrist))
-//                        ),
-//                        new WaitAction(200),
-//                        samplePickupAction,
-//
-//                        armAboveSample,
-//                        //dropoff fifth sample
-//                        new SequentialAction(extensionIn, new WaitAction(500), armUpSample),
-//                        new ParallelAction(
-//                                new PedroAction(follower, new PathChain(basketPath5), true),
-//                                wristDropoff,
-//                                extensionOut,
-//                                new SequentialAction(new WaitAction(1000), slidesUpBasket)
-//                        ),
-//                        new TimedAction(clawOuttake, 500),
+                        new ParallelAction(
+                                new PedroAction(follower, new PathChain(subPath1), true),
+                                slidesDownBasket,
+                                new SequentialAction(new WaitAction(1000), new ParallelAction(extensionOut, subPitch, subWrist))
+                        ),
+                        new WaitAction(200),
+                        samplePickupAction,
+
+                        new ParallelAction(armAboveSample, extensionIn),
+
+                        //dropoff fifth sample
+                        new ParallelAction(
+                                new PedroAction(follower, new PathChain(basketPath5), true),
+                                wristDropoff,
+                                new SequentialAction(new WaitAction(1000), extensionOut, slidesUpBasket),
+                                new SequentialAction(new WaitAction(500), armUpSample)
+                        ),
+                        new TimedAction(clawOuttake, 500),
+
+
+                        //get sixth sample
+
+                        new ParallelAction(
+                                new PedroAction(follower, new PathChain(subPath2), true),
+                                slidesDownBasket,
+                                new SequentialAction(new WaitAction(1000), new ParallelAction(extensionOut, subPitch, subWrist))
+                        ),
+                        new WaitAction(200),
+                        samplePickupAction2,
+
+                        new ParallelAction(armAboveSample, extensionIn),
+
+                        //dropoff sixth sample
+                        new ParallelAction(
+                                new PedroAction(follower, new PathChain(basketPath6), true),
+                                wristDropoff,
+                                new SequentialAction(new WaitAction(1000), extensionOut, slidesUpBasket),
+                                new SequentialAction(new WaitAction(500), armUpSample)
+                        ),
+                        new TimedAction(clawOuttake, 500),
+
 
                         //go park
 
                         new ParallelAction(
                                 park,
                                 new SequentialAction(
+                                        new WaitAction(500),
                                         slidesDownBasket,
                                         new ParallelAction(
                                                 parkSlidesUp,

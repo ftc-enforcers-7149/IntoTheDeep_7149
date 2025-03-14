@@ -7,6 +7,7 @@ import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.EventAction;
 import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.ParallelAction;
 import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.PedroAction;
 import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.SequentialAction;
+import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.WaitAction;
 import org.firstinspires.ftc.teamcode.GlobalData.HardwareConstants;
 import org.firstinspires.ftc.teamcode.Hardware.Subsystems.LLSampleVision;
 import com.pedropathing.follower.Follower;
@@ -113,7 +114,7 @@ public class MotionSamplePickupAction extends EventAction {
                             MathFunctions.addPoints(currentPos, xVector)
                     ));
                     strafePath.setConstantHeadingInterpolation(heading);
-                    findNewSample = new PedroAction(follower, new PathChain(strafePath), true);
+                    findNewSample = new SequentialAction(new PedroAction(follower, new PathChain(strafePath), true), new WaitAction(750));
                     findNewSample.init();
                 }
 
