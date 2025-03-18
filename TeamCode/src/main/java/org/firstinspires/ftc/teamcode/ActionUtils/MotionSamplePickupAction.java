@@ -144,11 +144,17 @@ public class MotionSamplePickupAction extends EventAction {
 
     @Override
     public void init() {
+        findNewSample = null;
+
         positionReceived = false;
+        findingNewSample = false;
     }
 
     @Override
     public void stop(boolean interrupted) {
+        findNewSample = null;
+
         positionReceived = false;
+        findingNewSample = false;
     }
 }

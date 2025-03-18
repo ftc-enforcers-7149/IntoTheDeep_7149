@@ -32,6 +32,8 @@ import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.TimedAction;
 import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.WaitAction;
 import org.firstinspires.ftc.teamcode.ActionUtils.ClawRotateAction;
 import org.firstinspires.ftc.teamcode.ActionUtils.MotionSamplePickupAction;
+import org.firstinspires.ftc.teamcode.ActionUtils.RetryPickupAction;
+import org.firstinspires.ftc.teamcode.GlobalData.Alliance_Color;
 import org.firstinspires.ftc.teamcode.GlobalData.AutoConstants;
 import org.firstinspires.ftc.teamcode.GlobalData.AutoFunctions;
 import org.firstinspires.ftc.teamcode.GlobalData.HardwareConstants;
@@ -59,6 +61,9 @@ public class LeftBasketExtras extends LinearOpMode {
     ServoImplEx rightExt, leftExt;
     Servo pitchBack1, pitchBack2;
     ColorClaw colorClaw;
+
+    ColorClaw.SampleColor wrongColor = ColorClaw.SampleColor.NONE;
+    Alliance_Color allianceColor = Alliance_Color.NONE;
 
     ServoImplEx wristFront;
 
@@ -88,7 +93,7 @@ public class LeftBasketExtras extends LinearOpMode {
             subPath2, basketPath6,
             parkPath;
 
-    double subXOffset = 0, subYOffset = 0, wristOffset = 0.5;
+    double subXOffset1 = 0, subXOffset2 = 0, wristOffset = 0.48;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -276,34 +281,33 @@ public class LeftBasketExtras extends LinearOpMode {
         basketPath4.setLinearHeadingInterpolation(Math.toRadians(90), Math.toRadians(135));
 
 
-
-        subPath1 = new Path(new BezierCurve(
-                MathFunctions.addPoints(AutoConstants.BASKET_DROPOFF, new Point(3, 1)),
-                new Point(64, 130),
-                new Point(62, 105)
-        ));
-        subPath1.setLinearHeadingInterpolation(Math.toRadians(135), Math.toRadians(270), 0.3);
-
-        basketPath5 = new Path(new BezierCurve(
-                new Point(62, 105),
-                new Point(66, 130),
-                MathFunctions.addPoints(AutoConstants.BASKET_DROPOFF, new Point(1, 1))
-        ));
-        basketPath5.setLinearHeadingInterpolation(Math.toRadians(270), Math.toRadians(135), 0.8);
-
-        subPath2 = new Path(new BezierCurve(
-                MathFunctions.addPoints(AutoConstants.BASKET_DROPOFF, new Point(1, 1)),
-                new Point(66, 130),
-                new Point(66, 105)
-        ));
-        subPath2.setLinearHeadingInterpolation(Math.toRadians(135), Math.toRadians(270), 0.3);
-
-        basketPath6 = new Path(new BezierCurve(
-                new Point(66, 105),
-                new Point(66, 130),
-                MathFunctions.addPoints(AutoConstants.BASKET_DROPOFF, new Point(1, 1))
-        ));
-        basketPath6.setLinearHeadingInterpolation(Math.toRadians(270), Math.toRadians(135), 0.8);
+//        subPath1 = new Path(new BezierCurve(
+//                MathFunctions.addPoints(AutoConstants.BASKET_DROPOFF, new Point(3, 1)),
+//                new Point(64, 130),
+//                new Point(62, 105)
+//        ));
+//        subPath1.setLinearHeadingInterpolation(Math.toRadians(135), Math.toRadians(270), 0.3);
+//
+//        basketPath5 = new Path(new BezierCurve(
+//                new Point(62, 105),
+//                new Point(66, 130),
+//                MathFunctions.addPoints(AutoConstants.BASKET_DROPOFF, new Point(1, 1))
+//        ));
+//        basketPath5.setLinearHeadingInterpolation(Math.toRadians(270), Math.toRadians(135), 0.8);
+//
+//        subPath2 = new Path(new BezierCurve(
+//                MathFunctions.addPoints(AutoConstants.BASKET_DROPOFF, new Point(1, 1)),
+//                new Point(66, 130),
+//                new Point(66, 105)
+//        ));
+//        subPath2.setLinearHeadingInterpolation(Math.toRadians(135), Math.toRadians(270), 0.3);
+//
+//        basketPath6 = new Path(new BezierCurve(
+//                new Point(66, 105),
+//                new Point(66, 130),
+//                MathFunctions.addPoints(AutoConstants.BASKET_DROPOFF, new Point(1, 1))
+//        ));
+//        basketPath6.setLinearHeadingInterpolation(Math.toRadians(270), Math.toRadians(135), 0.8);
 
 
 
@@ -365,73 +369,64 @@ public class LeftBasketExtras extends LinearOpMode {
         );
 
 
-//        Gamepad prevGamepad2 = new Gamepad();
-//        Gamepad currentGamepad2 = new Gamepad();
 
         while (!isStarted()) {
 
-//            prevGamepad2.copy(currentGamepad2);
-//            currentGamepad2.copy(gamepad2);
-//
-//            if (gamepad2.dpad_left && !prevGamepad2.dpad_left) {
-//                subXOffset += 0.5;
-//            } else if (gamepad2.dpad_up && !prevGamepad2.dpad_up) {
-//                subYOffset += 0.5;
-//            }
-//
-//            if (gamepad2.left_bumper && !prevGamepad2.left_bumper) {
-//                wristOffset -= 0.1;
-//            } else if (gamepad2.right_bumper && !prevGamepad2.right_bumper) {
-//                wristOffset += 0.1;
-//            }
-//
-//            if (gamepad2.options) {
-//                subPath1 = new Path(new BezierCurve(
-//                        MathFunctions.addPoints(AutoConstants.BASKET_DROPOFF, new Point(0.5, 1.5)),
-//                        new Point(64, 130),
-//                        new Point(48 + subXOffset, 86 - subYOffset + HardwareConstants.MAX_EXTENDO_LENGTH)
-//                ));
-//                subPath1.setLinearHeadingInterpolation(Math.toRadians(135), Math.toRadians(270), 0.3);
-//
-//                basketPath5 = new Path(new BezierCurve(
-//                        new Point(48 + subXOffset, 86 - subYOffset + HardwareConstants.MAX_EXTENDO_LENGTH),
-//                        new Point(64, 130),
-//                        MathFunctions.addPoints(AutoConstants.BASKET_DROPOFF, new Point(0.5, 1.5))
-//                ));
-//                basketPath5.setLinearHeadingInterpolation(Math.toRadians(270), Math.toRadians(135), 0.8);
-//            }
-//
-//            if (subPath1 != null) {
-//                telemetry.addData("Status", "Ready to Run");
-//            } else {
-//                telemetry.addData("Status", "Initialize Sub Motion (Options)");
-//            }
-//            telemetry.addData("X Offset", subXOffset);
-//            telemetry.addData("Y Offset", subYOffset);
-//            telemetry.addData("Wrist Offset", wristOffset);
+            if (gamepad2.left_bumper) {
+                allianceColor = Alliance_Color.BLUE;
+                wrongColor = ColorClaw.SampleColor.RED;
+            } else if (gamepad2.right_bumper) {
+                allianceColor = Alliance_Color.RED;
+                wrongColor = ColorClaw.SampleColor.BLUE;
+            }
+
+            subXOffset1 += gamepad2.right_stick_x / 100;
+            subXOffset2 += gamepad2.left_stick_x / 100;
 
 
-            telemetry.addData("-----", "");
+            telemetry.addData("Status", "Ready to Start");
+            telemetry.addData("Alliance", allianceColor.name());
+            telemetry.addData("Avoid", wrongColor.name());
+
+            telemetry.addData("--","--");
+            telemetry.addData("Offset 1", subXOffset1);
+            telemetry.addData("Offset 2", subXOffset2);
+
             telemetry.update();
 
         }
 
-//        if (subPath1 == null) {
-//            subPath1 = new Path(new BezierCurve(
-//                    MathFunctions.addPoints(AutoConstants.BASKET_DROPOFF, new Point(0.5, 1.5)),
-//                    new Point(64, 130),
-//                    new Point(48 + 14, 86 - 5 + HardwareConstants.MAX_EXTENDO_LENGTH)
-//            ));
-//            subPath1.setLinearHeadingInterpolation(Math.toRadians(135), Math.toRadians(270), 0.3);
-//
-//            basketPath5 = new Path(new BezierCurve(
-//                    new Point(48 + 14, 86 - 5 + HardwareConstants.MAX_EXTENDO_LENGTH),
-//                    new Point(64, 130),
-//                    MathFunctions.addPoints(AutoConstants.BASKET_DROPOFF, new Point(0.5, 1.5))
-//            ));
-//            basketPath5.setLinearHeadingInterpolation(Math.toRadians(270), Math.toRadians(135), 0.8);
-//
-//        }
+        //init updated paths
+
+        subPath1 = new Path(new BezierCurve(
+                MathFunctions.addPoints(AutoConstants.BASKET_DROPOFF, new Point(3, 1)),
+                new Point(64, 130),
+                new Point(62 + subXOffset1, 105)
+        ));
+        subPath1.setLinearHeadingInterpolation(Math.toRadians(135), Math.toRadians(270), 0.3);
+
+        basketPath5 = new Path(new BezierCurve(
+                new Point(62 + subXOffset1, 105),
+                new Point(66, 130),
+                MathFunctions.addPoints(AutoConstants.BASKET_DROPOFF, new Point(1, 1))
+        ));
+        basketPath5.setLinearHeadingInterpolation(Math.toRadians(270), Math.toRadians(135), 0.8);
+
+        subPath2 = new Path(new BezierCurve(
+                MathFunctions.addPoints(AutoConstants.BASKET_DROPOFF, new Point(1, 1)),
+                new Point(66 + subXOffset2, 130),
+                new Point(66, 105)
+        ));
+        subPath2.setLinearHeadingInterpolation(Math.toRadians(135), Math.toRadians(270), 0.3);
+
+        basketPath6 = new Path(new BezierCurve(
+                new Point(66 + subXOffset2, 105),
+                new Point(66, 130),
+                MathFunctions.addPoints(AutoConstants.BASKET_DROPOFF, new Point(1, 1))
+        ));
+        basketPath6.setLinearHeadingInterpolation(Math.toRadians(270), Math.toRadians(135), 0.8);
+
+
 
         if (isStopRequested()) {
             return;
@@ -497,6 +492,10 @@ public class LeftBasketExtras extends LinearOpMode {
                         new WaitAction(200),
                         samplePickupAction,
 
+                        //TODO: retry in case of wrong color
+                        new RetryPickupAction(new SequentialAction(subPitch, extensionOut, new TimedAction(clawOuttake, 750), samplePickupAction), colorClaw, wrongColor),
+
+
                         new ParallelAction(armAboveSample, extensionIn),
 
                         //dropoff fifth sample
@@ -518,6 +517,11 @@ public class LeftBasketExtras extends LinearOpMode {
                         ),
                         new WaitAction(200),
                         samplePickupAction2,
+
+
+                        //TODO: retry in case of wrong color
+                        new RetryPickupAction(new SequentialAction(subPitch, extensionOut, new TimedAction(clawOuttake, 750), samplePickupAction), colorClaw, wrongColor),
+
 
                         new ParallelAction(armAboveSample, extensionIn),
 

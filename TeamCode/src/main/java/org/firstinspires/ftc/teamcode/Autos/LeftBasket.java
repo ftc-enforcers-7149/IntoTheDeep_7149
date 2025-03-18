@@ -229,36 +229,36 @@ public class LeftBasket extends LinearOpMode {
 
         basketPath1 = new Path(new BezierLine(
                 new Point(8.625, 105.125),
-                MathFunctions.addPoints(AutoConstants.BASKET_DROPOFF, new Point(0, 0))
+                MathFunctions.addPoints(AutoConstants.BASKET_DROPOFF, new Point(-0.5, 0.5))
         ));
         basketPath1.setLinearHeadingInterpolation(Math.toRadians(90), Math.toRadians(135));
 
         samplePath2 = new Path(new BezierLine(
-                MathFunctions.addPoints(AutoConstants.BASKET_DROPOFF, new Point(0, 0)),
+                MathFunctions.addPoints(AutoConstants.BASKET_DROPOFF, new Point(-0.5, 0.5)),
                 SAMPLE_1_PICKUP
         ));
         samplePath2.setLinearHeadingInterpolation(Math.toRadians(135), 0);
 
         basketPath2 = new Path(new BezierLine(
                 SAMPLE_1_PICKUP,
-                MathFunctions.addPoints(AutoConstants.BASKET_DROPOFF, new Point(1.5, 1))
+                MathFunctions.addPoints(AutoConstants.BASKET_DROPOFF, new Point(1, 0.5))
         ));
         basketPath2.setLinearHeadingInterpolation(0, Math.toRadians(135));
 
         samplePath3 = new Path(new BezierLine(
-                MathFunctions.addPoints(AutoConstants.BASKET_DROPOFF, new Point(1.5, 1)),
+                MathFunctions.addPoints(AutoConstants.BASKET_DROPOFF, new Point(1, 0.5)),
                 SAMPLE_2_PICKUP
         ));
         samplePath3.setLinearHeadingInterpolation(Math.toRadians(135), 0);
 
         basketPath3 = new Path(new BezierLine(
                 SAMPLE_2_PICKUP,
-                MathFunctions.addPoints(AutoConstants.BASKET_DROPOFF, new Point(1.5, 1.5))
+                MathFunctions.addPoints(AutoConstants.BASKET_DROPOFF, new Point(1, 0.5))
         ));
         basketPath3.setLinearHeadingInterpolation(0, Math.toRadians(135));
 
         samplePath4 = new Path(new BezierLine(
-                MathFunctions.addPoints(AutoConstants.BASKET_DROPOFF, new Point(1.5, 1.5)),
+                MathFunctions.addPoints(AutoConstants.BASKET_DROPOFF, new Point(1, 0.5)),
                 SAMPLE_3_PICKUP
         ));
         samplePath4.setLinearHeadingInterpolation(0, Math.toRadians(45));
@@ -271,13 +271,13 @@ public class LeftBasket extends LinearOpMode {
 
         basketPath4 = new Path(new BezierLine(
                 SAMPLE_3_PICKUP,
-                MathFunctions.addPoints(AutoConstants.BASKET_DROPOFF, new Point(2.5, 2))
+                MathFunctions.addPoints(AutoConstants.BASKET_DROPOFF, new Point(2, 1.5))
         ));
         basketPath4.setLinearHeadingInterpolation(Math.toRadians(90), Math.toRadians(135));
 
 
         subPath1 = new Path(new BezierCurve(
-                MathFunctions.addPoints(AutoConstants.BASKET_DROPOFF, new Point(2.5, 2)),
+                MathFunctions.addPoints(AutoConstants.BASKET_DROPOFF, new Point(2, 1.5)),
                 new Point(64, 130),
                 new Point(62, 105)
         ));
@@ -287,13 +287,13 @@ public class LeftBasket extends LinearOpMode {
         basketPath5 = new Path(new BezierCurve(
                 new Point(62, 105),
                 new Point(66, 130),
-                MathFunctions.addPoints(AutoConstants.BASKET_DROPOFF, new Point(0.5, 1.5))
+                MathFunctions.addPoints(AutoConstants.BASKET_DROPOFF, new Point(0.5, 1))
         ));
         basketPath5.setLinearHeadingInterpolation(Math.toRadians(270), Math.toRadians(135), 0.8);
 
 
         parkPath = new Path(new BezierCurve(
-                MathFunctions.addPoints(AutoConstants.BASKET_DROPOFF, new Point(2.5, 2)),
+                MathFunctions.addPoints(AutoConstants.BASKET_DROPOFF, new Point(0.5, 1)),
                 new Point(66, 130),
                 new Point(62, 92)
         ));

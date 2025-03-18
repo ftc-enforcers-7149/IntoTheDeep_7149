@@ -251,14 +251,14 @@ public class RightSpecPush extends LinearOpMode {
         Path samplePath3_1 = new Path(new BezierCurve(
                 new Point(24, 18),
                 new Point(56, 16.5),
-                new Point(55, 10.5)
+                new Point(55, 10)
         ));
         samplePath3_1.setConstantHeadingInterpolation(Math.toRadians(0));
         samplePath3_1.setZeroPowerAccelerationMultiplier(6);
 
         Path samplePath3_2 = new Path(new BezierLine(
-                new Point(55, 10.5),
-                new Point(24, 10.5)
+                new Point(55, 10),
+                new Point(24, 10)
         ));
         samplePath3_2.setConstantHeadingInterpolation(Math.toRadians(0));
         samplePath3_2.setZeroPowerAccelerationMultiplier(6);

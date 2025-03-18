@@ -590,7 +590,7 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
                                 //visionSystem.getPortal().stopStreaming();
                             }
 
-                            if ((gamepad2.left_trigger > 0.05 && !(prevGamepad2.left_trigger > 0.05)) || gamepad2.dpad_up) {
+                            if ((gamepad2.left_trigger > 0.05 && !(prevGamepad2.left_trigger > 0.05)) || (gamepad2.dpad_up && !prevGamepad2.dpad_up)) {
                                 inStageFront = Intake.IDLE;
                                 stageFront = Stages.PITCHUP;
                                 //stageFront = Stages.IDLE;
