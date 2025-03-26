@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.Autos;
 
+import android.app.Activity;
+
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.pedropathing.pathgen.MathFunctions;
@@ -94,7 +96,6 @@ public class LeftBasket extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
 
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
-
 
         frontSlides = new TwoMotorSlides(this);
         frontArm = new FourServoPitchArm(this);

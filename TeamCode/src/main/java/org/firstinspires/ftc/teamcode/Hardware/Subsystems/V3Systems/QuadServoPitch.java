@@ -26,10 +26,10 @@ public class QuadServoPitch implements PeriodicAction {
     public static double ffMin = 0, ffMax = 0;
 
     public QuadServoPitch(OpMode opMode) {
-        leftServoBottom = opMode.hardwareMap.get(CRServo.class, "leftBottom");
-        leftServoTop = opMode.hardwareMap.get(CRServo.class, "leftTop");
-        rightServoBottom = opMode.hardwareMap.get(CRServo.class, "rightBottom");
-        rightServoTop = opMode.hardwareMap.get(CRServo.class, "rightTop");
+        leftServoBottom = opMode.hardwareMap.get(CRServo.class, "left1");
+        leftServoTop = opMode.hardwareMap.get(CRServo.class, "left2");
+        rightServoBottom = opMode.hardwareMap.get(CRServo.class, "right1");
+        rightServoTop = opMode.hardwareMap.get(CRServo.class, "right2");
 
         controller = new PIDFController(kpMin,0,kdMin,0);
 
@@ -54,8 +54,10 @@ public class QuadServoPitch implements PeriodicAction {
      * @return The position of the pitch from wraparound encoder
      */
     public double getPosition() {
-        return pitchPos;
+        return pitchEncoder.getAbsolutePosition();
     }
+
+    public double getRawPosition() { return pitchEncoder.getCurrentPosition(); }
 
     public double getPitchAngle() {
         return pitchAngle;
@@ -71,15 +73,15 @@ public class QuadServoPitch implements PeriodicAction {
         double currentFF = 0;
         //updates PIDF values based on the position of the extendo
         //interpolates pidf values linearly since torque changes linearly (is proportional to length of extendo)
-        if (extendoForPIDF == null) {
+        //if (extendoForPIDF == null) {
             controller.setPIDF(kpMin, 0, kdMin, 0);
             currentFF = ffMin;
-        } else {
-            double extPosPercent = extendoForPIDF.getExtensionPos() / OuttakeExtendo.MAX_EXTENSION;
-            controller.setPIDF(kpMin + (kpMax - kpMin) * extPosPercent,
-                    0, kdMin + (kdMax - kdMin) * extPosPercent, 0);
-            currentFF = ffMin + (ffMax - ffMin) * extPosPercent;
-        }
+//        } else {
+//            double extPosPercent = extendoForPIDF.getExtensionPos() / OuttakeExtendo.MAX_EXTENSION;
+//            controller.setPIDF(kpMin + (kpMax - kpMin) * extPosPercent,
+//                    0, kdMin + (kdMax - kdMin) * extPosPercent, 0);
+//            currentFF = ffMin + (ffMax - ffMin) * extPosPercent;
+//        }
 
         //update the encoder inside this periodic call
         pitchEncoder.periodic();
@@ -89,7 +91,7 @@ public class QuadServoPitch implements PeriodicAction {
         pitchAngle = pitchPos * POS_PITCH_CONVERSION;
 
         //adds angle based feedforward
-        double pitchPow = controller.calculate(pitchPos, target) + (Math.cos(Math.toRadians(pitchAngle)) * currentFF);
+        double pitchPow = controller.calculate(pitchPos, target); //+ (Math.cos(Math.toRadians(pitchAngle)) * currentFF);
 
         setPower(pitchPow);
     }

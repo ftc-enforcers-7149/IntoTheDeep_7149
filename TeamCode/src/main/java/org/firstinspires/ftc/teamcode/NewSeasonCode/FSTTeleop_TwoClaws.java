@@ -60,6 +60,7 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
 
     ElapsedTime wristTimer;
     ElapsedTime loopTime;
+    ElapsedTime wallPickupTimer;
 
     ServoImplEx rightExt, leftExt;
 
@@ -79,7 +80,8 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
     PIDFController slideController2;
 
     //DcMotorEx pitchMotorFront;
-    CRServo clawBack;
+    Servo clawBack;
+    double clawBackPosition = HardwareConstants.BACK_CLAW_OPEN;
     //DcMotorEx pitchMotorBack;
     //DcMotorEx hangMotor;
 
@@ -180,6 +182,7 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
         leftExt.setPwmRange(new PwmControl.PwmRange(500, 2500));
 
         loopTime = new ElapsedTime();
+        wallPickupTimer = new ElapsedTime();
 
         //slidesFront.slideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         clawFront = hardwareMap.get(CRServo.class, "frontClaw");
@@ -207,7 +210,7 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
         slidesBack = new OuttakeSlides(hardwareMap, "backSlide");
         slidesBack.slideMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         //slidesBack.slideMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-        clawBack = hardwareMap.get(CRServo.class, "backClaw");
+        clawBack = hardwareMap.get(Servo.class, "backClaw");
 
 
         pitchBack1 = hardwareMap.get(Servo.class, "pitchBack1");
@@ -307,6 +310,8 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
             if (Math.abs(slidePower2 - lastSlidePower2) > 0.02) {
                 slidesBack.slideMotor.setPower(slidePower2);
             }
+
+            clawBack.setPosition(clawBackPosition);
 
 //            double pitchPower2 = pitchController2.calculate(pitchMotorBack.getCurrentPosition(), pitchBackTarget);
 //            if (Math.abs(pitchPower2 - lastPitchPower2) > 0.02) {
@@ -835,7 +840,7 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
                     slideBackTarget = 0;
 
 
-                    clawBack.setPower(0);
+                    clawBackPosition = HardwareConstants.BACK_CLAW_OPEN;
 
                     pitchBackpos = BACK_PITCH_IDLE;
 
@@ -921,9 +926,9 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
 
                     //eject samples
                     if (gamepad1.right_trigger > 0.05) {
-                        clawBack.setPower(-0.7);
+                        clawBackPosition = HardwareConstants.BACK_CLAW_OPEN;
                     } else {
-                        clawBack.setPower(0);
+                        clawBackPosition = HardwareConstants.BACK_CLAW_CLOSE_FULL;
                     }
 
 
@@ -940,6 +945,7 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
                         stageBack = Stages.SLIDEDOWN;
                         slideBackTarget = 0;
                         pitchBackpos = BACK_PITCH_IDLE;
+                        clawBackPosition = HardwareConstants.BACK_CLAW_OPEN;
                     }
 
                     //unnecessary
@@ -983,7 +989,7 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
 //                    } else if (slidesBack.slideMotor.getCurrentPosition() < 600) {
 //                        pitchBackpos = BACK_PITCH_CHAMBER + 0.013;
 //                    }
-                    clawBack.setPower(1);
+                    //clawBack.setPower(1);
 
 
                     slideBackTarget = 0;
@@ -1012,9 +1018,9 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
                     //telemetry.addData("Pos", pitchMotorBack.getCurrentPosition());
 
                     if (inStageBack == Intake.ABOVE || inStageBack == Intake.SPECIMEN_ABOVE) {
-                        clawBack.setPower(0);
+                        clawBackPosition = HardwareConstants.BACK_CLAW_OPEN;
                     } else {
-                        clawBack.setPower(1);
+                        clawBackPosition = HardwareConstants.BACK_CLAW_CLOSE_FULL;
                     }
 
                     if (pitchBack1.getPosition() == BACK_PITCH_ABOVE) {
@@ -1038,9 +1044,9 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
 
                             //eject unwanted samples
                             if (gamepad1.right_trigger > 0.05) {
-                                clawBack.setPower(-0.7);
+                                clawBackPosition = HardwareConstants.BACK_CLAW_CLOSE_FULL;
                             } else {
-                                clawBack.setPower(0);
+                                clawBackPosition = HardwareConstants.BACK_CLAW_OPEN;
                             }
 
                             if (gamepad2.cross && !(prevGamepad2.cross)) {
@@ -1066,9 +1072,9 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
 //                            slideBackTarget = SAMPLE_PICKUP_SLIDE_POS; changed
 
                             if (gamepad2.dpad_right) {
-                                clawBack.setPower(-1);
+                                clawBackPosition = HardwareConstants.BACK_CLAW_CLOSE_FULL;
                             } else {
-                                clawBack.setPower(1);
+                                clawBackPosition = HardwareConstants.BACK_CLAW_CLOSE_FULL;
                             }
 
                             if (gamepad2.circle) {
@@ -1082,14 +1088,18 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
 
                         case SPECIMEN_ABOVE: {
 
+                            if (wallPickupTimer.milliseconds() > 400) {
+                                slideBackTarget = 120;
+                            }
+
                             pitchBackpos = BACK_PITCH_WALL;
                             //weird might have to change to back pitch wall, original was idle
 
                             //eject unwanted samples
                             if (gamepad1.right_trigger > 0.05) {
-                                clawBack.setPower(-0.7);
+                                clawBackPosition = HardwareConstants.BACK_CLAW_OPEN;
                             } else {
-                                clawBack.setPower(0);
+                                clawBackPosition = HardwareConstants.BACK_CLAW_CLOSE_FULL;
                             }
 
 //                            if (gamepad2.circle && !prevGamepad2.circle) {
@@ -1126,16 +1136,16 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
 
                             //slideBackTarget = 0;
 
-                            clawBack.setPower(1);
+                            clawBackPosition = HardwareConstants.BACK_CLAW_OPEN;
 
                             if (gamepad2.circle) {
+                                wallPickupTimer.reset();
                                 inStageBack = Intake.SPECIMEN_ABOVE;
                                 //stageBack = Stages.PITCHUP;
                                 //weird might have to change to back pitch idle
-                                slideBackTarget = 120;
-                                if(slideBackTarget - slidesBack.slideMotor.getCurrentPosition() <= 20) {
-                                    pitchBackpos = BACK_PITCH_IDLE;
-                                }
+//                                if(slideBackTarget - slidesBack.slideMotor.getCurrentPosition() <= 20) {
+//                                    pitchBackpos = BACK_PITCH_IDLE;
+//                                }
                                 //raise specimen off wall
                             }
 
@@ -1168,7 +1178,7 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
                         }
                     }
 
-                    clawBack.setPower(0);
+                    clawBackPosition = HardwareConstants.BACK_CLAW_CLOSE_FULL;
 
                     //telemetry.addData("Pitching Up", pitchPower);
                     //telemetry.addData("Pos", pitchMotorBack.getCurrentPosition());
@@ -1216,13 +1226,13 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
             }
 
             //intake
-            if (gamepad1.square) {
-                clawBack.setPower(-1);
-            }
-
-            if (gamepad1.circle) {
-                clawBack.setPower(1);
-            }
+//            if (gamepad1.square) {
+//                clawBack.setPower(-1);
+//            }
+//
+//            if (gamepad1.circle) {
+//                clawBack.setPower(1);
+//            }
 
             //resets front arm height
             if (gamepad1.cross) {

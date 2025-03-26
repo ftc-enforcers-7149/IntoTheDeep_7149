@@ -12,4 +12,6 @@ public class HardwareConstants {
 
     public final static double BACK_PITCH_PICKUP = 0.3, BACK_PITCH_ZERO = 0.64, BACK_PITCH_HOVER = 0.36, BACK_PITCH_WALL = 0.5, BACK_PITCH_SCORE = 0.48;
 
+    public final static double BACK_CLAW_OPEN = 0.56, BACK_CLAW_SLIGHT_CLOSE = 0.26, BACK_CLAW_CLOSE_FULL = 0.15;
+
 }

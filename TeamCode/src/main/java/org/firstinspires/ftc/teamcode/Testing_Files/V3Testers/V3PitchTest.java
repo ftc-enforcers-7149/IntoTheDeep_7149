@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.Testing_Files.V3Testers;
 
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -14,8 +16,12 @@ public class V3PitchTest extends LinearOpMode {
     QuadServoPitch pitchSubsystem;
     public boolean manual = false;
 
+    public static double kP = 0, kD = 0;
+
     @Override
     public void runOpMode() throws InterruptedException {
+
+        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
         pitchSubsystem = new QuadServoPitch(this);
 
@@ -26,6 +32,11 @@ public class V3PitchTest extends LinearOpMode {
         }
 
         while(opModeIsActive() && !isStopRequested()) {
+
+            pitchSubsystem.updateEncoder();
+
+            QuadServoPitch.kpMin = kP;
+            QuadServoPitch.kdMin = kD;
 
             if (gamepad1.triangle) {
                 manual = true;
@@ -42,6 +53,7 @@ public class V3PitchTest extends LinearOpMode {
 
 
             telemetry.addData("Pitch Position", pitchSubsystem.getPosition());
+            telemetry.addData("Raw Position", pitchSubsystem.getRawPosition());
             telemetry.addData("Pitch Target", target);
             telemetry.update();
 

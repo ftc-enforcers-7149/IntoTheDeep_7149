@@ -47,6 +47,8 @@ public class AxonAbsoluteEncoder implements PeriodicAction {
         return absolutePosition - offset;
     }
 
+    public double getCurrentPosition() { return currentPosition; };
+
     /**
      * Sets the current position to the input offset value. Future calls to getAbsolutePosition()
      * will reflect the new offset.

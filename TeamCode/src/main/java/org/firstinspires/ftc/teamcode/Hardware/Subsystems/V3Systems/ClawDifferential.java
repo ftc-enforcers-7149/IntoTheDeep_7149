@@ -20,6 +20,8 @@ public class ClawDifferential {
     /**
      * Initializes a ClawDifferential object with initial pitch angle of -80 degrees
      * and initial rotation of 180 degrees.
+     * Notes:
+     * - Left is inverted servo
      * @param opmode Current opMode creating this object
      */
     public ClawDifferential(OpMode opmode) {
@@ -32,11 +34,14 @@ public class ClawDifferential {
         pitchAngle = 0;
         rotAngle = 180;
 
+        leftPos =  180/355.0;
+        rightPos = 0/355.0;
+
     }
 
     public void initPositions() {
         leftPos =  180/355.0;
-        rightPos = 0;
+        rightPos = 0/355.0;
 
         leftServo.setPosition(leftPos);
         rightServo.setPosition(rightPos);
@@ -89,6 +94,9 @@ public class ClawDifferential {
 
         leftPos = leftPos + (rot - rotAngle)/355 + (pitch - pitchAngle)/355;
         rightPos = rightPos - (rot - rotAngle)/355 + (pitch - pitchAngle)/355;
+
+        leftServo.setPosition(leftPos);
+        rightServo.setPosition(rightPos);
 
         rotAngle = rot;
         pitchAngle = pitch;
