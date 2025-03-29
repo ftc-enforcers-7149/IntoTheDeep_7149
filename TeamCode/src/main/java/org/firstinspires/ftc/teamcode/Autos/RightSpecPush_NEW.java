@@ -123,11 +123,11 @@ public class RightSpecPush_NEW extends LinearOpMode {
         });
 
         armUpChamber = new InstantAction(() -> {
-            frontArm.setPosition(0.33);
+            frontArm.setPosition(0.33);  //TODO: this is the position where the front arm scores on chamber, just find it empirically in testing
         });
 
         //armUpChamber = frontArm.getPitchingAction(TARGET_HERE);
-        //TODO; this would have to done for the two actions above, and the one action below
+        //TODO; this would have to done for the two actions above, and the one action below (for continuous QuadPitch)
 
         armDownChamber = new InstantAction(() -> {
             frontArm.setPosition(HardwareConstants.PITCH_ZERO);
