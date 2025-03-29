@@ -16,7 +16,7 @@ public class V3PitchTest extends LinearOpMode {
     QuadServoPitch pitchSubsystem;
     public boolean manual = false;
 
-    public static double kP = 0, kD = 0;
+    public static double kP = 0, kD = 0, ff = 0;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -37,6 +37,7 @@ public class V3PitchTest extends LinearOpMode {
 
             QuadServoPitch.kpMin = kP;
             QuadServoPitch.kdMin = kD;
+            QuadServoPitch.ffMin = ff;
 
             if (gamepad1.triangle) {
                 manual = true;
@@ -55,6 +56,7 @@ public class V3PitchTest extends LinearOpMode {
             telemetry.addData("Pitch Position", pitchSubsystem.getPosition());
             telemetry.addData("Raw Position", pitchSubsystem.getRawPosition());
             telemetry.addData("Pitch Target", target);
+            telemetry.addData("Manual Mode", manual);
             telemetry.update();
 
         }

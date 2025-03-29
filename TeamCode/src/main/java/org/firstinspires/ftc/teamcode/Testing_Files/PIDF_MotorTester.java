@@ -17,7 +17,7 @@ public class PIDF_MotorTester extends LinearOpMode {
 
     public static double kp = 0.001, ki = 0, kd = 0.001, ff = 0;
 
-    DcMotorEx motor, motor2;
+    DcMotorEx motor, motor2, motor3;
 
     public static boolean reversed = false;
     public static boolean reversed2 = false;
@@ -41,6 +41,10 @@ public class PIDF_MotorTester extends LinearOpMode {
         motor2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motor2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
+        motor3 = hardwareMap.get(DcMotorEx.class, "motor3");
+        motor3.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motor3.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
         initialPos = motor.getCurrentPosition();
 
         controller = new PIDFController(kp, ki, kd, ff);
@@ -53,7 +57,7 @@ public class PIDF_MotorTester extends LinearOpMode {
 
         motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         motor2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
+        motor3.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         while (opModeIsActive() && !isStopRequested()) {
 
@@ -89,6 +93,8 @@ public class PIDF_MotorTester extends LinearOpMode {
                 controller.reset();
                 motor.setPower(-gamepad1.right_stick_y);
                 motor2.setPower(-gamepad1.right_stick_y);
+                motor3.setPower(gamepad1.left_stick_y);
+
             }
 
             telemetry.addData("Target Position", target);

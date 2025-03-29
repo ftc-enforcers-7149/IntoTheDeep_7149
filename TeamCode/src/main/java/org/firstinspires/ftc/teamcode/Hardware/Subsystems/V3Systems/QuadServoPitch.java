@@ -4,7 +4,11 @@ import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.controller.PIDFController;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.CombinedTelemetry;
 import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.EventAction;
 import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.PeriodicAction;
@@ -14,16 +18,20 @@ public class QuadServoPitch implements PeriodicAction {
 
     //as viewed from the front of the robot
     private CRServo leftServoBottom, leftServoTop, rightServoBottom, rightServoTop;
-    private AxonAbsoluteEncoder pitchEncoder;
+    private AxonPowerEncoder pitchEncoder;
     private PIDFController controller;
 
     private OuttakeExtendo extendoForPIDF;
+    private Telemetry tele;
+
+    //private DcMotorEx encoderMotor;   //TODO: If you want to use rev through bore encoder, uncomment all the dc motor lines in this file, and check the other TODOs
 
     private double pitchPos, target, pitchAngle;
+    private double lastPower;
     private final double POS_PITCH_CONVERSION = 1/3.0;
 
-    public static double kpMin = 0, kdMin = 0, kpMax = 0, kdMax = 0;
-    public static double ffMin = 0, ffMax = 0;
+    public static double kpMin = 0.006, kdMin = 0.0001, ffMin = -0.07, kpMax = 0, kdMax = 0;
+    public static double ffMax = 0;
 
     public QuadServoPitch(OpMode opMode) {
         leftServoBottom = opMode.hardwareMap.get(CRServo.class, "left1");
@@ -33,10 +41,17 @@ public class QuadServoPitch implements PeriodicAction {
 
         controller = new PIDFController(kpMin,0,kdMin,0);
 
-        pitchEncoder = new AxonAbsoluteEncoder(opMode.hardwareMap, "pitchInput");
+        pitchEncoder = new AxonPowerEncoder(opMode, "pitchInput");
+        tele = opMode.telemetry;
         extendoForPIDF = null;
 
+        //TODO
+//        encoderMotor = opMode.hardwareMap.get(DcMotorEx.class, "");
+//        encoderMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        encoderMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
         pitchPos = pitchEncoder.getAbsolutePosition();
+        lastPower = 777;
     }
 
     public void attachExtendo(OuttakeExtendo ext) {
@@ -44,10 +59,15 @@ public class QuadServoPitch implements PeriodicAction {
     }
 
     public void setPower(double power) {
-        leftServoBottom.setPower(power);
-        leftServoTop.setPower(power);
-        rightServoBottom.setPower(power);
-        rightServoTop.setPower(power);
+
+        if (power != lastPower) {
+            leftServoBottom.setPower(power);
+            leftServoTop.setPower(power);
+            rightServoBottom.setPower(power);
+            rightServoTop.setPower(power);
+        }
+
+        lastPower = power;
     }
 
     /**
@@ -55,6 +75,7 @@ public class QuadServoPitch implements PeriodicAction {
      */
     public double getPosition() {
         return pitchEncoder.getAbsolutePosition();
+        //return encoderMotor.getCurrentPosition();  //TODO and comment out the other return statement here
     }
 
     public double getRawPosition() { return pitchEncoder.getCurrentPosition(); }
@@ -64,7 +85,7 @@ public class QuadServoPitch implements PeriodicAction {
     }
 
     public void updateEncoder() {
-        pitchEncoder.periodic();
+        pitchEncoder.update(lastPower);
     }
 
     @Override
@@ -74,8 +95,8 @@ public class QuadServoPitch implements PeriodicAction {
         //updates PIDF values based on the position of the extendo
         //interpolates pidf values linearly since torque changes linearly (is proportional to length of extendo)
         //if (extendoForPIDF == null) {
-            controller.setPIDF(kpMin, 0, kdMin, 0);
-            currentFF = ffMin;
+        controller.setPIDF(kpMin, 0, kdMin, 0);
+        currentFF = ffMin;
 //        } else {
 //            double extPosPercent = extendoForPIDF.getExtensionPos() / OuttakeExtendo.MAX_EXTENSION;
 //            controller.setPIDF(kpMin + (kpMax - kpMin) * extPosPercent,
@@ -84,14 +105,25 @@ public class QuadServoPitch implements PeriodicAction {
 //        }
 
         //update the encoder inside this periodic call
-        pitchEncoder.periodic();
+        updateEncoder();
 
         //get position from encoder and convert to an angle measure
         pitchPos = pitchEncoder.getAbsolutePosition();
-        pitchAngle = pitchPos * POS_PITCH_CONVERSION;
+        pitchAngle = Range.scale(pitchPos, 350, 50, 0, 90);
+
+        tele.addData("Pitch angle", pitchAngle);
 
         //adds angle based feedforward
-        double pitchPow = controller.calculate(pitchPos, target); //+ (Math.cos(Math.toRadians(pitchAngle)) * currentFF);
+
+        //TODO: if you want to flip the pitch direction, change the -1 below to +1, and also look below
+        double pitchPow = -1 * controller.calculate(pitchPos, target) + (Math.sin(Math.toRadians(pitchAngle)) * currentFF);
+
+
+        //TODO: to flip direction, change the -0.25s to +0.25
+        //TODO: if using the motor, change target to the position at which the pitch arm performs a pass through
+        if (target > 360 && pitchPow < -0.25) {
+            pitchPow = -0.25;
+        }
 
         setPower(pitchPow);
     }

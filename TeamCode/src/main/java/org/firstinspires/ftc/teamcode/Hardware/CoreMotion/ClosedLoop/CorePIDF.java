@@ -1,6 +1,7 @@
-package org.firstinspires.ftc.teamcode.Hardware;
+package org.firstinspires.ftc.teamcode.Hardware.CoreMotion.ClosedLoop;
 
-public class sqUIDF {
+//Courtesy of FTCLib
+public class CorePIDF implements ClosedLoopController {
 
     private double kP, kI, kD, kF;
     private double setPoint;
@@ -20,7 +21,7 @@ public class sqUIDF {
     /**
      * The base constructor for the PIDF controller
      */
-    public sqUIDF(double kp, double ki, double kd, double kf) {
+    public CorePIDF(double kp, double ki, double kd, double kf) {
         this(kp, ki, kd, kf, 0, 0);
     }
 
@@ -33,7 +34,7 @@ public class sqUIDF {
      * @param pv The measured value of he pid control loop. We want sp = pv, or to the degree
      *           such that sp - pv, or e(t) < tolerance.
      */
-    public sqUIDF(double kp, double ki, double kd, double kf, double sp, double pv) {
+    public CorePIDF(double kp, double ki, double kd, double kf, double sp, double pv) {
         kP = kp;
         kI = ki;
         kD = kd;
@@ -102,8 +103,7 @@ public class sqUIDF {
         totalError = totalError < minIntegral ? minIntegral : Math.min(maxIntegral, totalError);
 
         // returns u(t)
-        //TODO: This takes the square root of the proportional term
-        return kP * Math.sqrt(Math.abs(errorVal_p)) * Math.signum(errorVal_p) + kI * totalError + kD * errorVal_v + kF * setPoint;
+        return kP * errorVal_p * Math.signum(errorVal_p) + kI * totalError + kD * errorVal_v + kF * setPoint;
     }
 
 
@@ -112,5 +112,21 @@ public class sqUIDF {
         kI = ki;
         kD = kd;
         kF = kf;
+    }
+
+
+    @Override
+    public double getPower(double pos, double target) {
+        return calculate(pos, target);
+    }
+
+    @Override
+    public void setCoefficients(double... coefficients) {
+
+        if (coefficients.length < 4) {
+            return;
+        }
+
+        setPIDF(coefficients[0], coefficients[1], coefficients[2], coefficients[3]);
     }
 }

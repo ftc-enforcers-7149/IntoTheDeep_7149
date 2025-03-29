@@ -81,16 +81,16 @@ public class DifferentialClawTester extends LinearOpMode {
 
             diffyClaw.setPitchRotAngles(pitch, rot);
 
-            if (gamepad1.dpad_up && !previousGamepad1.dpad_up) {
-                pitch += 30;
-            } else if (gamepad1.dpad_down && !previousGamepad1.dpad_down) {
-                pitch -= 30;
+            if (gamepad1.triangle && !previousGamepad1.triangle) {
+                pitch += 5;
+            } else if (gamepad1.cross && !previousGamepad1.cross) {
+                pitch -= 5;
             }
 
-            if (gamepad1.dpad_left && !previousGamepad1.dpad_left) {
-                rot += 30;
-            } else if (gamepad1.dpad_right && !previousGamepad1.dpad_right) {
-                rot -= 30;
+            if (gamepad1.square && !previousGamepad1.square) {
+                rot += 5;
+            } else if (gamepad1.circle && !previousGamepad1.circle) {
+                rot -= 5;
             }
 
             telemetry.addData("Left Pos", diffyClaw.getLeftPos());
