@@ -52,7 +52,7 @@ public class RightSpecPush_NEW extends LinearOpMode {
     TwoMotorSlides frontSlides;
     FourServoPitchArm frontArm;
     //QuadServoPitch frontArm;
-    ServoImplEx rightExt, leftExt;
+    ServoImplEx extServo, leftExt;
     Servo pitchBack1, pitchBack2;
 
     Servo wristFront;
@@ -114,7 +114,7 @@ public class RightSpecPush_NEW extends LinearOpMode {
         slidesDownChamber = frontSlides.getExtensionAction(0);
 
         slidesBackUpChamber = backSlides.getExtensionAction(610);
-        slidesBackScoreChamber = backSlides.getExtensionAction(410);
+        slidesBackScoreChamber = backSlides.getExtensionAction(370);
         slidesBackDownChamber = backSlides.getExtensionAction(0);
         slidesBackAboveWall = backSlides.getExtensionAction(150);
 
@@ -123,7 +123,7 @@ public class RightSpecPush_NEW extends LinearOpMode {
         });
 
         armUpChamber = new InstantAction(() -> {
-            frontArm.setPosition(0.33);  //TODO: this is the position where the front arm scores on chamber, just find it empirically in testing
+            frontArm.setPosition(0.74);  //TODO: this is the position where the front arm scores on chamber, just find it empirically in testing
         });
 
         //armUpChamber = frontArm.getPitchingAction(TARGET_HERE);
@@ -164,21 +164,21 @@ public class RightSpecPush_NEW extends LinearOpMode {
         EventAction clawBackOuttake = new InstantAction(() -> clawBack.setPosition(HardwareConstants.BACK_CLAW_OPEN));
         EventAction clawBackIntake = new InstantAction(() -> clawBack.setPosition(HardwareConstants.BACK_CLAW_CLOSE_FULL));
 
-        rightExt = hardwareMap.get(ServoImplEx.class, "rightExt");
-        rightExt.setPwmRange(new PwmControl.PwmRange(500, 2500));
-        leftExt = hardwareMap.get(ServoImplEx.class, "leftExt");
-        leftExt.setPwmRange(new PwmControl.PwmRange(500, 2500));
+        extServo = hardwareMap.get(ServoImplEx.class, "extServo");
+        extServo.setPwmRange(new PwmControl.PwmRange(500, 2500));
+        //leftExt = hardwareMap.get(ServoImplEx.class, "leftExt");
+        //leftExt.setPwmRange(new PwmControl.PwmRange(500, 2500));
 
         wristFront = hardwareMap.get(Servo.class, "frontWrist");
 
         extensionOut = new InstantAction(() -> {
-            leftExt.setPosition(0.25);
-            rightExt.setPosition(0.25);
+            //leftExt.setPosition(0.25);
+            extServo.setPosition(1);
         });
 
         extensionIn = new InstantAction(() -> {
-            leftExt.setPosition(1);
-            rightExt.setPosition(1);
+            //leftExt.setPosition(1);
+            extServo.setPosition(0.01);
         });
 
         imuReset = new InstantAction(() -> {
@@ -287,14 +287,14 @@ public class RightSpecPush_NEW extends LinearOpMode {
                 //MathFunctions.addPoints(SAMPLE_3_PICKUP, new Point(-2, 7)),
                 new Point(24, 10.5),
                 new Point(26, 11),
-                new Point(11.5, 13)
+                new Point(15, 13)
         ));
         wallPath2.setConstantHeadingInterpolation(0);
         wallPath2.setZeroPowerAccelerationMultiplier(5);
 
         chamberPath2 = new Path(new BezierCurve(
                 //SPEC_PICKUP,
-                new Point(13, 13),
+                new Point(16.5, 13),
                 new Point(30, 79),  //<-- 3 less than point below
                 new Point(37, 76)  //<--TODO: These y values can be changed to shift the robot down the chamber, if this is changed, the y value in the point right above it must be changed to 3 greater, and the point starting the next path must also be changed to be the same point (this applies to all the chamber paths here)
         ));
@@ -394,8 +394,8 @@ public class RightSpecPush_NEW extends LinearOpMode {
         actionManager.attachPeriodicActions(perFollower, backSlides, frontSlides);
 
         wristFront.setPosition(0.48);
-        leftExt.setPosition(1);
-        rightExt.setPosition(1);
+        //leftExt.setPosition(1);
+        extServo.setPosition(0.01);
 
 
         while (!isStarted()) {
@@ -476,7 +476,7 @@ public class RightSpecPush_NEW extends LinearOpMode {
                         armBackDownChamber,
                         new ParallelAction(
                                 moveWall3,
-
+                                slidesBackDownChamber,
                                 extensionIn,
                                 armBackSpecPickup
                                 //new SequentialAction(new WaitAction(200), slowFollower)
@@ -500,7 +500,7 @@ public class RightSpecPush_NEW extends LinearOpMode {
                         armBackDownChamber,
                         new ParallelAction(
                                 moveWall4,
-
+                                slidesBackDownChamber,
                                 extensionIn,
                                 armBackSpecPickup
                                 //new SequentialAction(new WaitAction(200), slowFollower)
@@ -524,7 +524,7 @@ public class RightSpecPush_NEW extends LinearOpMode {
                         armBackDownChamber,
                         new ParallelAction(
                                 moveWall5,
-
+                                slidesBackDownChamber,
                                 extensionIn,
                                 armBackSpecPickup
                                 //new SequentialAction(new WaitAction(200), slowFollower)

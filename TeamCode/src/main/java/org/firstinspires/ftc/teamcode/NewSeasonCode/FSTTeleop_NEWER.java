@@ -132,8 +132,8 @@ public class FSTTeleop_NEWER extends LinearOpMode {
     //new with camera
     final int SAMPLE_ABOVE_SLIDE_POS = 100, SAMPLE_PICKUP_SLIDE_POS = 100;
     final int SPECIMEN_ABOVE_PITCH_POS = 200, SPECIMEN_PICKUP_PITCH_POS = 400, SPECIMEN_OUT_PITCH_POS = 400;
-    final int FRONT_SLIDE_HIGH_BASKET = 2450, FRONT_SLIDE_LOW_BASKET = 1400, BACK_SLIDE_HIGH_CHAMBER = 610, BACK_SLIDE_LOW_CHAMBER = 50; //TODO high & low basket values
-    final int FRONT_SLIDE_PASSTHROUGH = 1400;  //TODO: this is the slide position at which to initiate the passthrough
+    final int FRONT_SLIDE_HIGH_BASKET = 2600, FRONT_SLIDE_LOW_BASKET = 1400, BACK_SLIDE_HIGH_CHAMBER = 610, BACK_SLIDE_LOW_CHAMBER = 50; //TODO low basket values
+    final int FRONT_SLIDE_PASSTHROUGH = 2600;  //TODO: this is the slide position at which to initiate the passthrough
     final double BACK_PITCH_IDLE = HardwareConstants.BACK_PITCH_ZERO, BACK_PITCH_ABOVE = HardwareConstants.BACK_PITCH_HOVER, BACK_PITCH_PICKUP = HardwareConstants.BACK_PITCH_PICKUP, BACK_PITCH_WALL = HardwareConstants.BACK_PITCH_WALL, BACK_PITCH_CHAMBER = HardwareConstants.BACK_PITCH_SCORE;
 
     /*
@@ -180,7 +180,7 @@ public class FSTTeleop_NEWER extends LinearOpMode {
 
         pitchController = new PIDFController(0.011, 0, 0.00035,0);
         //good
-        slideController = new PIDFController(0.0128, 0, 0.0011, 0);
+        slideController = new PIDFController(0.028, 0.00001, 0.0005, 0);
         //good
         pitchController2 = new PIDFController(0.012, 0, 0.0003,0);
         //good
@@ -408,6 +408,7 @@ public class FSTTeleop_NEWER extends LinearOpMode {
 
                     if (slidesFront.getPosition() > FRONT_SLIDE_PASSTHROUGH) {
                         frontWristPitch = 50;
+                        wait(500);
                         pitchFrontTarget = PITCH_PASSTHROUGH;
                     } else {
                         pitchFrontTarget = PITCH_ZERO;
@@ -454,6 +455,8 @@ public class FSTTeleop_NEWER extends LinearOpMode {
                     }
 
                     if (gamepad2.left_bumper) {
+                        pitchFrontTarget = PITCH_ZERO;
+                        wait(500);
                         stageFront = Stages.SLIDEDOWN;
                         //stageFront = Stages.IDLE;
                         slideFrontTarget = 0;
@@ -477,7 +480,7 @@ public class FSTTeleop_NEWER extends LinearOpMode {
 
                     frontWristPitch = -70;
                     frontWristPos = 90;
-                    pitchFrontTarget = 0;
+                    pitchFrontTarget = PITCH_ZERO;
 
                     extensionPos = extensionInPos;
 

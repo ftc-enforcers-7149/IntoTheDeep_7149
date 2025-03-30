@@ -26,7 +26,7 @@ public class TwoMotorSlides implements PeriodicAction {
         leftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         rightMotor.setDirection(DcMotorSimple.Direction.FORWARD);
 
-        controller = new PIDFController(0.015, 0, 0.0008, 0.0002);
+        controller = new PIDFController(0.0042, 0, 0.0003, 0.00009);
 
         target = 0;
         motorInterrupted = false;
