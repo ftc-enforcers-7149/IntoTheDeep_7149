@@ -213,7 +213,7 @@ public class RightSpecPush_NEW extends LinearOpMode {
         Point SPEC_PICKUP = MathFunctions.addPoints(AutoConstants.SPECIMEN_PICKUP, new Point(1.5, 0));
 
         chamberPath1 = new Path(new BezierLine(
-                new Point(8.75, 62),
+                new Point(8.5, 62),
                 new Point(30.5, 60.5)
         ));
         chamberPath1.setConstantHeadingInterpolation(Math.toRadians(0));
@@ -287,7 +287,7 @@ public class RightSpecPush_NEW extends LinearOpMode {
                 //MathFunctions.addPoints(SAMPLE_3_PICKUP, new Point(-2, 7)),
                 new Point(24, 10.5),
                 new Point(26, 11),
-                new Point(15, 13)
+                new Point(14.25, 13)
         ));
         wallPath2.setConstantHeadingInterpolation(0);
         wallPath2.setZeroPowerAccelerationMultiplier(5);
@@ -296,13 +296,13 @@ public class RightSpecPush_NEW extends LinearOpMode {
                 //SPEC_PICKUP,
                 new Point(16.5, 13),
                 new Point(30, 79),  //<-- 3 less than point below
-                new Point(37, 76)  //<--TODO: These y values can be changed to shift the robot down the chamber, if this is changed, the y value in the point right above it must be changed to 3 greater, and the point starting the next path must also be changed to be the same point (this applies to all the chamber paths here)
+                new Point(35, 76)  //<--TODO: These y values can be changed to shift the robot down the chamber, if this is changed, the y value in the point right above it must be changed to 3 greater, and the point starting the next path must also be changed to be the same point (this applies to all the chamber paths here)
         ));
         chamberPath2.setLinearHeadingInterpolation(0, Math.toRadians(180.01), 0.4);
         chamberPath2.setZeroPowerAccelerationMultiplier(1.4);
 
         wallPath3 = new Path(new BezierCurve(
-                new Point(37, 76),  //<--same as last point in prev path
+                new Point(35, 76),  //<--same as last point in prev path
                 new Point(30, 40),
                 SPEC_PICKUP
         ));
@@ -312,13 +312,13 @@ public class RightSpecPush_NEW extends LinearOpMode {
         chamberPath3 = new Path(new BezierCurve(
                 SPEC_PICKUP,
                 new Point(30, 76),
-                new Point(37, 73)
+                new Point(35.5, 73)
         ));
         chamberPath3.setLinearHeadingInterpolation(0, Math.toRadians(180.01), 0.6);
         chamberPath3.setZeroPowerAccelerationMultiplier(1.4);
 
         wallPath4 = new Path(new BezierCurve(
-                new Point(37, 73),
+                new Point(35.5, 73),
                 new Point(30, 40),
                 SPEC_PICKUP
         ));
@@ -328,13 +328,13 @@ public class RightSpecPush_NEW extends LinearOpMode {
         chamberPath4 = new Path(new BezierCurve(
                 SPEC_PICKUP,
                 new Point(30, 72),
-                new Point(37, 69)
+                new Point(35.5, 69)
         ));
         chamberPath4.setLinearHeadingInterpolation(0, Math.toRadians(180.01), 0.6);
         chamberPath4.setZeroPowerAccelerationMultiplier(1.4);
 
         wallPath5 = new Path(new BezierCurve(
-                new Point(37, 69),
+                new Point(35.5, 69),
                 new Point(30, 40),
                 SPEC_PICKUP
         ));
@@ -344,13 +344,13 @@ public class RightSpecPush_NEW extends LinearOpMode {
         chamberPath5 = new Path(new BezierCurve(
                 SPEC_PICKUP,
                 new Point(30, 69),
-                new Point(37, 66)
+                new Point(35.5, 66)
         ));
         chamberPath5.setLinearHeadingInterpolation(0, Math.toRadians(180.01), 0.6);
         chamberPath5.setZeroPowerAccelerationMultiplier(1.4);
 
         parkPath = new Path(new BezierLine(
-                new Point(37, 66),
+                new Point(35.5, 66),
                 new Point(28, 36)
         ));
         parkPath.setLinearHeadingInterpolation(Math.toRadians(180.01), Math.toRadians(230), 0.3);

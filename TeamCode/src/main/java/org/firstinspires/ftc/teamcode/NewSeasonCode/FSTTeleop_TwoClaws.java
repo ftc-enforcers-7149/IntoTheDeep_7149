@@ -265,6 +265,7 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
 
             //field centric driving
             drive.setFieldCentricPower(gamepad1.left_stick_x * 1.08, -gamepad1.left_stick_y * 1.08, gamepad1.right_stick_x * 1.08);
+            //always allows out-taking
 
             //FRONT PID POWERING
             double slidePower = slideController.calculate(slidesFront.getPosition(), slideFrontTarget);
