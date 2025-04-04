@@ -109,7 +109,7 @@ public class RightSpecPush_NEW extends LinearOpMode {
         backSlides.setPIDFCoefficients(0.022, 0, 0.0006, 0.00022);
         backSlides.slideMotor.setDirection(DcMotorSimple.Direction.FORWARD);
 
-        slidesUpChamber = frontSlides.getExtensionAction(550);
+        slidesUpChamber = frontSlides.getExtensionAction(750);
         slidesScoreChamber = frontSlides.getExtensionAction(450);
         slidesDownChamber = frontSlides.getExtensionAction(0);
 
@@ -123,7 +123,7 @@ public class RightSpecPush_NEW extends LinearOpMode {
         });
 
         armUpChamber = new InstantAction(() -> {
-            frontArm.setPosition(0.74);  //TODO: this is the position where the front arm scores on chamber, just find it empirically in testing
+            frontArm.setPosition(0.7);  //TODO: this is the position where the front arm scores on chamber, just find it empirically in testing
         });
 
         //armUpChamber = frontArm.getPitchingAction(TARGET_HERE);
@@ -287,7 +287,7 @@ public class RightSpecPush_NEW extends LinearOpMode {
                 //MathFunctions.addPoints(SAMPLE_3_PICKUP, new Point(-2, 7)),
                 new Point(24, 10.5),
                 new Point(26, 11),
-                new Point(14.25, 13)
+                new Point(13.7, 13)
         ));
         wallPath2.setConstantHeadingInterpolation(0);
         wallPath2.setZeroPowerAccelerationMultiplier(5);
@@ -296,7 +296,7 @@ public class RightSpecPush_NEW extends LinearOpMode {
                 //SPEC_PICKUP,
                 new Point(16.5, 13),
                 new Point(30, 79),  //<-- 3 less than point below
-                new Point(35, 76)  //<--TODO: These y values can be changed to shift the robot down the chamber, if this is changed, the y value in the point right above it must be changed to 3 greater, and the point starting the next path must also be changed to be the same point (this applies to all the chamber paths here)
+                new Point(34.5, 76)  //<--TODO: These y values can be changed to shift the robot down the chamber, if this is changed, the y value in the point right above it must be changed to 3 greater, and the point starting the next path must also be changed to be the same point (this applies to all the chamber paths here)
         ));
         chamberPath2.setLinearHeadingInterpolation(0, Math.toRadians(180.01), 0.4);
         chamberPath2.setZeroPowerAccelerationMultiplier(1.4);

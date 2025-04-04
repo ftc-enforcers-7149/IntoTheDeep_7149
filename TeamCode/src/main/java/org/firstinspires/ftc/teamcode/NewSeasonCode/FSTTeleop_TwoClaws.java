@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.PwmControl;
@@ -52,6 +53,7 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
     CRServo clawFront;
     ServoImplEx wristFront;
     Servo pitchBack1, pitchBack2;
+    DcMotorEx wheelieMotor;
 
     FourServoPitchArm pitchArm;
 
@@ -60,6 +62,7 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
     PIDFController slideController;
     PIDFController pitchController2;
     CoreSQIDF slideController2;
+    PIDFController wheelieController;
 
     //DcMotorEx pitchMotorFront;
     Servo clawBack;
@@ -98,8 +101,10 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
     int slideBackInitPos;
     int pitchBackInitPos;
 
+    boolean PULLING_UP_HANG = false;
+
     private enum Stages {
-        IDLE, INTAKING, OUTTAKING, SLIDEUP, SLIDEDOWN, PITCHUP, PITCHDOWN
+        IDLE, INTAKING, OUTTAKING, SLIDEUP, SLIDEDOWN, PITCHUP, PITCHDOWN, HANGING
     }
 
     private enum Outtake {
@@ -189,6 +194,11 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
         //good
         slideController2 = new CoreSQIDF(0.066, 0, 0.0003, 0.0005);
         //good
+        wheelieController = new PIDFController(0,0,0,0);
+
+        //hang motor
+        wheelieMotor = hardwareMap.get(DcMotorEx.class, "hangMotor");
+
         slidesBack = new OuttakeSlides(hardwareMap, "backSlide");
         slidesBack.slideMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         //slidesBack.slideMotor.setDirection(DcMotorSimple.Direction.FORWARD);
@@ -381,6 +391,10 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
                         slideFrontTarget = 0; //stays zero
                     }
 
+                    if (gamepad2.share) {
+                        stageFront = Stages.HANGING;
+                    }
+
                     //==not really used anymore==
 //                    if (gamepad2.left_trigger > 0.05 && !(prevGamepad2.left_trigger > 0.05)) {
 //                        stageFront = Stages.PITCHDOWN;
@@ -419,6 +433,10 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
 //                    telemetry.addData("Sliding Up", power2);
                     telemetry.addData("Pos", slidesFront.getPosition());
 
+                    if (slidesFront.getPosition() > 2200) {
+                        pitchFrontTarget = HardwareConstants.PITCH_SCORING;
+                    }
+
                     if ((Math.abs(slidesFront.getPosition() - slideFrontTarget) < 40)) {
                         stageFront = Stages.OUTTAKING;
                     }
@@ -430,7 +448,7 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
                 case OUTTAKING: {
 
                     extensionPos = extensionOutPos;
-                    frontWristPos = HardwareConstants.WRIST_MAX;
+                    frontWristPos = HardwareConstants.WRIST_MIN;
                     pitchFrontTarget = HardwareConstants.PITCH_SCORING;
 
                     if (outStageFront == Outtake.CHAMBER) {
@@ -439,7 +457,8 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
 
 
                     if (gamepad1.left_trigger > 0.05) {
-                        clawFront.setPower(0.55);    //outtake speed
+                        clawFront.setPower(0.55);
+                        telemetry.addData("Left Trig", "Outtake");   //outtake speed
                     } else {
                         clawFront.setPower(0);
                     }
@@ -457,9 +476,9 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
 
 
                     //while the slides are being brought down, keep the sample inside the claw
-                    if (slidesFront.getVelocity() < -0.01) {
-                        clawFront.setPower(-1);
-                    }
+//                    if (slidesFront.getVelocity() < -0.01) {
+//                        clawFront.setPower(-1);
+//                    }
 
                     break;
                 }
@@ -752,6 +771,33 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
 //                        stageFront = Stages.INTAKING;
 //                    }
                     //}
+
+                    break;
+                }
+
+
+                case HANGING: {
+
+                    if (!PULLING_UP_HANG) {
+                        slideFrontTarget = 2400;
+
+                        if (Math.abs(slidesFront.getPosition()) > 2200) {
+                            wheelieMotor.setPower(wheelieController.calculate(wheelieMotor.getCurrentPosition(), -1600));
+                        }
+
+                    } else {
+                        wheelieMotor.setPower(wheelieController.calculate(wheelieMotor.getCurrentPosition(), 0));
+                        slideFrontTarget = 0;
+
+                        if (Math.abs(slidesFront.getPosition()) < 10) {
+                            stageFront = Stages.IDLE;
+                            PULLING_UP_HANG = false;
+                        }
+                    }
+
+                    if (gamepad2.touchpad) {
+                        PULLING_UP_HANG = true;
+                    }
 
                     break;
                 }

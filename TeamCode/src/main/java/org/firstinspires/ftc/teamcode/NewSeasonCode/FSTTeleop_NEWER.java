@@ -382,6 +382,10 @@ public class FSTTeleop_NEWER extends LinearOpMode {
                         slideFrontTarget = 0; //stays zero
                     }
 
+                    if (gamepad2.share) {
+                        stageFront = Stages.HANGING;
+                    }
+
                     //==not really used anymore==
 //                    if (gamepad2.left_trigger > 0.05 && !(prevGamepad2.left_trigger > 0.05)) {
 //                        stageFront = Stages.PITCHDOWN;
@@ -766,11 +770,20 @@ public class FSTTeleop_NEWER extends LinearOpMode {
                 case HANGING: {
 
                     if (!PULLING_UP_HANG) {
-                        wheelieMotor.setPower(wheelieController.calculate(wheelieMotor.getCurrentPosition(), -1600));
                         slideFrontTarget = 2400;
+
+                        if (Math.abs(slidesFront.getPosition()) > 2200) {
+                            wheelieMotor.setPower(wheelieController.calculate(wheelieMotor.getCurrentPosition(), -1600));
+                        }
+
                     } else {
                         wheelieMotor.setPower(wheelieController.calculate(wheelieMotor.getCurrentPosition(), 0));
                         slideFrontTarget = 0;
+
+                        if (Math.abs(slidesFront.getPosition()) < 10) {
+                            stageFront = Stages.IDLE;
+                            PULLING_UP_HANG = false;
+                        }
                     }
 
                     if (gamepad2.touchpad) {
