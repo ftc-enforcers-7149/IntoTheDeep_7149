@@ -792,8 +792,9 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
                         wheelieMotor.setPower(wheelieController.calculate(wheelieMotor.getCurrentPosition(), 0));
                         slideFrontTarget = 0;
 
-                        if (Math.abs(slidesFront.getPosition()) < 10) {
+                        if (Math.abs(slidesFront.getPosition()) < 1400) {
                             stageFront = Stages.SLIDEDOWN;
+                            pitchFrontTarget = HardwareConstants.PITCH_ZERO;
                             PULLING_UP_HANG = false;
                         }
                     }
