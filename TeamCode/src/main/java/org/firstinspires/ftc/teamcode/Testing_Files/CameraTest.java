@@ -5,15 +5,22 @@ import android.graphics.Canvas;
 import android.util.Size;
 
 import com.acmerobotics.dashboard.FtcDashboard;
+import com.google.blocks.ftcrobotcontroller.hardware.HardwareItemMap;
+import com.qualcomm.ftccommon.FtcEventLoop;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.OpModeManagerImpl;
+import com.qualcomm.robotcore.eventloop.opmode.OpModeManagerNotifier;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.function.Consumer;
 import org.firstinspires.ftc.robotcore.external.function.Continuation;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.stream.CameraStreamSource;
 import org.firstinspires.ftc.robotcore.internal.camera.calibration.CameraCalibration;
+import org.firstinspires.ftc.robotcore.internal.camera.names.WebcamNameImpl;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.VisionProcessor;
 import org.opencv.android.Utils;
@@ -102,6 +109,24 @@ public class CameraTest extends LinearOpMode {
             if (state == VisionPortal.CameraState.STARTING_STREAM) {
                 loops++;
             }
+
+
+
+
+
+            WebcamName cam = hardwareMap.get(WebcamName.class, "Cam");
+            OpenCvCamera cvCam = OpenCvCameraFactory.getInstance().createWebcam(cam);
+
+
+
+            FtcEventLoop loop = new FtcEventLoop(null, null, null, null);
+            OpModeManagerImpl manager = loop.getOpModeManager();
+
+
+
+
+
+
 
             FtcDashboard.getInstance().sendImage(processor.getLastFrame());
 
