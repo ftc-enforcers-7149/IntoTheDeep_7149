@@ -13,11 +13,11 @@ public class AutoConstants {
 
     public static final Point ALLIANCE_PICKUP_OFFSET = new Point(-19.5, 22);
 
-    public static final Point SPECIMEN_PICKUP = new Point(19, 38);
+    public static final Point SPECIMEN_PICKUP = new Point(18, 37);
 
-    public static final Point NEUTRAL_SAMPLE_1 = new Point(46, 122);
-    public static final Point NEUTRAL_SAMPLE_2 = new Point(46.5,132);
-    public static final Point NEUTRAL_SAMPLE_3 = new Point(46,143);
+    public static final Point NEUTRAL_SAMPLE_1 = new Point(47, 121);
+    public static final Point NEUTRAL_SAMPLE_2 = new Point(47.5,132);
+    public static final Point NEUTRAL_SAMPLE_3 = new Point(47,143);
 
     public static final Point BASKET_DROPOFF = new Point(14,126);
 
