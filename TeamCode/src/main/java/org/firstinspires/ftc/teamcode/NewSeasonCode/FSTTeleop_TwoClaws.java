@@ -53,7 +53,7 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
     CRServo clawFront;
     ServoImplEx wristFront;
     Servo pitchBack1, pitchBack2;
-    DcMotorEx wheelieMotor;
+    DcMotorEx wheelieMotor, wheelieEncoder;
 
     FourServoPitchArm pitchArm;
 
@@ -194,10 +194,11 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
         //good
         slideController2 = new CoreSQIDF(0.066, 0, 0.0003, 0.0005);
         //good
-        wheelieController = new PIDFController(0,0,0,0);
+        wheelieController = new PIDFController(0.004,0,0.0004,0);
 
         //hang motor
         wheelieMotor = hardwareMap.get(DcMotorEx.class, "hangMotor");
+        wheelieEncoder = hardwareMap.get(DcMotorEx.class, "rightBack");
 
         slidesBack = new OuttakeSlides(hardwareMap, "backSlide");
         slidesBack.slideMotor.setDirection(DcMotorSimple.Direction.FORWARD);
@@ -487,6 +488,7 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
                 case SLIDEDOWN: {
 
                     extensionPos = extensionInPos;
+                    pitchFrontTarget = HardwareConstants.PITCH_ZERO;
 
                     telemetry.addData("Sliding Down", slidePower);
                     telemetry.addData("Sliding Velocity", slidesFront.getVelocity());
@@ -779,10 +781,11 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
                 case HANGING: {
 
                     if (!PULLING_UP_HANG) {
-                        slideFrontTarget = 2400;
+                        slideFrontTarget = 2550;
 
                         if (Math.abs(slidesFront.getPosition()) > 2200) {
-                            wheelieMotor.setPower(wheelieController.calculate(wheelieMotor.getCurrentPosition(), -1600));
+                            wheelieMotor.setPower(wheelieController.calculate(wheelieEncoder.getCurrentPosition(), -1100));
+                            pitchFrontTarget = HardwareConstants.PITCH_PASSTHROUGH;
                         }
 
                     } else {
@@ -790,7 +793,7 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
                         slideFrontTarget = 0;
 
                         if (Math.abs(slidesFront.getPosition()) < 10) {
-                            stageFront = Stages.IDLE;
+                            stageFront = Stages.SLIDEDOWN;
                             PULLING_UP_HANG = false;
                         }
                     }

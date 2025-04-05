@@ -276,7 +276,7 @@ public class RightSpecPush_NEW extends LinearOpMode {
 
         //---------------
 
-//        wallPath2 = new Path(new BezierCurve(
+//        wallPath2 = new Path(new BezierCurve(2
 //                //MathFunctions.addPoints(SAMPLE_3_PICKUP, new Point(-2, 7)),
 //                new Point(24, 9.5),
 //                new Point(36, 36),

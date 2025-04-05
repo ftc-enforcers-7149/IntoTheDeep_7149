@@ -129,6 +129,7 @@ public class LeftBasketExtras extends LinearOpMode {
         slidesUpBasket = frontSlides.getExtensionAction(1500);
         slidesDownBasket = frontSlides.getExtensionAction(0);
 
+
         armDownSample = new InstantAction(() -> {
             frontArm.setPosition(HardwareConstants.PITCH_PICKUP);
         });
@@ -147,6 +148,7 @@ public class LeftBasketExtras extends LinearOpMode {
         armReverseSample = new InstantAction(() -> {
             frontArm.setPosition(HardwareConstants.PITCH_REVERSE);
         });
+
 
         parkSlidesUp = backSlides.getExtensionAction(580);
         //parkPitch = backArm.getPitchingAction(300);
