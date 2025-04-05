@@ -24,9 +24,10 @@ public class PIDF_MotorTester extends LinearOpMode {
     public boolean manualOverride = false;
 
     public static int target = 0;
+    public static int target2 = 0;
     public int initialPos;
 
-    PIDFController controller;
+    PIDFController controller, controller2;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -48,6 +49,7 @@ public class PIDF_MotorTester extends LinearOpMode {
         initialPos = motor.getCurrentPosition();
 
         controller = new PIDFController(kp, ki, kd, ff);
+        controller2 = new PIDFController(kp, ki, kd, ff);
 
         waitForStart();
 
@@ -78,6 +80,7 @@ public class PIDF_MotorTester extends LinearOpMode {
             //ff *= Math.sin(angle);  //angle ff compensation
 
             controller.setPIDF(kp, ki, kd, ff);
+            controller2.setPIDF(kp, ki, kd, ff);
 
             if (gamepad1.triangle) {
                 manualOverride = true;
@@ -87,10 +90,13 @@ public class PIDF_MotorTester extends LinearOpMode {
 
             if (!manualOverride) {
                 double power = controller.calculate(motor.getCurrentPosition() - initialPos, target);
+                double power2 = controller2.calculate(motor.getCurrentPosition() - initialPos, target2);
                 motor.setPower(power);
                 motor2.setPower(power);
+                motor3.setPower(power2);
             } else {
                 controller.reset();
+                controller2.reset();
                 motor.setPower(-gamepad1.right_stick_y);
                 motor2.setPower(-gamepad1.right_stick_y);
                 motor3.setPower(gamepad1.left_stick_y);
@@ -98,7 +104,9 @@ public class PIDF_MotorTester extends LinearOpMode {
             }
 
             telemetry.addData("Target Position", target);
+            telemetry.addData("Target Position2", target2);
             telemetry.addData("Current Position", motor.getCurrentPosition() - initialPos);
+            telemetry.addData("current position2", motor.getCurrentPosition());
             telemetry.addData("Manual Override", manualOverride);
             telemetry.addData("NEW VERSION", "");
             telemetry.addData("Arm Angle", angle);
