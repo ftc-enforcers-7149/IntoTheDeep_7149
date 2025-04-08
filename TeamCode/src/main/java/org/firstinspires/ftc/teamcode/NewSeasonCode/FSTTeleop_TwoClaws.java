@@ -54,6 +54,7 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
     ServoImplEx wristFront;
     Servo pitchBack1, pitchBack2;
     DcMotorEx wheelieMotor, wheelieEncoder;
+    int wheeliePos = -1300;
 
     FourServoPitchArm pitchArm;
 
@@ -413,7 +414,7 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
                     pitchFrontTarget = HardwareConstants.PITCH_ZERO;
                     extensionPos = extensionOutPos;
 
-                    frontWristPos = HardwareConstants.WRIST_MAX;
+                    frontWristPos = HardwareConstants.WRIST_MIN;
 
                     if (outStageFront == Outtake.BUCKET) {
                         slideFrontTarget = FRONT_SLIDE_HIGH_BASKET;
@@ -781,22 +782,30 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
                 case HANGING: {
 
                     if (!PULLING_UP_HANG) {
+
                         slideFrontTarget = 2550;
 
                         if (Math.abs(slidesFront.getPosition()) > 2200) {
-                            wheelieMotor.setPower(wheelieController.calculate(wheelieEncoder.getCurrentPosition(), -1100));
+                            wheeliePos += (int) gamepad2.left_stick_y * 2;
+                            wheelieMotor.setPower(wheelieController.calculate(wheelieEncoder.getCurrentPosition(), -wheeliePos));
                             pitchFrontTarget = HardwareConstants.PITCH_PASSTHROUGH;
                         }
 
                     } else {
-                        wheelieMotor.setPower(wheelieController.calculate(wheelieMotor.getCurrentPosition(), 0));
-                        slideFrontTarget = 0;
+
+                        wheelieMotor.setPower(wheelieController.calculate(wheelieEncoder.getCurrentPosition(), 0));
+                        slideFrontTarget = 1900;
+
+                        if (gamepad2.share) {
+                            slideFrontTarget = 0;
+                        }
 
                         if (Math.abs(slidesFront.getPosition()) < 1400) {
                             stageFront = Stages.SLIDEDOWN;
                             pitchFrontTarget = HardwareConstants.PITCH_ZERO;
                             PULLING_UP_HANG = false;
                         }
+
                     }
 
                     if (gamepad2.touchpad) {

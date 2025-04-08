@@ -23,7 +23,9 @@ import com.qualcomm.robotcore.util.Range;
 
 public class MotionSamplePickupAction extends EventAction {
 
-    private EventAction pickupAction, aboveAction, autoAction, findNewSample, totalAction;
+    private SequentialAction pickupAction, pickupCopy;
+    private ParallelAction aboveAction, aboveCopy;
+    private EventAction autoAction, findNewSample, totalAction;
 
     private LLSampleVision visionSystem;
     private Servo clawWrist;
@@ -41,9 +43,12 @@ public class MotionSamplePickupAction extends EventAction {
     // Limelight should properly encode positions and add the 1 at the start
     // Limelight should also order sample info with closest sample first, then second closest, and on
 
-    public MotionSamplePickupAction(LLSampleVision vision, Servo wrist, Follower follow, EventAction aboveSample, EventAction pickupSample) {
+    public MotionSamplePickupAction(LLSampleVision vision, Servo wrist, Follower follow, ParallelAction aboveSample, SequentialAction pickupSample) {
         pickupAction = pickupSample;
         aboveAction = aboveSample;
+
+        pickupCopy = pickupAction.copy();
+        aboveCopy = aboveAction.copy();
 
         visionSystem = vision;
         clawWrist = wrist;
@@ -133,6 +138,8 @@ public class MotionSamplePickupAction extends EventAction {
             //if a position has been chosen, run the entire action until it ends
             if (!totalAction.run(t)) {
                 stop(false);
+
+                positionReceived = false;
                 return false;
             }
 

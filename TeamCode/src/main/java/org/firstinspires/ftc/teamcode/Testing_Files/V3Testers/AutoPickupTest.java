@@ -47,13 +47,13 @@ public class AutoPickupTest extends LinearOpMode {
         wristFront = hardwareMap.get(ServoImplEx.class, "frontWrist");
         wristFront.setPwmRange(new PwmControl.PwmRange(500, 2500));
 
-        rightExt = hardwareMap.get(ServoImplEx.class, "rightExt");
+        rightExt = hardwareMap.get(ServoImplEx.class, "extServo");
         rightExt.setPwmRange(new PwmControl.PwmRange(500, 2500));
-        leftExt = hardwareMap.get(ServoImplEx.class, "leftExt");
-        leftExt.setPwmRange(new PwmControl.PwmRange(500, 2500));
+//        leftExt = hardwareMap.get(ServoImplEx.class, "leftExt");
+//        leftExt.setPwmRange(new PwmControl.PwmRange(500, 2500));
 
-        leftExt.setPosition(0.25);
-        rightExt.setPosition(0.25);
+        //leftExt.setPosition(0.25);
+        rightExt.setPosition(1);
         arm.setPosition(HardwareConstants.PITCH_CAMERA);
 
 
@@ -70,12 +70,12 @@ public class AutoPickupTest extends LinearOpMode {
         });
 
         EventAction extensionOut = new InstantAction(() -> {
-            leftExt.setPosition(0.25);
-            rightExt.setPosition(0.25);
+            //leftExt.setPosition(1);
+            rightExt.setPosition(1);
         });
         EventAction extensionIn = new InstantAction(() -> {
-            leftExt.setPosition(1);
-            rightExt.setPosition(1);
+            //leftExt.setPosition(1);
+            rightExt.setPosition(0.1);
         });
 
         armPickup = new SequentialAction(new ParallelAction(pickup, new TimedAction(clawIntake, 1000)), above);

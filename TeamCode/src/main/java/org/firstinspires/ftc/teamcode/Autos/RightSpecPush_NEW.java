@@ -109,7 +109,7 @@ public class RightSpecPush_NEW extends LinearOpMode {
         backSlides.setPIDFCoefficients(0.022, 0, 0.0006, 0.00022);
         backSlides.slideMotor.setDirection(DcMotorSimple.Direction.FORWARD);
 
-        slidesUpChamber = frontSlides.getExtensionAction(750);
+        slidesUpChamber = frontSlides.getExtensionAction(850);
         slidesScoreChamber = frontSlides.getExtensionAction(450);
         slidesDownChamber = frontSlides.getExtensionAction(0);
 
@@ -123,7 +123,7 @@ public class RightSpecPush_NEW extends LinearOpMode {
         });
 
         armUpChamber = new InstantAction(() -> {
-            frontArm.setPosition(0.7);  //TODO: this is the position where the front arm scores on chamber, just find it empirically in testing
+            frontArm.setPosition(0.58);  //TODO: this is the position where the front arm scores on chamber, just find it empirically in testing
         });
 
         //armUpChamber = frontArm.getPitchingAction(TARGET_HERE);
@@ -214,7 +214,7 @@ public class RightSpecPush_NEW extends LinearOpMode {
 
         chamberPath1 = new Path(new BezierLine(
                 new Point(8.5, 62),
-                new Point(33, 60.5)
+                new Point(32.5, 60.5)
         ));
         chamberPath1.setConstantHeadingInterpolation(Math.toRadians(0));
         chamberPath1.setZeroPowerAccelerationMultiplier(4);
