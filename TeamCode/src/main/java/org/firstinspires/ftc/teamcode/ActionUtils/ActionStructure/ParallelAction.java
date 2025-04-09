@@ -20,6 +20,13 @@ public class ParallelAction extends EventAction {
 
     @Override
     public boolean run(CombinedTelemetry t) {
+        //end this action if there are no more actions in the list, save the actions
+        if (actions.isEmpty()) {
+            actions = new ArrayList<>(finished);
+            finished.clear();
+            return false;
+        }
+
         //only remove an action if it is no longer running
 //        actions.removeIf(action -> !action.run(t));
         for (int i = 0; i < actions.size(); i++) {
@@ -27,14 +34,10 @@ public class ParallelAction extends EventAction {
                 finished.add(actions.remove(i));
             }
         }
+
         //if there are actions left, this action is still running
-        if (actions.isEmpty()) {
-            actions = finished;
-            finished.clear();
-            return false;
-        } else {
-            return true;
-        }
+        return true;
+
     }
 
     @Override

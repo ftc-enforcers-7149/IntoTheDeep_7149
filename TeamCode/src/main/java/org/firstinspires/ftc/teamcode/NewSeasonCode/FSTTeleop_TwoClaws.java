@@ -787,7 +787,7 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
 
                         if (Math.abs(slidesFront.getPosition()) > 2200) {
                             wheeliePos += (int) gamepad2.left_stick_y * 2;
-                            wheelieMotor.setPower(wheelieController.calculate(wheelieEncoder.getCurrentPosition(), -wheeliePos));
+                            wheelieMotor.setPower(wheelieController.calculate(wheelieEncoder.getCurrentPosition(), wheeliePos));
                             pitchFrontTarget = HardwareConstants.PITCH_PASSTHROUGH;
                         }
 

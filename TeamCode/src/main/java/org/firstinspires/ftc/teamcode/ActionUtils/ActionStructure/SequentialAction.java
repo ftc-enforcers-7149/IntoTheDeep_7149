@@ -6,7 +6,7 @@ import java.util.List;
 
 public class SequentialAction extends EventAction {
 
-    ArrayList<EventAction> actions, finished;
+    private ArrayList<EventAction> actions, finished;
 
     public SequentialAction(List<EventAction> actionList) {
         //ensure we are given an arrayList, or else we get exceptions when removing actions from list
@@ -22,7 +22,7 @@ public class SequentialAction extends EventAction {
     public boolean run(CombinedTelemetry t) {
         //when all actions are finished, this action is finished
         if (actions.isEmpty()) {
-            actions = finished;
+            actions = new ArrayList<>(finished);
             finished.clear();
             return false;
         }

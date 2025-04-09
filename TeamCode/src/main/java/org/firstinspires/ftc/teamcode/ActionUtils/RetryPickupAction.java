@@ -7,7 +7,7 @@ import org.firstinspires.ftc.teamcode.Hardware.Subsystems.ColorClaw;
 
 public class RetryPickupAction extends EventAction {
 
-    private SequentialAction pickupAction, backUp;
+    private SequentialAction pickupAction;
     private ColorClaw colorClaw;
     private ColorClaw.SampleColor wrongColor;
 
@@ -15,7 +15,6 @@ public class RetryPickupAction extends EventAction {
 
     public RetryPickupAction(SequentialAction pickupAct, ColorClaw claw, ColorClaw.SampleColor wrongColor) {
         pickupAction = pickupAct;
-        backUp = pickupAction.copy();
         colorClaw = claw;
         this.wrongColor = wrongColor;
 
@@ -28,7 +27,6 @@ public class RetryPickupAction extends EventAction {
         if (!isRetry) {
             if (colorClaw.getSampleColor() == wrongColor || colorClaw.getSampleColor() == ColorClaw.SampleColor.NONE) {
                 isRetry = true;
-                pickupAction = backUp.copy();
                 pickupAction.init();
             } else {
                 return false;

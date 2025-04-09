@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode.ActionUtils;
 
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.ftccommon.external.OnCreate;
+import org.firstinspires.ftc.ftccommon.external.OnCreateEventLoop;
 import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.CombinedTelemetry;
 import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.EventAction;
 import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.ParallelAction;
@@ -23,8 +25,8 @@ import com.qualcomm.robotcore.util.Range;
 
 public class MotionSamplePickupAction extends EventAction {
 
-    private SequentialAction pickupAction, pickupCopy;
-    private ParallelAction aboveAction, aboveCopy;
+    private EventAction pickupAction;
+    private EventAction aboveAction;
     private EventAction autoAction, findNewSample, totalAction;
 
     private LLSampleVision visionSystem;
@@ -43,12 +45,10 @@ public class MotionSamplePickupAction extends EventAction {
     // Limelight should properly encode positions and add the 1 at the start
     // Limelight should also order sample info with closest sample first, then second closest, and on
 
-    public MotionSamplePickupAction(LLSampleVision vision, Servo wrist, Follower follow, ParallelAction aboveSample, SequentialAction pickupSample) {
+    public MotionSamplePickupAction(LLSampleVision vision, Servo wrist, Follower follow, EventAction aboveSample, EventAction pickupSample) {
         pickupAction = pickupSample;
         aboveAction = aboveSample;
 
-        pickupCopy = pickupAction.copy();
-        aboveCopy = aboveAction.copy();
 
         visionSystem = vision;
         clawWrist = wrist;
@@ -72,6 +72,7 @@ public class MotionSamplePickupAction extends EventAction {
 
             if (!findingNewSample) {
                 sampleInfo = visionSystem.getResultInfo();
+                t.getTelemetry().addData("SAMPLE CHECK", sampleInfo[0]);
             } else {
                 sampleInfo = new double[]{0,0,0,0,0,0,0,0};
             }
@@ -139,7 +140,6 @@ public class MotionSamplePickupAction extends EventAction {
             if (!totalAction.run(t)) {
                 stop(false);
 
-                positionReceived = false;
                 return false;
             }
 
