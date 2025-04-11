@@ -54,7 +54,7 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
     ServoImplEx wristFront;
     Servo pitchBack1, pitchBack2;
     DcMotorEx wheelieMotor, wheelieEncoder;
-    int wheeliePos = -1300;
+    int wheeliePos = -900;
 
     FourServoPitchArm pitchArm;
 
@@ -91,7 +91,7 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
     double lastExtensionPos = 0.9;
 
     final double extensionOutPos = 1;
-    final double extensionInPos = 0.02;
+    public static double extensionInPos = 0.04;
 
     int slideBackTarget = 0;
 //    int pitchBackTarget = 0;

@@ -9,7 +9,7 @@ public class HardwareConstants {
 
     public final static double WRIST_MIN = 0.23, WRIST_MAX = 0.75, WRIST_CENTER = 0.48;
 
-    public final static double PITCH_ZERO = 0.79, PITCH_PICKUP = 0.04, PITCH_HOVER = 0.1, PITCH_REVERSE = 0.06 , PITCH_CAMERA = 0.3, PITCH_PASSTHROUGH = 0.94, PITCH_SCORING = .79;
+    public final static double PITCH_ZERO = 0.78, PITCH_PICKUP = 0.04, PITCH_HOVER = 0.105, PITCH_REVERSE = 0.07 , PITCH_CAMERA = 0.29, PITCH_PASSTHROUGH = 0.92, PITCH_SCORING = .78;
 
     public final static double BACK_PITCH_PICKUP = 0.2, BACK_PITCH_ZERO = 0.64, BACK_PITCH_HOVER = 0.28, BACK_PITCH_WALL = 0.5, BACK_PITCH_SCORE = 0.48;
 
