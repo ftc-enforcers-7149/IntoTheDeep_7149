@@ -24,7 +24,9 @@ import org.firstinspires.ftc.robotcore.internal.camera.names.WebcamNameImpl;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.VisionProcessor;
 import org.opencv.android.Utils;
+import org.opencv.calib3d.Calib3d;
 import org.opencv.core.Mat;
+import org.opencv.imgproc.Imgproc;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 
@@ -109,23 +111,6 @@ public class CameraTest extends LinearOpMode {
             if (state == VisionPortal.CameraState.STARTING_STREAM) {
                 loops++;
             }
-
-
-
-
-
-            WebcamName cam = hardwareMap.get(WebcamName.class, "Cam");
-            OpenCvCamera cvCam = OpenCvCameraFactory.getInstance().createWebcam(cam);
-
-
-
-            FtcEventLoop loop = new FtcEventLoop(null, null, null, null);
-            OpModeManagerImpl manager = loop.getOpModeManager();
-
-
-
-
-
 
 
             FtcDashboard.getInstance().sendImage(processor.getLastFrame());

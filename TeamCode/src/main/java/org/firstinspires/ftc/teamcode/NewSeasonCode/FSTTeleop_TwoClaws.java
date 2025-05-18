@@ -54,7 +54,7 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
     ServoImplEx wristFront;
     Servo pitchBack1, pitchBack2;
     DcMotorEx wheelieMotor, wheelieEncoder;
-    int wheeliePos = -900;
+    int wheeliePos = -1100;
 
     FourServoPitchArm pitchArm;
 
@@ -453,9 +453,9 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
                     frontWristPos = HardwareConstants.WRIST_MIN;
                     pitchFrontTarget = HardwareConstants.PITCH_SCORING;
 
-                    if (outStageFront == Outtake.CHAMBER) {
-                        pitchFrontTarget = 0.1;
-                    }
+//                    if (outStageFront == Outtake.CHAMBER) {
+//                        pitchFrontTarget = HardwareConstants.PITCH_SCORING;
+//                    }
 
 
                     if (gamepad1.left_trigger > 0.05) {
@@ -786,7 +786,7 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
                         slideFrontTarget = 2550;
 
                         if (Math.abs(slidesFront.getPosition()) > 2200) {
-                            wheeliePos += (int) gamepad2.left_stick_y * 2;
+                            wheeliePos += (int) (gamepad2.left_stick_y * 5);
                             wheelieMotor.setPower(wheelieController.calculate(wheelieEncoder.getCurrentPosition(), wheeliePos));
                             pitchFrontTarget = HardwareConstants.PITCH_PASSTHROUGH;
                         }
@@ -994,7 +994,9 @@ public class FSTTeleop_TwoClaws extends LinearOpMode {
                         stageBack = Stages.SLIDEDOWN;
                         slideBackTarget = 0;
                         pitchBackpos = BACK_PITCH_IDLE;
-                        clawBackPosition = HardwareConstants.BACK_CLAW_OPEN;
+                        if (!gamepad2.dpad_left) {
+                            clawBackPosition = HardwareConstants.BACK_CLAW_OPEN;
+                        }
                     }
 
                     //unnecessary

@@ -188,7 +188,7 @@ public class LeftBasketExtras extends LinearOpMode {
 
         extensionIn = new InstantAction(() -> {
             //leftExt.setPosition(1);
-            extServo.setPosition(0.02);
+            extServo.setPosition(0.04);
         });
 
         wristDropoff = new InstantAction(() -> {
@@ -239,36 +239,36 @@ public class LeftBasketExtras extends LinearOpMode {
 
         basketPath1 = new Path(new BezierLine(
                 new Point(8.625, 105.125),
-                MathFunctions.addPoints(AutoConstants.BASKET_DROPOFF, new Point(0, 0.5))
+                MathFunctions.addPoints(AutoConstants.BASKET_DROPOFF, new Point(-0.75, 0.5))
         ));
         basketPath1.setLinearHeadingInterpolation(Math.toRadians(90), Math.toRadians(135));
 
         samplePath2 = new Path(new BezierLine(
-                MathFunctions.addPoints(AutoConstants.BASKET_DROPOFF, new Point(0, 0.5)),
+                MathFunctions.addPoints(AutoConstants.BASKET_DROPOFF, new Point(-0.75, 0.5)),
                 SAMPLE_1_PICKUP
         ));
         samplePath2.setLinearHeadingInterpolation(Math.toRadians(135), 0);
 
         basketPath2 = new Path(new BezierLine(
                 SAMPLE_1_PICKUP,
-                MathFunctions.addPoints(AutoConstants.BASKET_DROPOFF, new Point(-0.5, 1.5))
+                MathFunctions.addPoints(AutoConstants.BASKET_DROPOFF, new Point(0.5, 3))
         ));
         basketPath2.setLinearHeadingInterpolation(0, Math.toRadians(135));
 
         samplePath3 = new Path(new BezierLine(
-                MathFunctions.addPoints(AutoConstants.BASKET_DROPOFF, new Point(-0.5, 1.5)),
+                MathFunctions.addPoints(AutoConstants.BASKET_DROPOFF, new Point(0.5, 3)),
                 SAMPLE_2_PICKUP
         ));
         samplePath3.setLinearHeadingInterpolation(Math.toRadians(135), 0);
 
         basketPath3 = new Path(new BezierLine(
                 SAMPLE_2_PICKUP,
-                MathFunctions.addPoints(AutoConstants.BASKET_DROPOFF, new Point(-0.5, 2.5))
+                MathFunctions.addPoints(AutoConstants.BASKET_DROPOFF, new Point(0.25, 3.5))
         ));
         basketPath3.setLinearHeadingInterpolation(0, Math.toRadians(135));
 
         samplePath4 = new Path(new BezierLine(
-                MathFunctions.addPoints(AutoConstants.BASKET_DROPOFF, new Point(-0.5, 2.5)),
+                MathFunctions.addPoints(AutoConstants.BASKET_DROPOFF, new Point(0.25, 3.5)),
                 SAMPLE_3_PICKUP
         ));
         samplePath4.setLinearHeadingInterpolation(0, Math.toRadians(45));
@@ -281,7 +281,7 @@ public class LeftBasketExtras extends LinearOpMode {
 
         basketPath4 = new Path(new BezierLine(
                 SAMPLE_3_PICKUP,
-                MathFunctions.addPoints(AutoConstants.BASKET_DROPOFF, new Point(0.5, 1.5))
+                MathFunctions.addPoints(AutoConstants.BASKET_DROPOFF, new Point(0, 2.5))
         ));
         basketPath4.setLinearHeadingInterpolation(Math.toRadians(90), Math.toRadians(135));
 
@@ -317,7 +317,7 @@ public class LeftBasketExtras extends LinearOpMode {
 
 
         parkPath = new Path(new BezierCurve(
-                MathFunctions.addPoints(AutoConstants.BASKET_DROPOFF, new Point(1, 1)),
+                MathFunctions.addPoints(AutoConstants.BASKET_DROPOFF, new Point(0, 1)),
                 new Point(66, 130),
                 new Point(62, 92)
         ));
@@ -349,7 +349,7 @@ public class LeftBasketExtras extends LinearOpMode {
 
         wristFront.setPosition(0.5);
         //leftExt.setPosition(1);
-        extServo.setPosition(0.02);
+        extServo.setPosition(0.04);
 
         samplePickupAction = new MotionSamplePickupAction(
                 visionSystem,
@@ -404,7 +404,7 @@ public class LeftBasketExtras extends LinearOpMode {
         //init updated paths
 
         subPath1 = new Path(new BezierCurve(
-                MathFunctions.addPoints(AutoConstants.BASKET_DROPOFF, new Point(0.5, 1.5)),
+                MathFunctions.addPoints(AutoConstants.BASKET_DROPOFF, new Point(0, 2.5)),
                 new Point(64, 130),
                 new Point(62 + subXOffset1, 105)
         ));
@@ -413,12 +413,12 @@ public class LeftBasketExtras extends LinearOpMode {
         basketPath5 = new Path(new BezierCurve(
                 new Point(62 + subXOffset1, 105),
                 new Point(66, 130),
-                MathFunctions.addPoints(AutoConstants.BASKET_DROPOFF, new Point(1, 1))
+                MathFunctions.addPoints(AutoConstants.BASKET_DROPOFF, new Point(0, 1.5))
         ));
         basketPath5.setLinearHeadingInterpolation(Math.toRadians(270), Math.toRadians(135), 0.8);
 
         subPath2 = new Path(new BezierCurve(
-                MathFunctions.addPoints(AutoConstants.BASKET_DROPOFF, new Point(1, 1)),
+                MathFunctions.addPoints(AutoConstants.BASKET_DROPOFF, new Point(0, 1.5)),
                 new Point(66 + subXOffset2, 130),
                 new Point(66, 105)
         ));
@@ -427,7 +427,7 @@ public class LeftBasketExtras extends LinearOpMode {
         basketPath6 = new Path(new BezierCurve(
                 new Point(66 + subXOffset2, 105),
                 new Point(66, 130),
-                MathFunctions.addPoints(AutoConstants.BASKET_DROPOFF, new Point(1, 1))
+                MathFunctions.addPoints(AutoConstants.BASKET_DROPOFF, new Point(0, 1))
         ));
         basketPath6.setLinearHeadingInterpolation(Math.toRadians(270), Math.toRadians(135), 0.8);
 

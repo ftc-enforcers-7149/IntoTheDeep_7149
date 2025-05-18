@@ -178,7 +178,7 @@ public class RightSpecPush_NEW extends LinearOpMode {
 
         extensionIn = new InstantAction(() -> {
             //leftExt.setPosition(1);
-            extServo.setPosition(0.01);
+            extServo.setPosition(0.04);
         });
 
         imuReset = new InstantAction(() -> {
@@ -214,13 +214,13 @@ public class RightSpecPush_NEW extends LinearOpMode {
 
         chamberPath1 = new Path(new BezierLine(
                 new Point(8.5, 62),
-                new Point(32.5, 60.5)
+                new Point(31.5, 60.5)
         ));
         chamberPath1.setConstantHeadingInterpolation(Math.toRadians(0));
         chamberPath1.setZeroPowerAccelerationMultiplier(4);
 
         Path samplePath1_1 = new Path(new BezierCurve(
-                new Point(33, 60.5),
+                new Point(31.5, 60.5),
                 new Point(18, 35),
                 new Point(46.5, 35.5)
         ));
@@ -261,14 +261,14 @@ public class RightSpecPush_NEW extends LinearOpMode {
         Path samplePath3_1 = new Path(new BezierCurve(
                 new Point(24, 18),
                 new Point(56, 16.5),
-                new Point(55, 10)
+                new Point(55, 9)
         ));
         samplePath3_1.setConstantHeadingInterpolation(Math.toRadians(0));
         samplePath3_1.setZeroPowerAccelerationMultiplier(6);
 
         Path samplePath3_2 = new Path(new BezierLine(
-                new Point(55, 10),
-                new Point(24, 10)
+                new Point(55, 9),
+                new Point(24, 9)
         ));
         samplePath3_2.setConstantHeadingInterpolation(Math.toRadians(0));
         samplePath3_2.setZeroPowerAccelerationMultiplier(6);
@@ -287,22 +287,22 @@ public class RightSpecPush_NEW extends LinearOpMode {
                 //MathFunctions.addPoints(SAMPLE_3_PICKUP, new Point(-2, 7)),
                 new Point(24, 10.5),
                 new Point(26, 11),
-                new Point(14.25, 13)
+                new Point(13.25, 13)
         ));
         wallPath2.setConstantHeadingInterpolation(0);
         wallPath2.setZeroPowerAccelerationMultiplier(5);
 
         chamberPath2 = new Path(new BezierCurve(
                 //SPEC_PICKUP,
-                new Point(16.5, 13),
+                new Point(13.25, 13),
                 new Point(30, 79),  //<-- 3 less than point below
-                new Point(35.5, 76)  //<--TODO: These y values can be changed to shift the robot down the chamber, if this is changed, the y value in the point right above it must be changed to 3 greater, and the point starting the next path must also be changed to be the same point (this applies to all the chamber paths here)
+                new Point(35, 76)  //<--TODO: These y values can be changed to shift the robot down the chamber, if this is changed, the y value in the point right above it must be changed to 3 greater, and the point starting the next path must also be changed to be the same point (this applies to all the chamber paths here)
         ));
         chamberPath2.setLinearHeadingInterpolation(0, Math.toRadians(180.01), 0.4);
         chamberPath2.setZeroPowerAccelerationMultiplier(1.4);
 
         wallPath3 = new Path(new BezierCurve(
-                new Point(35.5, 76),  //<--same as last point in prev path
+                new Point(35, 76),  //<--same as last point in prev path
                 new Point(30, 40),
                 SPEC_PICKUP
         ));
@@ -395,7 +395,7 @@ public class RightSpecPush_NEW extends LinearOpMode {
 
         wristFront.setPosition(0.48);
         //leftExt.setPosition(1);
-        extServo.setPosition(0.01);
+        extServo.setPosition(0.04);
 
 
         while (!isStarted()) {
@@ -440,7 +440,9 @@ public class RightSpecPush_NEW extends LinearOpMode {
                                 new SequentialAction(new WaitAction(1000), armDownChamber),
                                 extensionIn,
 
-                                moveSample1
+                                moveSample1,
+
+                                new SequentialAction(new WaitAction(1000), new TimedAction(clawOuttake, 1500))
                         ),
 
                         moveSample2,
@@ -545,7 +547,7 @@ public class RightSpecPush_NEW extends LinearOpMode {
 
                         //go to park
 
-                        new ParallelAction(park, slidesBackDownChamber, armDownSample)
+                        new ParallelAction(park, slidesBackDownChamber, armDownSample, extensionOut)
 
 
                 ), (telemetry) -> {

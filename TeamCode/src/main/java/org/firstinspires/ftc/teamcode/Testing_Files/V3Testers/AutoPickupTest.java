@@ -58,7 +58,7 @@ public class AutoPickupTest extends LinearOpMode {
 
 
         EventAction above = new InstantAction(() -> {
-            arm.setPosition(HardwareConstants.PITCH_HOVER - 0.05);
+            arm.setPosition(HardwareConstants.PITCH_HOVER + 0.06);
         });
 
         EventAction pickup = new InstantAction(() -> {
@@ -75,7 +75,7 @@ public class AutoPickupTest extends LinearOpMode {
         });
         EventAction extensionIn = new InstantAction(() -> {
             //leftExt.setPosition(1);
-            rightExt.setPosition(0.1);
+            rightExt.setPosition(0.02);
         });
 
         armPickup = new SequentialAction(new ParallelAction(pickup, new TimedAction(clawIntake, 1000)), above);
