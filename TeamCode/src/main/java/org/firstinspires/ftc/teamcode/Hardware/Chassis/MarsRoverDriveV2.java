@@ -50,6 +50,7 @@ public class MarsRoverDriveV2 extends LinearOpMode {
                 RevHubOrientationOnRobot.LogoFacingDirection.UP,
                 RevHubOrientationOnRobot.UsbFacingDirection.FORWARD
         ));
+        imu.initialize(imuParams);
 
         waitForStart();
 
