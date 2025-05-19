@@ -103,7 +103,6 @@ public class MarsRoverFinal extends LinearOpMode {
                 rightDrive.setPower(1);
 
             } else {
-                // Center steering when stick is neutral
                 frontLeftPivot.setPosition(0.5);
                 frontRightPivot.setPosition(0.5);
                 backLeftPivot.setPosition(0.5);
