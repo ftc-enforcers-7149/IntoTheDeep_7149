@@ -2,7 +2,14 @@ package org.firstinspires.ftc.teamcode.Autos;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
-import com.acmerobotics.roadrunner.Pose2d;
+import com.pedropathing.follower.Follower;
+import com.pedropathing.localization.Pose;
+import com.pedropathing.pathgen.BezierCurve;
+import com.pedropathing.pathgen.BezierLine;
+import com.pedropathing.pathgen.Path;
+import com.pedropathing.pathgen.PathChain;
+import com.pedropathing.pathgen.Point;
+import com.pedropathing.util.Constants;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -10,15 +17,10 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.ActionManager;
 import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.PedroAction;
 import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.SequentialAction;
-import org.firstinspires.ftc.teamcode.ActionUtils.P2PAction;
-import org.firstinspires.ftc.teamcode.Hardware.Chassis.MecanumPowerDrive;
-import org.firstinspires.ftc.teamcode.PathingSystems.pedroPathing.follower.Follower;
-import org.firstinspires.ftc.teamcode.PathingSystems.pedroPathing.localization.Pose;
-import org.firstinspires.ftc.teamcode.PathingSystems.pedroPathing.pathGeneration.BezierCurve;
-import org.firstinspires.ftc.teamcode.PathingSystems.pedroPathing.pathGeneration.BezierLine;
-import org.firstinspires.ftc.teamcode.PathingSystems.pedroPathing.pathGeneration.Path;
-import org.firstinspires.ftc.teamcode.PathingSystems.pedroPathing.pathGeneration.PathChain;
-import org.firstinspires.ftc.teamcode.PathingSystems.pedroPathing.pathGeneration.Point;
+import org.firstinspires.ftc.teamcode.Hardware.Chassis.PeriodicFollower;
+import org.firstinspires.ftc.teamcode.pedroPathing.constants.FConstants;
+import org.firstinspires.ftc.teamcode.pedroPathing.constants.LConstants;
+
 
 
 @Autonomous(name = "MovementTest")
@@ -39,8 +41,10 @@ public class MovementTest extends LinearOpMode {
 
         //drive = new MecanumPowerDrive(hardwareMap, new Pose2d(-63.25, 15.375, 0), telemetry);
 
+        Constants.setConstants(FConstants.class, LConstants.class);
         follower = new Follower(hardwareMap);
         follower.setStartingPose(new Pose(24, 72, 0));
+        PeriodicFollower perFollower = new PeriodicFollower(follower);
 
         path1 = new Path(
                         new BezierLine(
@@ -56,12 +60,12 @@ public class MovementTest extends LinearOpMode {
         path2.setLinearHeadingInterpolation(0, Math.toRadians(-45));
 
 
-        move1 = new PedroAction(follower, new PathChain(path1), false);
+        move1 = new PedroAction(follower, new PathChain(path1), true);
 
-        move2 = new PedroAction(follower, new PathChain(path2), false);
+        move2 = new PedroAction(follower, new PathChain(path2), true);
 
-        actionManager = new ActionManager(telemetry, hardwareMap);
-        actionManager.attachPeriodicActions();
+        actionManager = new ActionManager(this);
+        actionManager.attachPeriodicActions(perFollower);
 
         waitForStart();
 
@@ -76,7 +80,7 @@ public class MovementTest extends LinearOpMode {
 
                     move1, move2
 
-                )
+                ), (telemetry) -> {}
         );
 
         telemetry.addData("Finished", "Actions");

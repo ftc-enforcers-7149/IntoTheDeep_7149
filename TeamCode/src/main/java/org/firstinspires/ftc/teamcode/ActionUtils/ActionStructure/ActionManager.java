@@ -4,6 +4,7 @@ package org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.hardware.lynx.LynxModule;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -14,6 +15,10 @@ import java.util.Arrays;
 import java.util.List;
 
 public class ActionManager {
+
+    public interface TelemetryUpdater{
+        public void update(Telemetry t);
+    }
 
     private ArrayList<PeriodicAction> periodicActions;
 
@@ -39,6 +44,10 @@ public class ActionManager {
         }
     }
 
+    public ActionManager(OpMode opMode) {
+        this(opMode.telemetry, opMode.hardwareMap);
+    }
+
     public void attachPeriodicActions(List<PeriodicAction> periodic) {
         periodicActions = new ArrayList<PeriodicAction>((List<PeriodicAction>) periodic);
     }
@@ -47,8 +56,12 @@ public class ActionManager {
         attachPeriodicActions(Arrays.asList(periodic));
     }
 
+    public boolean removeAction(PeriodicAction action) {
+        return periodicActions.remove(action);
+    }
 
-    public void runActionManager(EventAction a) {
+
+    public void runActionManager(EventAction a, TelemetryUpdater telemetryUpdate) {
 
         FtcDashboard dash = FtcDashboard.getInstance();
 
@@ -63,6 +76,7 @@ public class ActionManager {
                 hub.clearBulkCache();
             }
 
+            //update hardware linked to the action manager
             for (PeriodicAction perAct : periodicActions) {
                 perAct.periodic();
             }
@@ -73,11 +87,13 @@ public class ActionManager {
             dash.sendTelemetryPacket(t.getPacket());
             telemetry.addLine("");
             telemetry.addData("LoopTime(ms)", loopTime.milliseconds());
+            telemetry.addLine("");
+            telemetryUpdate.update(telemetry);
+
             loopTime.reset();
             telemetry.update();
         }
 
-        //TODO: Have periodic actions running in the back to update actionInfo objects associated with actions
     }
 
 }

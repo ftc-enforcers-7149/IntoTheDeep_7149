@@ -2,8 +2,6 @@ package org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure;
 
 import com.acmerobotics.roadrunner.Pose2d;
 
-import org.firstinspires.ftc.teamcode.PathingSystems.pedroPathing.localization.Pose;
-
 /**
  * Used in conjunction with actions that require the position of the robot. Abstracting all
  * localizers under ActionLocalizer allows for the use of many different libraries with

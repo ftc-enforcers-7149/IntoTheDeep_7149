@@ -2,11 +2,13 @@ package org.firstinspires.ftc.teamcode.ActionUtils;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.ActionManager;
+import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.ConditionalAction;
 import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.EventAction;
 import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.GamepadAction;
 import org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.GamepadActionEx;
@@ -18,7 +20,7 @@ import org.firstinspires.ftc.teamcode.Hardware.Chassis.MecanumPowerDrive;
 import org.firstinspires.ftc.teamcode.Hardware.Subsystems.OuttakeSlides;
 import org.firstinspires.ftc.teamcode.Hardware.Subsystems.PitchArm;
 
-
+@Disabled
 @TeleOp(name = "ActionTester")
 public class ActionTestOpMode extends LinearOpMode {
 
@@ -72,6 +74,29 @@ public class ActionTestOpMode extends LinearOpMode {
 //        // connect the actions directly to a gamepad button
 //        // e.g. gamepad_a.whileHeld(action).whenReleased(action2)
 //        // this does prevent you from doing more complex predicates
+
+        int index = (int) (Math.random() + 0.5);
+        ConditionalAction chooseAct = new ConditionalAction(() -> {
+
+            boolean b;
+
+            switch(index) {
+                case 1: {
+                    b = true;
+                    break;
+                }
+
+                default: {
+                    b = false;
+                    break;
+                }
+
+            }
+
+            return b;
+        }, slidesDown);
+
+        ConditionalAction chooseAct2 = new ConditionalAction( () -> index == 0, slidesDown, slidesUp);
 //
 //
 
@@ -147,7 +172,7 @@ public class ActionTestOpMode extends LinearOpMode {
 //                        )
 //
 
-                )
+                ), (telemetry) -> {}
         );
 
         telemetry.addData("Finished", "Actions");

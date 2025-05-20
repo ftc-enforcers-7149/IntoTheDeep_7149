@@ -1,8 +1,11 @@
 package org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.Shapes;
 
-import org.firstinspires.ftc.teamcode.PathingSystems.pedroPathing.localization.Pose;
-import org.firstinspires.ftc.teamcode.PathingSystems.pedroPathing.pathGeneration.MathFunctions;
-import org.firstinspires.ftc.teamcode.PathingSystems.pedroPathing.pathGeneration.Point;
+
+import com.pedropathing.localization.Pose;
+import com.pedropathing.pathgen.MathFunctions;
+import com.pedropathing.pathgen.Point;
+
+import org.firstinspires.ftc.teamcode.GlobalData.AutoFunctions;
 
 public class Triangle extends Shape{
 
@@ -15,9 +18,9 @@ public class Triangle extends Shape{
         vertices = new Point[] {left, center, right};
 
         sideLengths = new double[] {
-                MathFunctions.distance(left, center),
-                MathFunctions.distance(center, right),
-                MathFunctions.distance(right, left),
+                AutoFunctions.getDistance(left, center),
+                AutoFunctions.getDistance(center, right),
+                AutoFunctions.getDistance(right, left),
         };
 
         angles = new double[3];

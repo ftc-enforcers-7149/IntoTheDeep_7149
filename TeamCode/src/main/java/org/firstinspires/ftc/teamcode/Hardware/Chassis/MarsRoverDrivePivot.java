@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.Hardware.Chassis;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -10,6 +11,7 @@ import com.qualcomm.robotcore.hardware.IMU;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
+//@Disabled
 @TeleOp(name = "MarsRoverV2")
 public class MarsRoverDrivePivot extends LinearOpMode {
 
@@ -43,7 +45,7 @@ public class MarsRoverDrivePivot extends LinearOpMode {
         //init can be used to zero the servos to this position
         frontRightPivot.setPosition(0.5);
         frontLeftPivot.setPosition(0.5);
-
+        pitchServo.setPosition(0.5);
         IMU.Parameters imuParams = new IMU.Parameters(new RevHubOrientationOnRobot(
                 RevHubOrientationOnRobot.LogoFacingDirection.UP,
                 RevHubOrientationOnRobot.UsbFacingDirection.FORWARD
@@ -58,10 +60,10 @@ public class MarsRoverDrivePivot extends LinearOpMode {
         while (opModeIsActive() && !isStopRequested()) {
 
             // Get pitch angle
-            double pitch = imu.getRobotYawPitchRollAngles().getPitch(AngleUnit.DEGREES);
+            double pitch = (imu.getRobotYawPitchRollAngles().getPitch(AngleUnit.DEGREES));
 
             // Map angles to servo positions (assumes 0-180 degrees range)
-            double pitchServoPos = (pitch + 90) / 180.0; // Scale to 0-1
+            double pitchServoPos = (pitch + 150.0) / 300.0; // Scale to 0-1
 
             // Limit servo range between 0 and 1
             pitchServoPos = Math.min(Math.max(pitchServoPos, 0), 1);
@@ -97,8 +99,8 @@ public class MarsRoverDrivePivot extends LinearOpMode {
 
             //each side's pivot is connected to the respective joystick
             //servos should be facing directly forwards when at 0.5 position
-            frontRightPivot.setPosition( (gamepad1.left_stick_x + 1) / 2 );
-            frontLeftPivot.setPosition( (1 - gamepad1.left_stick_x) / 2 );
+            frontRightPivot.setPosition( (gamepad1.right_stick_x + 1) / 2 );
+            frontLeftPivot.setPosition( (1 - gamepad1.right_stick_x) / 2 );
 
 
             //Use these to flip the direction of the pivots if necessary

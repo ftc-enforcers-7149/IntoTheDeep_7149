@@ -6,11 +6,12 @@ import java.util.List;
 
 public class SequentialAction extends EventAction {
 
-    ArrayList<EventAction> actions;
+    private ArrayList<EventAction> actions, finished;
 
     public SequentialAction(List<EventAction> actionList) {
         //ensure we are given an arrayList, or else we get exceptions when removing actions from list
-        actions = new ArrayList<EventAction>((List<EventAction>) actionList);
+        actions = new ArrayList<EventAction>(actionList);
+        finished = new ArrayList<EventAction>();
     }
 
     public SequentialAction(EventAction...actions) {
@@ -21,6 +22,8 @@ public class SequentialAction extends EventAction {
     public boolean run(CombinedTelemetry t) {
         //when all actions are finished, this action is finished
         if (actions.isEmpty()) {
+            actions = new ArrayList<>(finished);
+            finished.clear();
             return false;
         }
 
@@ -29,7 +32,7 @@ public class SequentialAction extends EventAction {
             return true;
         } else {
             //if the current action ended, remove it and continue this action
-            actions.remove(0);
+            finished.add(actions.remove(0));
             //if there are more actions, initialize the next one
             if (!actions.isEmpty()) {
                 actions.get(0).init();
@@ -51,6 +54,10 @@ public class SequentialAction extends EventAction {
         for (EventAction act : actions){
             act.stop(interrupted);
         }
+    }
+
+    public SequentialAction copy() {
+        return new SequentialAction(actions);
     }
 
 

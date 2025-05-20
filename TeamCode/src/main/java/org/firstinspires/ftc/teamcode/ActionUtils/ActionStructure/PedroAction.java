@@ -1,9 +1,8 @@
 package org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure;
 
-import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.firstinspires.ftc.teamcode.PathingSystems.pedroPathing.follower.Follower;
-import org.firstinspires.ftc.teamcode.PathingSystems.pedroPathing.pathGeneration.PathChain;
+import com.pedropathing.follower.Follower;
+import com.pedropathing.pathgen.PathChain;
 
 public class PedroAction extends EventAction{
 

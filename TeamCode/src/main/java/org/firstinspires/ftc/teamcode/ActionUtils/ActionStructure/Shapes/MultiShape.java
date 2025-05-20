@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.ActionUtils.ActionStructure.Shapes;
 
-import org.firstinspires.ftc.teamcode.PathingSystems.pedroPathing.localization.Pose;
+import com.pedropathing.localization.Pose;
+import com.pedropathing.pathgen.MathFunctions;
+import com.pedropathing.pathgen.Point;
 
 public class MultiShape extends Shape{
 
