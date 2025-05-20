@@ -13,14 +13,11 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 @TeleOp(name = "MarsRoverFinal")
 public class MarsRoverFinal extends LinearOpMode {
 
-    // Drive motors (continuous rotation servos)
     CRServo leftDrive, rightDrive, drillServo;
 
-    // Four independent steering servos
     Servo frontLeftPivot, frontRightPivot, backLeftPivot, backRightPivot;
     Servo pitchServo, cameraServo, armHinge1, armHinge2;
 
-    // Inertial Measurement Unit
     IMU imu;
 
     @Override
