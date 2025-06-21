@@ -11,7 +11,6 @@ import org.firstinspires.ftc.teamcode.Hardware.Subsystems.SwerveModule;
 import com.arcrobotics.ftclib.kinematics.wpilibkinematics.SwerveDriveKinematics;
 import com.arcrobotics.ftclib.geometry.Translation2d;
 
-
 @TeleOp(name = "ShanSwerveAttempt")
 public class ShanSwerveAttempt extends LinearOpMode {
 

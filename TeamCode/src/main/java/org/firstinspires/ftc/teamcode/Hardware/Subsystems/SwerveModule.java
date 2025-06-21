@@ -14,7 +14,6 @@ public class SwerveModule {
     public DcMotor driveMotor;
     public CRServo pivotServo;
     public AnalogInput axonEncoder;
-
     public PIDFController crController;
     public static double kP, kD;
 
