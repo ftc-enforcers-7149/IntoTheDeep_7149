@@ -31,7 +31,7 @@ public class MarsRoverDriveV2 extends LinearOpMode {
 
         //for current set up, steering should be 2 front wheels in same direction, back 2 wheels in same direction
         //front steer is front right 
-        frontRightPivot = hardwareMap.get(Servo.class, "frontSteer");
+        frontRightPivot = hardwareMap.get(Servo.class, "frontLeftSteer");
         frontLeftPivot = hardwareMap.get(Servo.class, "backSteer");
 
         //for the pitch balancing
@@ -51,6 +51,7 @@ public class MarsRoverDriveV2 extends LinearOpMode {
                 RevHubOrientationOnRobot.LogoFacingDirection.UP,
                 RevHubOrientationOnRobot.UsbFacingDirection.FORWARD
         ));
+        imu.initialize(imuParams);
 
         waitForStart();
 
