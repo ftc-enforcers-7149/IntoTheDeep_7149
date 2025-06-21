@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.Hardware.Chassis;
 
- import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
+import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -114,6 +114,8 @@ public class MarsRoverFinal extends LinearOpMode {
                 cameraServo.setPosition(cameraPos += .05);
             } else if (gamepad1.right_bumper) {
                 cameraServo.setPosition(cameraPos += .05);
+            } else {
+                cameraServo.setPosition(cameraPos += 0);
             }
 
             double armHinge1pos = .5;
@@ -122,6 +124,8 @@ public class MarsRoverFinal extends LinearOpMode {
                 armHinge1.setPosition(armHinge1pos - .05);
             } else if (gamepad1.dpad_right) {
                 armHinge1.setPosition(armHinge1pos + .05);
+            } else {
+                armHinge1.setPosition(armHinge1pos + 0);
             }
 
             double armHinge2pos = .5;
@@ -130,12 +134,14 @@ public class MarsRoverFinal extends LinearOpMode {
                 armHinge2.setPosition(armHinge2pos - .05);
             } else if (gamepad1.dpad_down) {
                 armHinge2.setPosition(armHinge2pos + .05);
+            } else {
+                armHinge2.setPosition(armHinge2pos + 0);
             }
 
             if (gamepad1.circle) {
                 drillServo.setPower(1);
             } else {
-                drillServo.setPower(.5);
+                drillServo.setPower(0);
             }
 
             // Telemetry for driver station
