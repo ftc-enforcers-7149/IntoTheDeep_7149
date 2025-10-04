@@ -7,7 +7,6 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
-
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
 @TeleOp(name = "MarsRoverFinal")
@@ -114,8 +113,6 @@ public class MarsRoverFinal extends LinearOpMode {
                 cameraServo.setPosition(cameraPos += .05);
             } else if (gamepad1.right_bumper) {
                 cameraServo.setPosition(cameraPos += .05);
-            } else {
-                cameraServo.setPosition(cameraPos += 0);
             }
 
             double armHinge1pos = .5;
@@ -124,8 +121,6 @@ public class MarsRoverFinal extends LinearOpMode {
                 armHinge1.setPosition(armHinge1pos - .05);
             } else if (gamepad1.dpad_right) {
                 armHinge1.setPosition(armHinge1pos + .05);
-            } else {
-                armHinge1.setPosition(armHinge1pos + 0);
             }
 
             double armHinge2pos = .5;
@@ -134,32 +129,17 @@ public class MarsRoverFinal extends LinearOpMode {
                 armHinge2.setPosition(armHinge2pos - .05);
             } else if (gamepad1.dpad_down) {
                 armHinge2.setPosition(armHinge2pos + .05);
-            } else {
-                armHinge2.setPosition(armHinge2pos + 0);
             }
 
             if (gamepad1.circle) {
                 drillServo.setPower(1);
             } else {
-                drillServo.setPower(0);
+                drillServo.setPower(.5);
             }
 
             // Telemetry for driver station
             telemetry.addData("Pitch (deg)", pitch);
             telemetry.addData("Pitch Servo Pos", pitchServoPos);
-            telemetry.addData("Drive Power", drivePower);
-            telemetry.addData("Steer Input", steerInput);
-
-            telemetry.addData("Front Left Pivot", frontLeftPivot.getPosition());
-            telemetry.addData("Front Right Pivot", frontRightPivot.getPosition());
-            telemetry.addData("Back Left Pivot", backLeftPivot.getPosition());
-            telemetry.addData("Back Right Pivot", backRightPivot.getPosition());
-
-            telemetry.addData("Camera Servo Pos", cameraPos);
-
-            telemetry.addData("Camera Servo Pos", cameraPos);
-            telemetry.addData("ArmHinge1 Pos", armHinge1pos);
-            telemetry.addData("ArmHinge2 Pos", armHinge2pos);
 
             telemetry.update();
         }

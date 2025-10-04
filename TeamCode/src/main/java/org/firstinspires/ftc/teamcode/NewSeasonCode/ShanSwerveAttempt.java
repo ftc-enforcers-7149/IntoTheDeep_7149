@@ -14,25 +14,24 @@ public class ShanSwerveAttempt extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
 
-        SwerveModule fl = new SwerveModule(hardwareMap, "flWheel", "flPivot", "flEncoder");
-        SwerveModule fr = new SwerveModule(hardwareMap, "frWheel", "frPivot", "frEncoder");
-        SwerveModule bl = new SwerveModule(hardwareMap, "blWheel", "blPivot", "blEncoder");
-        SwerveModule br = new SwerveModule(hardwareMap, "brWheel", "brPivot", "brEncoder");
+        SwerveModule fl = new SwerveModule(hardwareMap, "flWheel", "flPivot");
+        SwerveModule fr = new SwerveModule(hardwareMap, "frWheel", "frPivot");
+        SwerveModule bl = new SwerveModule(hardwareMap, "blWheel", "blPivot");
+        SwerveModule br = new SwerveModule(hardwareMap, "brWheel", "brPivot");
 
         SwerveModule[] swerveModules = {fl, fr, bl, br};
 
         Translation2d m_frontLeftLocation =
-                new Translation2d(0.381, 0.381);
+                new Translation2d(0.1925, 0.1325);
         Translation2d m_frontRightLocation =
-                new Translation2d(0.381, -0.381);
+                new Translation2d(0.1925, -0.1325);
         Translation2d m_backLeftLocation =
-                new Translation2d(-0.381, 0.381);
+                new Translation2d(-0.1925, 0.1325);
         Translation2d m_backRightLocation =
-                new Translation2d(-0.381, -0.381);
-
-        // Creating my kinematics object using the module locations
+                new Translation2d(-0.1925, -0.1325);
+// Creating my kinematics object using the module locations
         SwerveDriveKinematics m_kinematics = new SwerveDriveKinematics(
-                  m_frontLeftLocation, m_frontRightLocation, m_backLeftLocation, m_backRightLocation
+                m_frontLeftLocation, m_frontRightLocation, m_backLeftLocation, m_backRightLocation
         );
 
         waitForStart();
