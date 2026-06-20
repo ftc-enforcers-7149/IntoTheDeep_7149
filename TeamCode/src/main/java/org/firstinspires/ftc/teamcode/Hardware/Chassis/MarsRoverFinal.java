@@ -41,6 +41,7 @@ public class MarsRoverFinal extends LinearOpMode {
         // Reverse one drive servo so both move the same way
         rightDrive.setDirection(DcMotorSimple.Direction.REVERSE);
 
+
         // Center steering servos to forward position (0.5 = centered)
         frontLeftPivot.setPosition(0.5);
         frontRightPivot.setPosition(0.5);
